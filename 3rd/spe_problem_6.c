@@ -1,4 +1,4 @@
-# include <stdio.h>
+#include <stdio.h>
 int main(void)
 {
 	char name[] = {'S', 'h', 'i', 'm', 'o', 'j', 'i', '?', '\0'};

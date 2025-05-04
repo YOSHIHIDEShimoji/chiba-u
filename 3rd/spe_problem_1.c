@@ -1,13 +1,13 @@
-# include <stdio.h>
+#include <stdio.h>
 
 int main(void)
 {
 	char a = 127;
 	unsigned char b = 200;
-	short c = 300;
+	short int c = 300;
 	int d = 123456;
 	float e = 1234.5;
-	long f = 12345678901234;
+	long int f = 12345678901234;
 
 	printf("%d\n", a);
 	printf("%u\n", b);
