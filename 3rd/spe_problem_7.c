@@ -2,7 +2,7 @@
 
 int main(void)
 {
-	char name[] = {'S', 'h', 'i', 'm', 'o', 'j', 'i', '?', '\0'};
+	char name[] = {'S', 'h', 'i', 'm', 'o', 'j', 'i', '\?', '\0'};
 
 	int i;
 	for(i = 0; i <= 8; i++){
