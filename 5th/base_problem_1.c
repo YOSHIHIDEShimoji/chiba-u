@@ -6,7 +6,6 @@ int main(void)
     do {
         sum += i;
         product *= i;
-        i++;
-    } while (i <= 5);
+    } while (++i <= 5);
         printf("sum = %d, product = %d\n", sum, product);    
 }
