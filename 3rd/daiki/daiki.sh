@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# curl -o ~/daiki.sh https://gist.githubusercontent.com/YOSHIHIDEShimoji/b7865b936374739e2e84d6db3d058fa3/raw/daiki.sh
+# chmod +x ~/daiki.sh
+# bash ~/daiki.sh
+
 # ファイルを作成してそこに移動
 mkdir ~/3rd; cd ~/3rd
 
