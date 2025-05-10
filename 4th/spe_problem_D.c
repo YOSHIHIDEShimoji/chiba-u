@@ -13,3 +13,7 @@ int main(void)
 	}
 	return 0;
 }
+
+/*
+The divisor of 9367 is 1 17 19 29 323 493 551 9367
+*/

@@ -11,6 +11,3 @@ int main(void)
 	return 0;
 }
 
-/*
-Translated by DeepL
-*/
