@@ -8,11 +8,12 @@ int main(void)
 	scanf("%c", &c);
 
 	if (32 <= c && c <= 126) {
-		for (j =0; j < 5; j++) {
-			for (i = 0; i < 10; i++) {
-				c2[i] = c + i;
+		for (i = 0; i < 5; i++) {
+			for (j = 0; j < 10; j++) {
+				c2[j] = c + j;
 			}
-		printf("%s", c2);}
+		printf("%s", c2);
+		}
 	}	
 	return 0;
 	
