@@ -9,7 +9,7 @@ int main(void)
 			printf("%c\n", dt);
 			printf("%o\n", dt);		
 			printf("%d\n", dt);
-			printf("%10.7d\n",dt );
+			printf("%10.7f\n", dt / 3.0);
 		}
 	}	
 }
