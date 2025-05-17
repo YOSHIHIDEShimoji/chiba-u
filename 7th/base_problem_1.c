@@ -14,3 +14,8 @@ void prin0(int a)
 {
 	printf("Input no. = %d\n", a);
 }
+
+/*
+Input no. = 1
+Input no. = 2
+*/

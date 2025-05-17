@@ -21,3 +21,9 @@ int func(int a, int b)
 		return value;
 	}
 }
+
+/*
+x = 8
+y = 45
+The sum of between 8 and 45 is 1007
+*/

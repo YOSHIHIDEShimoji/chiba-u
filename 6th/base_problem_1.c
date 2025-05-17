@@ -11,4 +11,10 @@ int main(void)
 
 	printf("%s", ss1);
 	printf("%s\n",ss2);
-}	
+}
+
+/*
+input string 1:asdf
+input string 2jkl;
+asdfjkl;
+*/

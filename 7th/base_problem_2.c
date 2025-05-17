@@ -14,3 +14,12 @@ void prin1(void)
 	printf("in function prin1(): %d\n", i);
 	i++;
 }
+
+/*
+in function prin1(): 1
+in function prin1(): 2
+in function prin1(): 3
+in function prin1(): 4
+in function prin1(): 5
+in function prin1(): 6
+*/
