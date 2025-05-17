@@ -24,3 +24,10 @@ int min_int(int a, int b)
 	}
 	return min;
 }
+
+/*
+Enter two integer values.
+integer a:60
+integer b:97
+The smaller value is 60
+*/

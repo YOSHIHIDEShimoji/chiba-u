@@ -19,3 +19,9 @@ int pw(int a, int b)
 	}
 	return value;
 }
+
+/*
+x = 6
+y = 8
+6 ^ 8 = 1679616
+*/

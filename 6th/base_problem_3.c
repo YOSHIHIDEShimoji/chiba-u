@@ -18,3 +18,8 @@ int main(void)
 	return 0;
 	
 }
+
+/*
+input char:G
+GHIJKLMNOPGHIJKLMNOPGHIJKLMNOPGHIJKLMNOPGHIJKLMNOP
+*/

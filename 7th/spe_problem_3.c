@@ -14,3 +14,8 @@ int pw3(int i)
 {
 	return i * i * i;
 }
+
+/*
+x = 6
+the third power of 6 = 216
+*/
