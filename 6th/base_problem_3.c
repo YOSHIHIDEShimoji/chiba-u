@@ -7,7 +7,7 @@ int main(void)
 	printf("input char:");
 	scanf("%c", &c);
 
-	if (32 <= c && c <= 126) {
+	if (32 <= c && c <= 117) {
 		for (i = 0; i < 5; i++) {
 			for (j = 0; j < 10; j++) {
 				c2[j] = c + j;
