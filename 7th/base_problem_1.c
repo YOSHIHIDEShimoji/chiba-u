@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 void prin0(int a);
 
 int main(void)
