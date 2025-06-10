@@ -13,3 +13,10 @@ int main(void)
 
 	return 0;
 }
+
+/*
+num1 = 1
+num2 = 2
+num1 = 1
+num2 = 5
+*/

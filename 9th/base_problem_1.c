@@ -3,6 +3,10 @@
 int main(void)
 {
 	int x;
-	printf("アドレスは%pです。値は%dです。\n", &x, x);
+	printf("The address is %p. The value is %d.\n", &x, x);
 	return 0;
 }
+
+/*
+The address is 0x7fffba7702ec. The value is 30788.
+*/
