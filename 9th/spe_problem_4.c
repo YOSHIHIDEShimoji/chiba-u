@@ -14,3 +14,7 @@ int main(void)
 	
 	return 0;
 }
+
+/*x = 1	y = 23
+x = 23	y = 1
+*/

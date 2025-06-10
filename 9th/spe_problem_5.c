@@ -12,3 +12,10 @@ int main(void)
 		ptr++;
 	}
 }
+
+/*
+Address of x: 0x7ffddb08a7d0
+Address of array[0]: 0x7ffddb08a7c4
+Address of array[1]: 0x7ffddb08a7c8
+Address of array[2]: 0x7ffddb08a7cc
+*/
