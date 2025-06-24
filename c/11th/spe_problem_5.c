@@ -6,7 +6,6 @@ int count_n(char str[]);
 int main(void)
 {
 	char s[100];
-	int number;
 	printf("文字列は？：");
 	scanf("%s%*c", s);
 	reverse(s);
