@@ -18,3 +18,8 @@ void waseki(int *a, int *b)
 	*b = *a * *b;
 	*a = wa;
 }
+
+/*
+x = 5, y = 2
+x = 7, y = 10
+*/
