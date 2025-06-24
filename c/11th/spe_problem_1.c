@@ -7,3 +7,8 @@ int main(void)
 	printf("学科 = %s\n", s);
 	return 0;
 }
+
+/*
+配列の先頭アドレス = 0x7ffed1627371
+学科 = medsys
+*/

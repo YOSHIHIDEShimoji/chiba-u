@@ -21,3 +21,9 @@ void print_n(char str[], int number)
 	}
 	printf("\n");
 }
+
+/*
+文字列は？：Medsys
+繰り返し回数は？：4
+MedsysMedsysMedsysMedsys
+*/

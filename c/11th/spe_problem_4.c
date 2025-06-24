@@ -26,3 +26,9 @@ int count_c(char str[], char c)
 	}
 	return n;
 }
+
+/*
+文字列は？：Medsys
+探す文字は？：s
+文字sはMedsysの中に2こあります
+*/

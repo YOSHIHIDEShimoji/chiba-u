@@ -10,3 +10,10 @@ int main(void)
 	printf("aはbの%d%です.\n", wariai);
 	return 0;
 }
+
+/*
+２つの整数値を入力して下さい.
+整数a: 12
+整数b: 23
+aはbの52%です.
+*/

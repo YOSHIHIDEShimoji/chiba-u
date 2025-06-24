@@ -34,3 +34,8 @@ int count_n(char str[])
 	}
 	return n;
 }
+
+/*
+文字列は？：Medsys
+sysdeM
+*/
