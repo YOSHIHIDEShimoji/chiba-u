@@ -10,16 +10,17 @@ int main(void)
 	printf("文字列は？：");
 	scanf("%s%*c", s);
 	reverse(s);
+	return 0;
 }
 
 void reverse(char str[])
 {
-	int m;
-	m = count_n(str);
-	char ss[m];
-	for (int i = 0; i < m / 2; i++) {
-		ss[m] = str[i];
+	int m = count_n(str);
+	char ss[100];
+	for (int i = 0; i < m; i++) {
+		ss[i] = str[m - 1 - i];
 	}
+	ss[m] = '\0';
 	printf("%s\n", ss);
 	
 }
