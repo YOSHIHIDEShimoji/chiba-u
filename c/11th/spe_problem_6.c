@@ -33,5 +33,4 @@ int compare(char str1[], char str2[])
 １つ目の文字列は？：Medsys
 ２つ目の文字列は？：medsys
 0
-yshim
 */
