@@ -20,3 +20,8 @@ int main(void)
 
 	return 0;
 }
+
+/*
+Enter the strings: Shimoji
+ijomihS
+*/

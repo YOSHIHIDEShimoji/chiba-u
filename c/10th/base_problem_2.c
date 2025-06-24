@@ -17,3 +17,7 @@ void hyouji(int *a, int b)
 	}
 	printf("総和 = %d\n", wa);
 }
+
+/*
+総和 = 22
+*/
