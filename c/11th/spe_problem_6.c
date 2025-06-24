@@ -28,3 +28,10 @@ int compare(char str1[], char str2[])
 	}
 	return 1;
 }
+
+/*
+１つ目の文字列は？：Medsys
+２つ目の文字列は？：medsys
+0
+yshim
+*/
