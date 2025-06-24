@@ -4,14 +4,14 @@ int count_c(char str[], char c);
 
 int main(void)
 {
-	char s[100], c[1];
+	char s[100], c;
 	int number;
 	printf("文字列は？：");
 	scanf("%s%*c", s);
 	printf("探す文字は？：");
-	scanf("%s%*c", c);
-	number = count_c(s, c[1]);
-	printf("文字%cは%sの中に%dこあります\n", c[1], s, number);
+	scanf("%c", &c);
+	number = count_c(s, c);
+	printf("文字%cは%sの中に%dこあります\n", c, s, number);
 	return 0;
 }
 
