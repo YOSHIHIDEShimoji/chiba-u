@@ -17,3 +17,8 @@ int main(void)
 	printf("Mother's name = %s\n", p0.mother->name);
 	printf("Father's name = %s\n", p0.mother->partner->name);
 }
+
+/*
+Mother's name = Hanako
+Father's name = Hiroshi
+*/

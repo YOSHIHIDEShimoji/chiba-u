@@ -8,3 +8,7 @@ int main(void)
 	putsd(x);
 	return 0;
 }
+
+/*
+123
+*/

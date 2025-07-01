@@ -21,3 +21,8 @@ struct vector v_2bai(struct vector v)
 	v.y *= 2;
 	return v;	
 }
+
+/*
+a = (1, 2)
+b = (2, 4)
+*/
