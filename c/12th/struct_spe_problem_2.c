@@ -23,3 +23,7 @@ int InnerProduct(struct vector v1, struct vector v2)
 {
     return v1.x * v2.x + v1.y * v2.y;
 }
+
+/*
+Inner product of a and b = 24
+*/

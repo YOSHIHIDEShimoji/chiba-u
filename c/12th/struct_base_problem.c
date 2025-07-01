@@ -1,22 +1,26 @@
 #include <stdio.h>
 
-struct xydate
+struct xydata
 {
 	int x, y;
 };
 
-void seki(struct xydate date);
+void seki(struct xydata data);
 
 int main(void)
 {
-	struct xydate hoge;
+	struct xydata hoge;
 	hoge.x = 10;
 	hoge.y = 11;
 	seki(hoge);
 	return 0;
 }
 
-void seki(struct xydate date)
+void seki(struct xydata data)
 {
-	printf("%d\n", date.x * date.y);
+	printf("%d\n", data.x * data.y);
 }
+
+/*
+110
+*/
