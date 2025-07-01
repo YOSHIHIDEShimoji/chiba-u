@@ -898,3 +898,279 @@ main()
 }
 ```
 
+## 11章
+
+### 整数を格納する変数xに適当な値を代入し,その値を画面表示するフログラムを作成せよ
+```c
+#include <stdio.h>
+int main(void)
+{
+	int x;
+	x = 123;
+	printf("変数の値は%dです\n", x);
+	return 0;
+}
+```
+
+### キーボードから入力した2つの整数値の席を表示するプログラムを作成せよ。
+```c
+#include <stdio.h>
+
+int main(void)
+{
+	int a, b, seki;
+	printf("２つの整数値を入力して下さい.\n");
+	printf("整数a: ");	scanf("%d", &a);
+	printf("整数b: ");	scanf("%d", &b);
+	seki = a * b;
+	printf("２つの整数値の積の値は%dです.\n", seki);
+	return 0;
+}
+```
+
+### 2つの整数値の前者が後者の何%か（小数点以下切り捨て）を表示するプログラムを作成せよ。
+```c
+#include <stdio.h>
+
+int main(void)
+{
+	int a, b, wariai;
+	printf("２つの整数値を入力して下さい.\n");
+	printf("整数a: ");	scanf("%d", &a);
+	printf("整数b: ");	scanf("%d", &b);
+	wariai = 100 * a / b;
+	printf("aはbの%d%%です.\n", wariai);
+	return 0;
+}
+```
+
+### cmの単位で読み込んだ長さを、インチに変換した値を表示するプログラムを作成せよ。
+```c
+#include <stdio.h>
+
+int main(void)
+{
+	double cm;
+	printf("長さをcmで入力して下さい: ");
+	scanf("%lf", &cm);
+	printf("それは%fインチです.\n", cm / 2.54);
+	return 0;
+}
+```
+
+### 読み込んだ整数値が10の倍数であるかどうかを表示するプログラムを作成せよ。
+```c
+#include <stdio.h>
+
+int main(void)
+{
+	int x;
+	printf("整数値を入力して下さい: ");
+	scanf("%d", &x);
+	if (x % 10)
+		printf("%dは10の倍数ではありません.\n", x);
+	else
+		printf("%dは10の倍数です.\n", x);
+	return 0;
+}
+```
+
+### 読み込んだ整数値まで、1から順番にスペースで間を空けて表示するプログラムを作成せよ。
+```c
+#include <stdio.h>
+
+int main(void)
+{
+	int x, i;
+	printf("整数値を入力して下さい: ");
+	scanf("%d", &x);
+	for (i = 1; i <= x; i++)
+		printf("%d ", i);
+	printf("\n");
+	return 0;
+}
+```
+
+### 読み込んだ整数の段数を持つピラミッドを表示するプログラムを作成せよ。
+```c
+int main(void)
+{
+	int i, j, h;
+	printf("ピラミッドの段数を入力してください: ");
+	scnaf("%d", &h);
+	for (i = 1; i <= h; i++) {
+		for (j = 1; <= h - i; j++)
+			printf(" ");
+		for (j = 1; j <= i * 2 - 1; j++)
+			printf("*");
+		printf("\n");
+	}
+	return 0;
+}
+```
+
+### 要素数が5のint型配列の先頭から順に5, 4, 3, 2, 1で初期化し、各要素を表示するプログラムを作成せよ。
+```c
+#include <stdio.h>
+
+int main(void)
+{
+	int i, a[5] = {5, 4, 3, 2, 1};
+	for (i = 0; i < 5; i++)
+		printf("a[%d] = %d\n", i, a[i]);
+	return 0;
+}
+```
+
+### "medsys"を初期値とするchar型の配列を定義し、文字配列の先頭アドレスと文字配列に保存された内容を表示するプログラムを作成せよ。
+```c
+#include <stdio.h>
+
+int main(void)
+{
+	char str[] = "medsys";
+	printf("配列の先頭アドレス = %p\n", str);
+	printf("学科 = %s\n", str);
+	return 0;
+}
+```
+
+### 文字列を指定回数繰りし表示する関数を定義し、プログラムを作成せよ。
+```c
+#include <stdio.h>
+
+void print_n(char str[], int number);
+
+int main(void)
+{
+	char s[128];
+	int number;
+	printf("文字列は？：");
+	scanf("%s", str);
+	printf("繰り返し回数は？：");
+	scanf("%d", &number);
+	print_n(str, number);
+	return 0;
+}
+
+void print_n(char str[], int number)
+{
+	while (number-- > 0)
+		printf("%s", str);
+}
+```
+
+### 文字列の文字数（ヌル文字を除く）を数える関数を定義し、プログラムを作成せよ
+```c
+
+```
+
+### 
+```c
+
+```
+
+###
+```c
+
+```
+###
+```c
+
+```###
+```c
+
+```
+
+###
+```c
+
+```
+###
+```c
+
+```###
+```c
+
+```
+
+###
+```c
+
+```
+###
+```c
+
+```###
+```c
+
+```
+
+###
+```c
+
+```
+###
+```c
+
+```###
+```c
+
+```
+
+###
+```c
+
+```
+###
+```c
+
+```###
+```c
+
+```
+
+###
+```c
+
+```
+###
+```c
+
+```###
+```c
+
+```
+
+###
+```c
+
+```
+###
+```c
+
+```###
+```c
+
+```
+
+###
+```c
+
+```
+###
+```c
+
+```###
+```c
+
+```
+
+###
+```c
+
+```
+###
+```c
+
+```
