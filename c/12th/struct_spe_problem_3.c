@@ -1,14 +1,13 @@
 #include <stdio.h>
 
-struct person
-{
+struct person {
 	char name[10];
 	struct person *partner;
 	struct person *child;
 	struct person *mother;
-} p0 = {"Taro", (struct person *) 0, (struct person *) 0, (struct person *) 0},
-  p1 = {"Hanako", (struct person *) 0, &p0, (struct person *) 0},
-  p2 = {"Hiroshi", &p1, &p0, (struct person *) 0};
+} p0 = {"Taro", NULL, NULL, NULL},
+  p1 = {"Hanako", NULL, &p0, NULL},
+  p2 = {"Hiroshi", &p1, &p0, NULL};
 
 int main(void)
 {

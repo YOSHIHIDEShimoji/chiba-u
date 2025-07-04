@@ -1,0 +1,24 @@
+BasedOnStyle: LLVM
+
+UseTab: ForIndentation
+IndentWidth: 4
+TabWidth: 4
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true          # 関数の後は改行（Allmanスタイル）
+  AfterStruct: false           # struct の { は同じ行
+  AfterControlStatement: false  # if, while などの { は同じ行
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+
+SpaceBeforeParens: ControlStatements  # if () の前はスペース、関数名の後はなし
+
+AllowShortFunctionsOnASingleLine: InlineOnly
+
+IncludeBlocks: Preserve
+SortIncludes: true
+
+AlignConsecutiveDeclarations: false
+EmptyLineBeforeAccessModifier: Always
+SeparateDefinitionBlocks: Always
