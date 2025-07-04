@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="UTF-8">
+	<title>メモリ可視化（16進数アドレス）</title>
+	<style>
+		body {
+			font-family: monospace;
+			padding: 20px;
+			background: #f5f5f5;
+		}
+
+		.memory-grid {
+			display: grid;
+			grid-template-columns: 120px repeat(8, 30px);
+			gap: 4px;
+			margin-bottom: 8px;
+		}
+
+		.address {
+			background-color: #333;
+			color: white;
+			text-align: right;
+			padding-right: 8px;
+			line-height: 30px;
+		}
+
+		.cell {
+			width: 30px;
+			height: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: bold;
+			border: 1px solid #999;
+		}
+
+		.bit-0 {
+			background-color: white;
+			color: #555;
+		}
+
+		.bit-1 {
+			background-color: #4caf50;
+			color: white;
+		}
+	</style>
+</head>
+
+<body>
+
+	<h2>メモリ可視化（16進数アドレス）</h2>
+
+	<div class="memory-grid">
+		<div class="address">0x393A00FC</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+	</div>
+	<div class="memory-grid">
+		<div class="address">0x393A00FD</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+	</div>
+	<div class="memory-grid">
+		<div class="address">0x393A00FE</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-1">1</div>
+	</div>
+	<div class="memory-grid">
+		<div class="address">0x393A00FF</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+	</div>
+	<div class="memory-grid">
+		<div class="address">0x393A0100</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+	</div>
+	<div class="memory-grid">
+		<div class="address">0x393A0101</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-1">1</div>
+	</div>
+	<div class="memory-grid">
+		<div class="address">0x393A0102</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+	</div>
+	<div class="memory-grid">
+		<div class="address">0x393A0103</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-0">0</div>
+		<div class="cell bit-1">1</div>
+	</div>
+
+</body>
+
+</html>

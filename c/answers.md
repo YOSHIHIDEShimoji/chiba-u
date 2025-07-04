@@ -1,5 +1,6 @@
 '''# 目次
 
+- [0章](#0章)
 - [1章](#1章)
 - [2章](#2章)
 - [3章](#3章)
@@ -11,6 +12,10 @@
 - [9章](#9章)
 - [10章](#10章)
 - [11章](#11章)
+
+## 0章　メモリの構造
+
+![メモリの写真](image.png)
 
 ## 1章
 
@@ -64,8 +69,7 @@ int main(void)
 {
     double x;
     for (x = 1.0; x <= 7.0; x++) {
-        printf("6.0/%f=%f 
-", x, 6.0 / x);
+        printf("6.0/%f=%f", x, 6.0 / x);
     }
     return 0;
 }
@@ -827,7 +831,7 @@ int main(void)
 
 void prin0(int x)
 {
-    printf(" Input no. = %d ", x);
+    printf("Input no. = %d ", x);
 }
 ```
 
@@ -1419,4 +1423,3 @@ int str_length(char str[])
     return len;
 }
 ```
-''
