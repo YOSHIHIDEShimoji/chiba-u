@@ -24,3 +24,9 @@ int main(void)
 	printf("chars = %d\nlines = %d\n", count_char, count_line);
 	return 0;
 }
+
+/*
+input filename = test.txt
+chars = 11
+lines = 2
+*/

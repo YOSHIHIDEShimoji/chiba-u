@@ -35,3 +35,21 @@ int main(void)
 	}
 	return 0;
 }
+
+/*
+record2[0].c = a
+record2[0].i = -1024
+record2[0].f = 0.000320
+record2[0].s = Hello
+
+record2[1].c = b
+record2[1].i = 1023
+record2[1].f = 5900.000000
+record2[1].s = Good bye
+
+record2[2].c = c
+record2[2].i = 528
+record2[2].f = 0.000130
+record2[2].s = why?
+
+*/
