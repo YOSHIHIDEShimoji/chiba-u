@@ -2,8 +2,8 @@
 #include <string.h>
 
 struct sample {
-	int i;
 	char c;
+	int i;
 	float f;
 	char s[30];
 };
@@ -11,23 +11,27 @@ struct sample {
 int main(void)
 {
 	FILE *file;
-	struct sample record1, record2;
-	record1.c = 'a';
-	record1.i = -1024;
-	record1.f = 3.2e-4;
-	strcpy(record1.s, "Hello");
+	struct sample record1[3] = {
+		{'a', -1024, 3.2e-4, "Hello"},
+		{'b', 1023, 5.9e3, "Good bye"},
+		{'c', 528, 1.3e-4, "why?"}
+	};
+
+	struct sample record2[3];
 
 	file = fopen("temp6.dat", "wb");
-	fwrite((char *)&record1, sizeof(struct sample), 1, file);
+	fwrite((char *)&record1, sizeof(struct sample), 3, file);
 	fclose(file);
 	
 	file = fopen("temp6.dat", "rb");
-	fread((char *)&record2, sizeof(struct sample), 1, file);
+	fread((char *)&record2, sizeof(struct sample), 3, file);
 
-	printf("record2.c = %c\n", record2.c);
-	printf("record2.i = %d\n", record2.i);
-	printf("record2.f = %f\n", record2.f);
-	printf("record2.s = %s\n", record2.s);
-
+	for(int i = 0; i < 3; i++) {
+		printf("record2[%d].c = %c\n", i, record2[i].c);
+		printf("record2[%d].i = %d\n", i, record2[i].i);
+		printf("record2[%d].f = %f\n", i, record2[i].f);
+		printf("record2[%d].s = %s\n", i, record2[i].s);
+		printf("\n");
+	}
 	return 0;
 }
