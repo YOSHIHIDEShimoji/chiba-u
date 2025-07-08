@@ -1,1 +1,53 @@
+# === C言語関連 ===
+
+# コンパイル結果
+*.o
+*.out
+*.exe
+*.a
+*.so
 **/build/
+
+# デバッグ情報
+*.dSYM/
+*.map
+*.obj
+
+# バイナリデータ
+*.dat
+*.bin
+*.log
+*.tmp
+
+# coreダンプファイル
+core
+
+# === Python関連 ===
+
+# Pythonバイトコード
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 仮想環境（venvなど）
+venv/
+env/
+.venv/
+ENV/
+.pip-cache/
+.python-version
+
+# Jupyter Notebook チェックポイント
+.ipynb_checkpoints/
+
+# その他
+*.sqlite3
+*.db
+.DS_Store
+
+# === VSCode 設定 ===（使ってる場合）
+.vscode/
+
+# === 一時ファイル ===
+*.swp
+*~
