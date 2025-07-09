@@ -4,9 +4,9 @@
 int main(void)
 {
 	FILE *infile = fopen("inputdata.txt", "r"), 
-		 *outfile = fopen("outputdata.csb", "w");	
-	char s[40], ts[15], as[15];
-	double time[51], signal_A[51], signal_B[51];
+		 *outfile = fopen("outputdata.csv", "w");	
+	char s[40], ts[15], as[15], bs[15];
+	double time[51], a, b, c, d;
 
 
 	if (infile == NULL) {
@@ -14,35 +14,48 @@ int main(void)
 		exit (1);
 	}
 
-	// time[51]の設定
 	fgets(s, 39, infile);
 	int t;
 	for (t = 0; t < 51; t++) {
 		fgets(s, 39, infile);
-		int i, j;
-		for (i = 0, j = 0; s[i] != '\t'; i++, j++) {
-			ts[i] = s[i];
+
+		int i = 0, j = 0;
+
+		while (s[i] != '\t') {
+			ts[j] = s[i];
+			i++;	j++; 
 		}
-		ts[i] = '\0';
+		ts[j] = '\0';
 		time[t] = atof(ts);
 		// printf("%f\n", time[t]);
-	}
-
-	
-	// signal_A[51]の設定
-	fseek(infile, 0, 0);
-	fgets(s, 39, infile);
-	int a;
-	for (a = 0; a < 51; a++) {
-		fgets(s, 39, infile);
-		int i, j;
-		for (i = 0, j = 0; s[i] != '\t'; i++, j++) {
-			as[i] = s[i];
+		
+		i++;	j = 0;
+		while (s[i] != '\t') {
+			as[j] = s[i];
+			i++;	j++;
 		}
-		as[i] = '\0';
-		signal_A[a] = atof(as);
-		printf("%f\n", signal_A[a]);
-	}
+		as[j] = '\0';
+		a = atof(as);
+		// printf("%f\n", a);
 
+		i++;	j = 0;
+		while (s[i] != '\0') {
+			bs[j] = s[i];
+			i++;	j++;
+		}
+		bs[j] = '\0';
+		b = atof(bs);
+		// printf("%f\n", b);
+
+		c = a + b;
+		d = a * a + b * b;
+
+		// printf("%f,%f,%f\n", time[t], c, d);
+		fprintf(outfile, "%f,%f,%f\n", time[t], c, d);
+	}
+	
+	fclose(infile);
+	fclose(outfile);
+	return 0;
 }
 
