@@ -1,8 +1,17 @@
+/*
+Advanced Computer Programming I
+24TB4039
+Yoshihide Shimoji
+2025/07/15
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(void)
 {
+	printf("24TB4039\nYoshihide Shimoji\n");
+
 	FILE *infile = fopen("inputdata.txt", "r"), 
 		 *outfile = fopen("outputdata.csv", "w");	
 	char s[40], ts[15], as[15], bs[15];
@@ -27,7 +36,6 @@ int main(void)
 		}
 		ts[j] = '\0';
 		time[t] = atof(ts);
-		// printf("%f\n", time[t]);
 		
 		i++;	j = 0;
 		while (s[i] != '\t') {
@@ -36,7 +44,6 @@ int main(void)
 		}
 		as[j] = '\0';
 		a = atof(as);
-		// printf("%f\n", a);
 
 		i++;	j = 0;
 		while (s[i] != '\0') {
@@ -45,12 +52,10 @@ int main(void)
 		}
 		bs[j] = '\0';
 		b = atof(bs);
-		// printf("%f\n", b);
 
 		c = a + b;
 		d = a * a + b * b;
 
-		// printf("%f,%f,%f\n", time[t], c, d);
 		fprintf(outfile, "%f,%f,%f\n", time[t], c, d);
 	}
 	
