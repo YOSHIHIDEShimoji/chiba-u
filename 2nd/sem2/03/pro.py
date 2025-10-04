@@ -5,7 +5,6 @@ def bubble_sort(l):
         for j in range(len(l) - 1):
            if l[j] > l[j + 1]:
                l[j], l[j + 1] = l[j + 1], l[j]
-               j += 1
 
 def main():
     l = []
@@ -18,5 +17,3 @@ def main():
     
 if __name__ == '__main__':
     main()
-
-    
