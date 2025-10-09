@@ -3,9 +3,6 @@
 
 #define BUF_SIZE 256
 
-void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[]);
-
-
 int main()
 {
     /* open file */
@@ -35,40 +32,35 @@ int main()
         resp_ary[i] = resp;
     }
 
-    /* find i between 1000 and 1100 */
-    int count = 0;
+    /* calculation, print, free */
+    double rate, max = 0, min = 0, mean, sum;
+    
+    /* sampling rate */
+    rate = (N - 1) * 1000.0 / (etime_ary[N - 1] - etime_ary[0]);
+
+    /* max and min */
+    min = max = resp_ary[0];
+    for (int i = 1; i < N; i++) {
+        if (resp_ary[i] < min) min = resp_ary[i];
+        if (resp_ary[i] > max) max = resp_ary[i];
+    }     
+    
+    /* mean */
     for (int i = 0; i < N; i++) {
-        if (1000 <= etime_ary[i] && etime_ary[i] <= 1100) {
-            count++;
-        }
+        sum += resp_ary[i];
     }
+    mean = sum / N;
 
-    /* define array */
-    float *resp_ma;
-    resp_ma = (float *)malloc(sizeof(float) * count);
+    /* print and free */
+    printf("sampling rate = %f\n", rate);
+    printf("max = %f\n", max);
+    printf("min = %f\n", min);
+    printf("mean = %f\n", mean);
 
-    /* define index */
-    printf("etime\tresp_ma\n");
-
-    for (int i = 0; i < N; i++) {
-        if (1000 <= etime_ary[i] && etime_ary[i] <= 1100) {
-            cal_resp_ma(i, resp_ary, resp_ma, etime_ary);
-        }
-    }
-
-    /* free */
     free(etime_ary);
     free(resp_ary);
-    free(resp_ma);
     
     /* ending */
     fclose(fp);
     return 0;
-}
-
-void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[])
-{
-    resp_ma[i] = 1.0 / 5.0 * (resp_ary[i] + resp_ary[i - 1] + resp_ary[i - 2] + resp_ary[i - 3] + resp_ary[i - 4]);
-    printf("%d\t%f\n", etime_ary[i], resp_ma[i]);
-
 }
