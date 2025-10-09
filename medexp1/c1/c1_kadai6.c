@@ -51,16 +51,28 @@ int main()
     }
 
     /* cal timing */
-    double timing;
+    double timing, t[100];
+    int count = 0;
     for (int i = 4; i < N - 1; i++) {
         if (resp_ma[i] > mean && mean >= resp_ma[i + 1]) {
-            // printf("%d\n", i);
             timing = 1.0 / 2.0 * (etime_ary[i] + etime_ary[i + 1]);
-            printf("%fms\n", timing);
+            t[count] = timing;
+            count++;
         }   
     }
 
-    /* free */
+    /* cal T */
+    double T, tmp = 0, bpm;
+    for (int i = 0; i < count - 1; i++) {
+        tmp += t[i + 1] - t[i];
+    }
+    T = tmp / (count - 1);
+    bpm = 60.0 * 1000.0 / T;
+
+    printf("T = %fms\n", T);
+    printf("n = %fbpm\n", bpm);
+
+    /* free */    
     free(etime_ary);
     free(resp_ary);
     free(resp_ma);
