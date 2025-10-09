@@ -70,5 +70,4 @@ void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[])
 {
     resp_ma[i] = 1.0 / 5.0 * (resp_ary[i] + resp_ary[i - 1] + resp_ary[i - 2] + resp_ary[i - 3] + resp_ary[i - 4]);
     printf("%d\t%f\n", etime_ary[i], resp_ma[i]);
-
 }
