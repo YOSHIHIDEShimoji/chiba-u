@@ -10,8 +10,7 @@ print(f'max: {max(num)}')
 print(f'min: {min(num)}')
     
 
-# こっちでもいい
-
+# こっちでもいい_1
 # is_first = True
 
 # for _ in range(10):
@@ -28,3 +27,17 @@ print(f'min: {min(num)}')
 # print(f'max: {max}')
 # print(f'min: {min}')
 
+
+# こっちでもいい_2
+# value = int(input('Input an integer: '))
+# max_value = min_value = value
+
+# for _ in range(9):
+#     value = int(input('Input an integer: '))
+#     if value > max_value:
+#         max_value = value
+#     if value < min_value:
+#         min_value = value
+
+# print(f'max: {max_value}')
+# print(f'min: {min_value}')
