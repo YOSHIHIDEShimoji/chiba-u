@@ -2,9 +2,9 @@
 #include <stdlib.h>
 
 #define BUF_SIZE 256
+#define M 5
 
 void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[]);
-
 
 int main()
 {
@@ -45,13 +45,15 @@ int main()
 
     /* define array */
     float *resp_ma;
-    resp_ma = (float *)malloc(sizeof(float) * count);
+    /* ← ここだけ変更：添字は i(0..N-1) を使うので N で確保 */
+    resp_ma = (float *)malloc(sizeof(float) * N);
 
     /* define index */
     printf("etime\tresp_ma\n");
 
     for (int i = 0; i < N; i++) {
-        if (1000 <= etime_ary[i] && etime_ary[i] <= 1100) {
+        /* ← ここだけ変更：窓幅 M を満たすインデックスだけ計算 */
+        if (i >= M - 1 && 1000 <= etime_ary[i] && etime_ary[i] <= 1100) {
             cal_resp_ma(i, resp_ary, resp_ma, etime_ary);
         }
     }
@@ -68,6 +70,12 @@ int main()
 
 void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[])
 {
-    resp_ma[i] = 1.0 / 5.0 * (resp_ary[i] + resp_ary[i - 1] + resp_ary[i - 2] + resp_ary[i - 3] + resp_ary[i - 4]);
+    /* ← ここだけ変更：M に対応するループで合計を作る */
+    long sum = 0;
+    for (int k = 0; k < M; k++) {
+        sum += resp_ary[i - k];
+    }
+    resp_ma[i] = (float)sum / (float)M;
+
     printf("%d\t%f\n", etime_ary[i], resp_ma[i]);
 }

@@ -54,7 +54,7 @@ int main()
     double timing;
     for (int i = 4; i < N - 1; i++) {
         if (resp_ma[i] > mean && mean >= resp_ma[i + 1]) {
-            // printf("%d\n", i);
+            // printf("debug: i = %d\n", i);
             timing = 1.0 / 2.0 * (etime_ary[i] + etime_ary[i + 1]);
             printf("%fms\n", timing);
         }   
