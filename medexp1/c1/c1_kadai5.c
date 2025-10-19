@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #define BUF_SIZE 256
+#define M 5
 
 void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[]);
 
@@ -46,21 +47,17 @@ int main()
     resp_ma = (float *)malloc(sizeof(float) * N);
 
     /* cal resp_ma */
-    for (int i = 4; i <= N - 1; i++) {
+    for (int i = M - 1; i <= N - 1; i++) {
         cal_resp_ma(i, resp_ary, resp_ma, etime_ary);
     }
 
     /* cal timing */
     double timing;
-    for (int i = 4; i < N - 1; i++) {
+    for (int i = M - 1; i < N - 1; i++) {
         if (resp_ma[i] > mean && mean >= resp_ma[i + 1]) {
             // printf("debug: i = %d\n", i);
             timing = etime_ary[i] + (mean - resp_ma[i]) / (resp_ma[i + 1] - resp_ma[i]) * (etime_ary[i + 1] - etime_ary[i]);
             printf("%fms\n", timing);
-            // printf("i = %d\ttime = %d\n" ,i, etime_ary[i]);
-            // printf("i = %d\ttime = %d\n" ,i + 1, etime_ary[i + 1]);
-            // printf("###########\n");
-
         }   
     }
 
@@ -76,5 +73,9 @@ int main()
 
 void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[])
 {
-    resp_ma[i] = 1.0 / 5.0 * (resp_ary[i] + resp_ary[i - 1] + resp_ary[i - 2] + resp_ary[i - 3] + resp_ary[i - 4]);
+    float sum = 0;
+    for (int k = 0; k < M; k++) {
+        sum += resp_ary[i - k];
+    }
+    resp_ma[i] = sum / M;
 }

@@ -124,23 +124,31 @@ int main(int argc, char **argv)
     }
 
     /* 課題6: 交差時刻の周期 -> 平均周期 -> 呼吸数(bpm) */
-    int P = (C >= 2) ? (C - 1) : 0;
-    double Tsum = 0.0;
+    double Tlist[8];   /* 最大8周期ぶん保持（平均は指導書どおり最大8周期で計算） */
     int use = 0;
-    for (int i = 1; i < C; i++) {
-        double T = cross[i] - cross[i - 1]; // ms
-        if (T > 0) {
-            Tsum += T;
-            use++;
-            if (use == 8) break; // 指導書「8回の呼吸周期の平均」を優先
+
+    /* 交差時刻 cross[0..C-1] から隣接差を周期として取得（ms） */
+    for (int i = 1; i < C && use < 8; i++) {
+        double T = cross[i] - cross[i - 1];  /* ms */
+        if (T > 0.0) {
+            Tlist[use++] = T;
         }
     }
+
+    /* 1回目〜7回目を個別に表示（存在するところまで） */
+    printf("=== Kadai 6 ===\n");
+    int show = (use < 7) ? use : 7;
+    for (int i = 0; i < show; i++) {
+        printf("T%d = %.6f ms\n", i + 1, Tlist[i]);
+    }
+
+    /* 平均周期（最大8周期で平均）と呼吸数 */
+    double Tsum = 0.0;
+    for (int i = 0; i < use; i++) Tsum += Tlist[i];
     double Tmean_ms = (use > 0) ? (Tsum / (double)use) : 0.0;
     double bpm = (Tmean_ms > 0.0) ? (60000.0 / Tmean_ms) : 0.0;
 
-    printf("=== Kadai 6 ===\n");
-    printf("cycles_used=%d, mean_period=%.6f ms, respiratory_rate=%.6f bpm\n",
-           use, Tmean_ms, bpm);
+    printf("cycles_used=%d, mean_period=%.6f ms, respiratory_rate=%.6f bpm\n", use, Tmean_ms, bpm);
 
     /* 後始末 */
     free(ma);
