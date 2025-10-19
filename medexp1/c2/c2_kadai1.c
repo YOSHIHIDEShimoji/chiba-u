@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define BUF_SIZE 256
 #define MAX_PEAK_NUM 6
 
 float *movingAverage(float *signal, int length, int K)
@@ -22,12 +23,13 @@ float *movingAverage(float *signal, int length, int K)
 
         for (int j=i-K; j<=i+K; j++)
         {
-            /* 条件式を設定すること */
+            /*
             if (jが配列の範囲内かどうかの判定)
             {
                 sum += signal[j];
                 count++;
-            }    
+            }  
+            */  
         }
         averagedSignal[i] = sum / count;
     }
@@ -43,6 +45,32 @@ int main(int argc, char **argv)
     float* otime = NULL;
     float* signal = NULL;
 
+    /* open file */
+    FILE *fp = fopen("ecg4000.txt", "r");
+    if (fp == NULL) {
+        printf("Can't open data file.\n");
+        return 1;
+    }
+
+    /* define dataLength */
+    char buf[BUF_SIZE];
+    fgets(buf, BUF_SIZE - 1, fp);
+    sscanf(buf, "%d\n", &dataLength);
+    // printf("%d\n",dataLength);
+
+    /* define array */
+    otime = (float *)malloc(sizeof(float) * dataLength);
+    signal = (float *)malloc(sizeof(float) * dataLength);
+
+    float otime_value = 0;
+    float signal_value = 0;
+    for (int i = 0; i < dataLength; i++) {
+        fgets(buf, BUF_SIZE - 1, fp);
+        sscanf(buf, "%f,%f\n", &otime_value, &signal_value);
+        otime[i] = otime_value;
+        signal[i] = signal_value;
+        printf("otime[%d] = %f\tsignal[%d] = %f\n", i, otime[i], i, signal[i]);
+    }
 
     /* 課題2: 移動平均処理の適用 */
     int K = 1;
