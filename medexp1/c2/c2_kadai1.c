@@ -79,5 +79,9 @@ int main(int argc, char **argv)
 
     /* 課題3: ピーク処理の検出 */
 
+    /* ending */
+    fclose(fp);
+    free(otime);
+    free(signal);
     return 0;
 }
