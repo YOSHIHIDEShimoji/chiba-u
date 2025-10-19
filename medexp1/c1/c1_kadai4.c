@@ -52,7 +52,6 @@ int main()
     printf("etime\tresp_ma\n");
 
     for (int i = 0; i < N; i++) {
-        /* ← ここだけ変更：窓幅 M を満たすインデックスだけ計算 */
         if (i >= M - 1 && 1000 <= etime_ary[i] && etime_ary[i] <= 1100) {
             cal_resp_ma(i, resp_ary, resp_ma, etime_ary);
         }
@@ -70,7 +69,6 @@ int main()
 
 void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[])
 {
-    /* ← ここだけ変更：M に対応するループで合計を作る */
     long sum = 0;
     for (int k = 0; k < M; k++) {
         sum += resp_ary[i - k];
