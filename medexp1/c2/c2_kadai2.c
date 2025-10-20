@@ -26,10 +26,9 @@ float *movingAverage(float *signal, int length, int K)
                 sum += signal[j];
                 count++;
             }
-            
         }
         averagedSignal[i] = sum / count;
-        printf("%f\n", averagedSignal[i]);
+        // printf("%f\n", averagedSignal[i]);
     }
 
     return averagedSignal;
@@ -54,7 +53,6 @@ int main(int argc, char **argv)
     char buf[BUF_SIZE];
     fgets(buf, BUF_SIZE - 1, fp);
     sscanf(buf, "%d\n", &dataLength);
-    // printf("%d\n",dataLength);
 
     /* define array */
     otime = (float *)malloc(sizeof(float) * dataLength);
