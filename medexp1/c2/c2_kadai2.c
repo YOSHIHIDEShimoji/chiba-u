@@ -28,7 +28,7 @@ float *movingAverage(float *signal, int length, int K)
             }
         }
         averagedSignal[i] = sum / count;
-        // printf("%f\n", averagedSignal[i]);
+        printf("%f\n", averagedSignal[i]);
     }
 
     return averagedSignal;
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
     if (argc >= 2) {
         K = atoi(argv[1]);
     } else {
-        printf("移動平均のサイズ K を入力してください\n");
+        printf("移動平均のサイズ K を引数として指定してください\n");
     }
     
     float *averagedSignal = movingAverage(signal, dataLength, K);
