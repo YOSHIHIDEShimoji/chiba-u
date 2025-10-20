@@ -14,24 +14,22 @@
 float *movingAverage(float *signal, int length, int K)
 {
     /* NULLの代わりにmallocで動的配列を宣言すること*/
-    float* averagedSignal = NULL;
+    float* averagedSignal = (float *)malloc(sizeof(float) * length);
 
-    for (int i = 0; i < length; i++)
-    {
+    for (int i = 0; i < length; i++) {
         float sum = 0.0;
         float count = 0.0;
 
-        for (int j = i - K; j <= i + K; j++)
-        {
-            /*
-            if (jが配列の範囲内かどうかの判定)
-            {
+        for (int j = i - K; j <= i + K; j++) {
+            /* jが配列の範囲内かどうかの判定 */
+            if (0 <= j && j <= length - 1) {
                 sum += signal[j];
                 count++;
-            }  
-            */  
+            }
+            
         }
         averagedSignal[i] = sum / count;
+        printf("%f\n", averagedSignal[i]);
     }
 
     return averagedSignal;
@@ -62,26 +60,36 @@ int main(int argc, char **argv)
     otime = (float *)malloc(sizeof(float) * dataLength);
     signal = (float *)malloc(sizeof(float) * dataLength);
 
-    float otime_value = 0;
-    float signal_value = 0;
+    float otime_value;
+    float signal_value;
     for (int i = 0; i < dataLength; i++) {
         fgets(buf, BUF_SIZE - 1, fp);
         sscanf(buf, "%f,%f\n", &otime_value, &signal_value);
         otime[i] = otime_value;
         signal[i] = signal_value;
-        printf("otime[%d] = %f\tsignal[%d] = %f\n", i, otime[i], i, signal[i]);
+        // printf("otime[%d] = %f\tsignal[%d] = %f\n", i, otime[i], i, signal[i]);
     }
 
     /* 課題2: 移動平均処理の適用 */
     int K = 1;
+    
+    if (argc >= 2) {
+        K = atoi(argv[1]);
+    } else {
+        printf("移動平均のサイズ K を入力してください\n");
+    }
+    
     float *averagedSignal = movingAverage(signal, dataLength, K);
+    // printf("%d\n", K);
+    
 
 
     /* 課題3: ピーク処理の検出 */
 
-    /* ending */
+    /* free and end */
     fclose(fp);
     free(otime);
     free(signal);
+    free(averagedSignal);
     return 0;
 }
