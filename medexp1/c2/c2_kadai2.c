@@ -28,7 +28,7 @@ float *movingAverage(float *signal, int length, int K)
             }
         }
         averagedSignal[i] = sum / count;
-        printf("%f\n", averagedSignal[i]);
+        // printf("%f\n", averagedSignal[i]);
     }
 
     return averagedSignal;
@@ -66,6 +66,7 @@ int main(int argc, char **argv)
         otime[i] = otime_value;
         signal[i] = signal_value;
         // printf("otime[%d] = %f\tsignal[%d] = %f\n", i, otime[i], i, signal[i]);
+        printf("%f\n",otime[i]);
     }
 
     /* 課題2: 移動平均処理の適用 */

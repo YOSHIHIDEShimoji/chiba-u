@@ -9,7 +9,7 @@
 #include <stdlib.h>
 
 #define BUF_SIZE 256
-#define MAX_PEAK_NUM 0.6
+#define MAX_PEAK_NUM 6
 
 float *movingAverage(float *signal, int length, int K)
 {
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
         printf("Can't open data file.\n");
         return 1;
     }
-
+    
     /* define dataLength */
     char buf[BUF_SIZE];
     fgets(buf, BUF_SIZE - 1, fp);
@@ -67,6 +67,25 @@ int main(int argc, char **argv)
         // printf("otime[%d] = %f\tsignal[%d] = %f\n", i, otime[i], i, signal[i]);
     }
 
+    /* ecg400 の読み込み */
+    int dataLength_short;
+    FILE *fp_short = fopen("ecg400.txt", "r");
+    if (fp_short == NULL) {
+        printf("Can't open data file.\n");
+        return 1;
+    }
+    fgets(buf, BUF_SIZE - 1, fp_short);
+    sscanf(buf, "%d\n", &dataLength_short);
+    float * otime_short = (float *)malloc(sizeof(float) * dataLength_short);
+    float * signal_short = (float *)malloc(sizeof(float) * dataLength_short);
+    for (int i = 0; i < dataLength_short; i++) {
+        fgets(buf, BUF_SIZE - 1, fp_short);
+        sscanf(buf, "%f,%f\n", &otime_value, &signal_value);
+        otime_short[i] = otime_value;
+        signal_short[i] = signal_value;
+        // printf("otime_short[%d] = %f\tsignal_short[%d] = %f\n", i, otime_short[i], i, signal_short[i]);
+    }
+
     /* 課題2: 移動平均処理の適用 */
     int K = 1;
     
@@ -74,12 +93,13 @@ int main(int argc, char **argv)
         K = atoi(argv[1]);
     } else {
         printf("移動平均のサイズ K を引数として指定してください\n");
+        return 1;
     }
     
     float *averagedSignal = movingAverage(signal, dataLength, K);
     // printf("%d\n", K);
     
-    /* 課題3: ピーク処理の検出 */
+        /* 課題3: ピーク処理の検出 */
     float* ds = (float *)malloc(sizeof(float) * dataLength);
     float* r_peak = (float *)malloc(sizeof(float) * dataLength);
 
@@ -89,7 +109,7 @@ int main(int argc, char **argv)
     }
 
     /* RR波のピーク時刻の配列 r_peak を定義 */
-    printf("R波のピーク時刻\n");
+    // printf("R波のピーク時刻\n");
     int count = 0;
     for (int i = 0; i < dataLength; i++) {
         if (averagedSignal[i] > MAX_PEAK_NUM && ds[i] >= 0 && ds[i + 1] <= 0) {
@@ -109,15 +129,75 @@ int main(int argc, char **argv)
     }
     float mean = tmp / (count - 1);
     float bpm = 60.0 / mean;
-
-    printf("\nRR間隔の平均値 = %f[秒/回]\n\n平均心拍数 = %f[回/分]\n", mean, bpm);
+    // printf("\nRR間隔の平均値 = %f[秒/回]\n\n平均心拍数 = %f[回/分]\n", mean, bpm);
     
+    /* 課題4 */
+    /* r_xyの定義 */
+    float * r_xy = (float *)malloc(sizeof(float) * (dataLength - dataLength_short + 1));
+    for (int i = 0; i <= dataLength - dataLength_short; i++) {
+        double sigma = 0.0;
+        for (int j = 0; j < dataLength_short; j++) {
+            sigma += signal_short[j] * averagedSignal[j + i];
+        }
+        r_xy[i] = sigma;
+        // printf("%f\n", r_xy[i]);
+    }
+
+    /* r_xyの極大の検出 */
+    float* dr = (float *)malloc(sizeof(float) * dataLength_short);
+    float* r_xy_peak = (float *)malloc(sizeof(float) * dataLength_short);
+
+    /* 導関数 dr を定義*/
+    for (int j = 0; j < dataLength; j++) {
+        dr[j] = (r_xy[j] - r_xy[j - 1]) * j / otime[j];
+    }
+
+    /* r_xy のピーク時刻の配列 r_xy_peak を定義 */
+    printf("r_xy のピーク時刻\n");
+    int count_2 = 0;
+    for (int i = 0; i < dataLength - dataLength_short; i++) {
+        if (r_xy[i] > MAX_PEAK_NUM && dr[i] >= 0 && dr[i + 1] <= 0) {
+            printf("%d\t%f\t%f\n", i, otime[i], r_xy[i]);
+            r_xy_peak[count_2] = otime[i];
+
+            /* r_xy のピーク時刻[s] */
+            // printf("peak %d\t%f[s]\t\n", count_2 + 1, r_xy_peak[count_2]);
+            count_2++;
+        }
+    }
+
+    /* RR間隔の平均値[s/回]と平均心拍数[回/分] */
+    float tmp_2 = 0;
+    for (int i = 0; i < count_2 - 1; i++) {
+        tmp_2 += r_xy_peak[i + 1] - r_xy_peak[i];
+    }
+    float mean_2 = tmp_2 / (count_2 - 1);
+    float bpm_2 = 60.0 / mean_2;
+    printf("\nRR間隔の平均値 = %f[秒/回]\n\n平均心拍数 = %f[回/分]\n", mean_2, bpm_2);
+
+
+
+
+
+
+
+
+
+
+
+
+
     /* free and end */
     fclose(fp);
     free(otime);
     free(signal);
     free(averagedSignal);
-    free(ds);
-    free(r_peak);
+    // free(ds);
+    // free(r_peak);
+    free(dr);
+    free(r_xy_peak);
+    free(otime_short);
+    free(signal_short);
+    free(r_xy);
     return 0;
 }
