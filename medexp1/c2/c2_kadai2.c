@@ -28,7 +28,7 @@ float *movingAverage(float *signal, int length, int K)
             }
         }
         averagedSignal[i] = sum / count;
-        // printf("%f\n", averagedSignal[i]);
+        printf("averagedSignal[%d] = %f\n", i, averagedSignal[i]);
     }
 
     return averagedSignal;
@@ -37,6 +37,15 @@ float *movingAverage(float *signal, int length, int K)
 
 int main(int argc, char **argv)
 {
+    /* 引数がなければエラー */
+    int K;
+    if (argc >= 2) {
+        K = atoi(argv[1]);
+    } else {
+        printf("移動平均のサイズ K を引数として指定してください\n");
+        return 1;
+    }
+    
     /* 課題1: 心電図データの読み込み */
     int    dataLength = 0;
     float* otime = NULL;
@@ -66,22 +75,11 @@ int main(int argc, char **argv)
         otime[i] = otime_value;
         signal[i] = signal_value;
         // printf("otime[%d] = %f\tsignal[%d] = %f\n", i, otime[i], i, signal[i]);
-        printf("%f\n",otime[i]);
     }
 
     /* 課題2: 移動平均処理の適用 */
-    int K = 1;
-    
-    if (argc >= 2) {
-        K = atoi(argv[1]);
-    } else {
-        printf("移動平均のサイズ K を引数として指定してください\n");
-    }
-    
+    // int K = 1;
     float *averagedSignal = movingAverage(signal, dataLength, K);
-    // printf("%d\n", K);
-    
-
 
     /* 課題3: ピーク処理の検出 */
 

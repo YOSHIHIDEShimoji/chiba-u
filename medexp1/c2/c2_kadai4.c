@@ -9,7 +9,8 @@
 #include <stdlib.h>
 
 #define BUF_SIZE 256
-#define MAX_PEAK_NUM 6
+#define MAX_PEAK_NUM 0.6
+#define MAX_PEAK_NUM_2 6
 
 float *movingAverage(float *signal, int length, int K)
 {
@@ -103,21 +104,18 @@ int main(int argc, char **argv)
     float* ds = (float *)malloc(sizeof(float) * dataLength);
     float* r_peak = (float *)malloc(sizeof(float) * dataLength);
 
-    /* 導関数 ds を定義*/
-    for (int j = 0; j < dataLength; j++) {
+    /* 導関数 ds を定義 */
+    ds[0] = 0.0;
+    for (int j = 1; j < dataLength; j++) {
         ds[j] = (averagedSignal[j] - averagedSignal[j - 1]) * j / otime[j];
     }
 
     /* RR波のピーク時刻の配列 r_peak を定義 */
-    // printf("R波のピーク時刻\n");
     int count = 0;
     for (int i = 0; i < dataLength; i++) {
         if (averagedSignal[i] > MAX_PEAK_NUM && ds[i] >= 0 && ds[i + 1] <= 0) {
             // printf("%d\t%f\t%f\n", i, otime[i], averagedSignal[i]);
             r_peak[count] = otime[i];
-
-            /* RR波のピーク時刻[s] */
-            printf("peak %d\t%f[s]\n",count + 1, r_peak[count]);
             count++;
         }
     }
@@ -153,47 +151,38 @@ int main(int argc, char **argv)
     }
 
     /* r_xy のピーク時刻の配列 r_xy_peak を定義 */
-    printf("r_xy のピーク時刻\n");
+    printf("心電図に関係する i\n");
     int count_2 = 0;
     for (int i = 0; i < dataLength - dataLength_short; i++) {
-        if (r_xy[i] > MAX_PEAK_NUM && dr[i] >= 0 && dr[i + 1] <= 0) {
-            printf("%d\t%f\t%f\n", i, otime[i], r_xy[i]);
+        if (r_xy[i] > MAX_PEAK_NUM_2 && dr[i] >= 0 && dr[i + 1] <= 0) {
+            // printf("%d\t%f\t%f\n", i, otime[i], r_xy[i]);
             r_xy_peak[count_2] = otime[i];
 
-            /* r_xy のピーク時刻[s] */
-            // printf("peak %d\t%f[s]\t\n", count_2 + 1, r_xy_peak[count_2]);
+            /* 心電図と関係する i */
+            printf("i = %d\n", i);
             count_2++;
         }
     }
 
     /* RR間隔の平均値[s/回]と平均心拍数[回/分] */
+    printf("\n%d個のRR間隔\n", count_2 - 1);
     float tmp_2 = 0;
     for (int i = 0; i < count_2 - 1; i++) {
-        tmp_2 += r_xy_peak[i + 1] - r_xy_peak[i];
+        float interval = r_xy_peak[i + 1] - r_xy_peak[i];
+        printf("%f[秒]\n", interval);
+        tmp_2 += interval;
     }
     float mean_2 = tmp_2 / (count_2 - 1);
     float bpm_2 = 60.0 / mean_2;
-    printf("\nRR間隔の平均値 = %f[秒/回]\n\n平均心拍数 = %f[回/分]\n", mean_2, bpm_2);
-
-
-
-
-
-
-
-
-
-
-
-
+    printf("\n%d個のRR間隔の平均値 = %f[秒/回]\n\n平均心拍数 = %f[回/分]\n", count_2 - 1, mean_2, bpm_2);
 
     /* free and end */
     fclose(fp);
     free(otime);
     free(signal);
     free(averagedSignal);
-    // free(ds);
-    // free(r_peak);
+    free(ds);
+    free(r_peak);
     free(dr);
     free(r_xy_peak);
     free(otime_short);

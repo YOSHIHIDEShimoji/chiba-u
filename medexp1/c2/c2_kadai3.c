@@ -74,6 +74,7 @@ int main(int argc, char **argv)
         K = atoi(argv[1]);
     } else {
         printf("移動平均のサイズ K を引数として指定してください\n");
+        return 1;
     }
     
     float *averagedSignal = movingAverage(signal, dataLength, K);
@@ -83,8 +84,9 @@ int main(int argc, char **argv)
     float* ds = (float *)malloc(sizeof(float) * dataLength);
     float* r_peak = (float *)malloc(sizeof(float) * dataLength);
 
-    /* 導関数 ds を定義*/
-    for (int j = 0; j < dataLength; j++) {
+    /* 導関数 ds を定義 */
+    ds[0] = 0.0;
+    for (int j = 1; j < dataLength; j++) {
         ds[j] = (averagedSignal[j] - averagedSignal[j - 1]) * j / otime[j];
     }
 
@@ -97,7 +99,7 @@ int main(int argc, char **argv)
             r_peak[count] = otime[i];
 
             /* RR波のピーク時刻[s] */
-            printf("peak %d\t%f[s]\n",count + 1, r_peak[count]);
+            printf("peak %d\t%f[秒]\n",count + 1, r_peak[count]);
             count++;
         }
     }
@@ -108,7 +110,7 @@ int main(int argc, char **argv)
         tmp += r_peak[i + 1] - r_peak[i];
     }
     float mean = tmp / (count - 1);
-    float bpm = 60.0 / mean;
+    float bpm = 60.0 / mean;        // K >= 7 にになると、mean = 0.0 になり、RR間隔の平均値も0になり、平均心拍数は 0.0 で割ってるため未定義動作になる
 
     printf("\nRR間隔の平均値 = %f[秒/回]\n\n平均心拍数 = %f[回/分]\n", mean, bpm);
     
