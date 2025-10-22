@@ -36,7 +36,7 @@ int main()
     double rate, max = 0, min = 0, mean = 0, sum = 0;
     
     /* sampling rate */
-    rate = (N - 1) * 1000.0 / (etime_ary[N - 1] - etime_ary[0]);
+    rate = N * 1000.0 / etime_ary[N - 1];
 
     /* max and min */
     min = max = resp_ary[0];

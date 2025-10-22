@@ -45,7 +45,7 @@ int main()
 
     /* define array */
     float *resp_ma;
-    /* ← ここだけ変更：添字は i(0..N-1) を使うので N で確保 */
+    /*
     resp_ma = (float *)malloc(sizeof(float) * N);
 
     /* define index */
