@@ -78,17 +78,30 @@ int main(int argc, char **argv)
     float df = 1 / (dataLength * dt);
     float f_max = f_s / 2;
 
-    /* printf */
-    printf("サンプリング間隔 dt = %f[s]\n", dt);
-    printf("サンプリング周波数 f_s = %f[Hz]\n", f_s);
-    printf("周波数スペクトルのメモリ間隔 df = %f[Hz]\n", df);
-    printf("ナイキスト周波数 f_max = %f[Hz]\n", f_max);
-
-    printf("\nk\tf[Hz]\tG_r\tG_i\t|G|\n");
-    for (int i = 0; i < dataLength; i++) {
-        int k = i - dataLength / 2;
-        printf("%d\t%f\t%f\t%f\t%f\n", k, k * df, G_r[i], G_i[i], G_abs[i]);
+    /* |G| が最大となる周波数 f_1 を求める */
+    float max = G_abs[0];
+    float f_1;
+    for (int i = 1; i < dataLength; i++) {
+        if (max <= G_abs[i]) {
+            max = G_abs[i];
+            f_1 = (i - dataLength / 2) * df;
+        }
     }
+    float bpm = f_1 * 60.0;
+    // printf("心拍数 = %f[回/秒]\n", bpm);
+
+
+    /* printf */
+    // printf("サンプリング間隔 dt = %f[s]\n", dt);
+    // printf("サンプリング周波数 f_s = %f[Hz]\n", f_s);
+    // printf("周波数スペクトルのメモリ間隔 df = %f[Hz]\n", df);
+    // printf("ナイキスト周波数 f_max = %f[Hz]\n", f_max);
+
+    // printf("\nk\tf[Hz]\tG_r\tG_i\t|G|\n");
+    // for (int i = 0; i < dataLength; i++) {
+    //     int k = i - dataLength / 2;
+    //     printf("%d\t%f\t%f\t%f\t%f\n", k, k * df, G_r[i], G_i[i], G_abs[i]);
+    // }
 
 
     /* free and end */
