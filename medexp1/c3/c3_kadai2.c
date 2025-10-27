@@ -89,7 +89,7 @@ int main(int argc, char **argv)
         }
     }
     float bpm = f_1 * 60.0;
-    // printf("心拍数 = %f[回/秒]\n", bpm);
+    printf("心拍数 = %f[回/分]\n", bpm);
 
 
     /* printf */
