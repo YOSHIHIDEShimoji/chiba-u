@@ -19,8 +19,9 @@ void fourier_transform(int N, float signal[], float G_r[], float G_i[], float G_
         double G_r_sum = 0;
         double G_i_sum = 0;
         for (int n = 0; n <= N - 1; n++) {
-            G_r_sum += signal[n] * cos(2 * M_PI * n * k / N);
-            G_i_sum += -(signal[n] * sin(2 * M_PI * n * k / N));
+            double theta = 2.0 * M_PI * n * k / N;
+            G_r_sum += signal[n] * cos(theta);
+            G_i_sum += -(signal[n] * sin(theta));
         }
         G_r[i] = G_r_sum;
         G_i[i] = G_i_sum;
