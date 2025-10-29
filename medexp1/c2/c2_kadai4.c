@@ -100,7 +100,7 @@ int main(int argc, char **argv)
     float *averagedSignal = movingAverage(signal, dataLength, K);
     // printf("%d\n", K);
     
-        /* 課題3: ピーク処理の検出 */
+    /* 課題3: ピーク処理の検出 */
     float* ds = (float *)malloc(sizeof(float) * dataLength);
     float* r_peak = (float *)malloc(sizeof(float) * dataLength);
 
@@ -178,6 +178,7 @@ int main(int argc, char **argv)
 
     /* free and end */
     fclose(fp);
+    fclose(fp_short);
     free(otime);
     free(signal);
     free(averagedSignal);
