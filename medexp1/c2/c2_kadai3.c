@@ -86,8 +86,8 @@ int main(int argc, char **argv)
 
     /* 導関数 ds を定義 */
     ds[0] = 0.0;
-    for (int j = 1; j < dataLength; j++) {
-        ds[j] = (averagedSignal[j] - averagedSignal[j - 1]) * j / otime[j];
+    for (int i = 1; i < dataLength; i++) {
+        ds[i] = (averagedSignal[i] - averagedSignal[i - 1]) / (otime[i] - otime[i - 1]);
     }
 
     /* RR波のピーク時刻の配列 r_peak を定義 */
