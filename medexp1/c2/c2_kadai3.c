@@ -90,11 +90,19 @@ int main(int argc, char **argv)
         ds[i] = (averagedSignal[i] - averagedSignal[i - 1]) / (otime[i] - otime[i - 1]);
     }
 
+    /* averagedSignal の最大値 max を求める */
+    float max = averagedSignal[0];
+    for (int i = 1; i < dataLength; i++) {
+        if (max <= averagedSignal[i]) {
+            max = averagedSignal[i];
+        }
+    }
+
     /* RR波のピーク時刻の配列 r_peak を定義 */
     printf("R波のピーク時刻\n");
     int count = 0;
     for (int i = 0; i < dataLength; i++) {
-        if (averagedSignal[i] > MAX_PEAK_NUM && ds[i] >= 0 && ds[i + 1] <= 0) {
+        if (averagedSignal[i] > max * 0.7 && ds[i] >= 0 && ds[i + 1] <= 0) {
             // printf("%d\t%f\t%f\n", i, otime[i], averagedSignal[i]);
             r_peak[count] = otime[i];
 
