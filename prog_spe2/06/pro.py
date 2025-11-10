@@ -28,7 +28,7 @@ for box in bp['whiskers']:
 
 ax.set_xticklabels(columns)
 plt.ylim([16, 34])
-plt.savefig('./_ignore/lesson.png')
+plt.savefig('./pro.png')
 
 # 対応のないt検定
 t, p = stats.ttest_ind(vals[:, 0], vals[:, 3], equal_var=False)
