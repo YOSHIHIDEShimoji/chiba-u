@@ -21,7 +21,7 @@ int main()
     fgets(buf, BUF_SIZE - 1, fp);
     sscanf(buf, "%d\n", &N);
 
-    /* define array */
+    /* array を定義 */
     int *etime_ary, *resp_ary;
     etime_ary = (int *)malloc(sizeof(int) * N);
     resp_ary = (int *)malloc(sizeof(int) * N);
@@ -43,12 +43,11 @@ int main()
         }
     }
 
-    /* define array */
+    /* array を定義 */
     float *resp_ma;
-    /*
     resp_ma = (float *)malloc(sizeof(float) * N);
 
-    /* define index */
+    /* index を定義 */
     printf("etime\tresp_ma\n");
 
     for (int i = 0; i < N; i++) {
