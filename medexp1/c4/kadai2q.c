@@ -39,6 +39,13 @@ int main()
 	ReadData(&tsp);
 	ShowData(&tsp);
 
+	/* 課題2で作成する：　総移動距離 */
+	float distance = 0;
+	for (int i = 0; i < N - 1; i++) {
+		distance += sqrt((tsp.city[i + 1].x - tsp.city[i].x) * (tsp.city[i + 1].x - tsp.city[i].x)
+					   + (tsp.city[i + 1].y - tsp.city[i].y) * (tsp.city[i + 1].y - tsp.city[i].y));
+	}
+	printf("%f\n", distance);
 	return 0;
 }
 
@@ -49,6 +56,7 @@ int main()
 void ReadData(struct TSP *tsp)
 {
 	/* 課題1で作成する */
+	/* open file */
     FILE *fp = fopen("cities2025_4-20/cities10.csv", "r");
     if (fp == NULL) {
         printf("Can't open data file.\n");
@@ -59,7 +67,8 @@ void ReadData(struct TSP *tsp)
     for (int i = 0; i < N; i++) {
         fgets(buf, BUF_SIZE - 1, fp);
         sscanf(buf, "%d,%d\n", &tsp->city[i].x, &tsp->city[i].y);
-    }	
+    }
+	
 }
 
 /*

@@ -10,7 +10,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define N 4		/* 都市の数 */
+#define N 10		/* 都市の数 */
+#define BUF_SIZE 256	
 
 /* 都市の座標構造体 */
 struct City {
@@ -55,6 +56,17 @@ int main()
 void ReadData(struct TSP *tsp)
 {
 	/* 課題１で作成 */
+	FILE *fp = fopen("cities2025_4-20/cities10.csv", "r");
+    if (fp == NULL) {
+        printf("Can't open data file.\n");
+        exit(1);
+    }
+
+    char buf[BUF_SIZE];
+    for (int i = 0; i < N; i++) {
+        fgets(buf, BUF_SIZE - 1, fp);
+        sscanf(buf, "%d,%d\n", &tsp->city[i].x, &tsp->city[i].y);
+    }
 }
 
 /*
@@ -68,8 +80,7 @@ void ShowData(struct TSP *tsp)
 	/* データ表示 */
 	printf("Cities location:\n");
 	for (i = 0; i < N; i ++) {
-		printf("C%-2d : %4d,%4d\n", 
-			i + 1, tsp->city[i].x, tsp->city[i].y);
+		printf("C%-2d : %4d,%4d\n", i + 1, tsp->city[i].x, tsp->city[i].y);
 	}
 }
 
@@ -82,6 +93,9 @@ void SimpleOrder(struct TSP *tsp)
 	printf("\nSimple order:\n"); /* 計算始めの表示 */
 
 	/* 課題３で作成 */
+	for (int i = 0; i < N; i++) {
+		tsp->order[i] = i;
+	}
 }
 
 /*
@@ -92,6 +106,10 @@ void CalcCost(struct TSP *tsp)
 {
 	/* 課題3で作成 */
 	/* 計算した総移動距離は tsp->cost に代入する */
+	tsp->cost = 0;
+	for (int i = 0; i < N - 1; i++) {
+		tsp->cost += CalcDistance(tsp->city[i + 1], tsp->city[i]);
+	}
 }
 
 /*
@@ -103,6 +121,8 @@ void CalcCost(struct TSP *tsp)
 float CalcDistance(struct City a, struct City b)
 {
 	/* 課題3で作成 */
+	float dis = sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+	return dis;
 }
 
 /*
