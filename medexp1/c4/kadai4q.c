@@ -10,7 +10,9 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define N 4	/* 都市の数 */
+#ifndef N			/* "-DN=15" で "#define 15" とする */
+#define N 4			/* 都市の数 */
+#endif
 
 /* 都市の座標構造体 */
 struct City {
@@ -57,12 +59,21 @@ int main()
 void ReadData(struct TSP *tsp)
 {
 	/* 課題１で作成 */
-    FILE *fp = fopen("cities2025_4-20/cities04.csv", "r");	// ここも N 似合わせて変更する
+    /* ファイル名を作成 */
+	char filename[256];
+
+	if (4 <= N && N <=9) {
+		sprintf(filename, "cities2025_4-20/cities0%d.csv", N);
+	} else {
+		sprintf(filename, "cities2025_4-20/cities%d.csv", N);
+	}
+
+	FILE *fp = fopen(filename, "r");
     if (fp == NULL) {
         printf("Can't open data file.\n");
         exit(1);
     }
-
+	/* ファイル読み込み */
     char buf[256];
     for (int i = 0; i < N; i++) {
         fgets(buf, 256 - 1, fp);
@@ -106,7 +117,9 @@ void SimpleOrder(struct TSP *tsp)
 void GenCombination(struct TSP *tsp)
 {
 	printf("\nAll order:\n"); /* 計算始めの表示 */
-	for (int i = 0; i < N; i++) {
+	
+	/* 後ろ2個の入れ替え */
+	for (int i = 3; i <= 4; i++) {
 		tsp->order[i] = i;
 	}
 }

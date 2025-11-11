@@ -10,7 +10,9 @@
 #include <stdlib.h>
 #include <math.h>
 
+#ifndef N			/* "-DN=15" で "#define 15" とする */
 #define N 10		/* 都市の数 */
+#endif
 
 /* 都市の座標構造体 */
 struct City {
@@ -54,13 +56,21 @@ int main()
  */
 void ReadData(struct TSP *tsp)
 {
-	/* 課題１で作成 */
-	FILE *fp = fopen("cities2025_4-20/cities10.csv", "r");
+	/* ファイル名を作成 */
+	char filename[256];
+
+	if (4 <= N && N <=9) {
+		sprintf(filename, "cities2025_4-20/cities0%d.csv", N);
+	} else {
+		sprintf(filename, "cities2025_4-20/cities%d.csv", N);
+	}
+
+	FILE *fp = fopen(filename, "r");
     if (fp == NULL) {
         printf("Can't open data file.\n");
         exit(1);
     }
-
+	/* ファイル読み込み */
     char buf[256];
     for (int i = 0; i < N; i++) {
         fgets(buf, 256 - 1, fp);
@@ -135,5 +145,5 @@ void ShowCost(struct TSP *tsp)
 	for (i = 0; i < N; i ++) {
 		printf("C%-2d> ", tsp->order[i] + 1);
 	}
-	printf("C%-2d  cost=%7.1f\n", tsp->order[0] + 1, tsp->cost);
+	printf("C%-2d  cost =%7.1f\n", tsp->order[0] + 1, tsp->cost);
 }
