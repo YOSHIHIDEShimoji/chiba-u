@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define N 10		/* 都市の数 */
+#define N 4	/* 都市の数 */
 
 /* 都市の座標構造体 */
 struct City {
@@ -29,6 +29,7 @@ void ReadData(struct TSP *tsp);
 void ShowData(struct TSP *tsp);
 float CalcDistance(struct City a, struct City b);
 void SimpleOrder(struct TSP *tsp);
+void GenCombination(struct TSP *tsp);
 void CalcCost(struct TSP *tsp);
 void ShowCost(struct TSP *tsp);
 
@@ -42,6 +43,7 @@ int main()
 	ReadData(&tsp);
 	ShowData(&tsp);
 	SimpleOrder(&tsp);
+	GenCombination(&tsp);
 	CalcCost(&tsp);
 	ShowCost(&tsp);
 
@@ -55,7 +57,7 @@ int main()
 void ReadData(struct TSP *tsp)
 {
 	/* 課題１で作成 */
-	FILE *fp = fopen("cities2025_4-20/cities10.csv", "r");
+    FILE *fp = fopen("cities2025_4-20/cities04.csv", "r");	// ここも N 似合わせて変更する
     if (fp == NULL) {
         printf("Can't open data file.\n");
         exit(1);
@@ -89,9 +91,21 @@ void ShowData(struct TSP *tsp)
  */
 void SimpleOrder(struct TSP *tsp)
 {
-	printf("\nSimple order:\n"); /* 計算始めの表示 */
+	// printf("\nSimple order:\n"); /* 計算始めの表示 */
 
 	/* 課題３で作成 */
+	for (int i = 0; i < N; i++) {
+		tsp->order[i] = i;
+	}
+}
+
+/*
+ * 巡回組み合わせ生成
+ * 引数：struct TSP *tsp : TSPデータ
+ */
+void GenCombination(struct TSP *tsp)
+{
+	printf("\nAll order:\n"); /* 計算始めの表示 */
 	for (int i = 0; i < N; i++) {
 		tsp->order[i] = i;
 	}

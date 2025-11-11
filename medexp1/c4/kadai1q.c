@@ -11,7 +11,6 @@
 #include <math.h>
 
 #define N 10		/* 都市の数 */
-#define BUF_SIZE 256
 
 /* 都市の座標構造体 */
 struct City {
@@ -55,9 +54,9 @@ void ReadData(struct TSP *tsp)
         exit(1);
     }
 
-    char buf[BUF_SIZE];
+    char buf[256];
     for (int i = 0; i < N; i++) {
-        fgets(buf, BUF_SIZE - 1, fp);
+        fgets(buf, 256 - 1, fp);
         sscanf(buf, "%d,%d\n", &tsp->city[i].x, &tsp->city[i].y);
     }	
 }
