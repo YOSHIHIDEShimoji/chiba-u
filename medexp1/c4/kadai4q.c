@@ -31,7 +31,8 @@ void ReadData(struct TSP *tsp);
 void ShowData(struct TSP *tsp);
 float CalcDistance(struct City a, struct City b);
 void SimpleOrder(struct TSP *tsp);
-void GenCombination(struct TSP *tsp);
+void GenOrder(struct TSP *tsp);
+void replace(struct TSP *tsp, int n);
 void CalcCost(struct TSP *tsp);
 void ShowCost(struct TSP *tsp);
 
@@ -45,9 +46,9 @@ int main()
 	ReadData(&tsp);
 	ShowData(&tsp);
 	SimpleOrder(&tsp);
-	GenCombination(&tsp);
+	GenOrder(&tsp);
 	CalcCost(&tsp);
-	ShowCost(&tsp);
+	// ShowCost(&tsp);
 
 	return 0;
 }
@@ -114,14 +115,23 @@ void SimpleOrder(struct TSP *tsp)
  * 巡回組み合わせ生成
  * 引数：struct TSP *tsp : TSPデータ
  */
-void GenCombination(struct TSP *tsp)
+void GenOrder(struct TSP *tsp)
 {
 	printf("\nAll order:\n"); /* 計算始めの表示 */
+
+
+
 	
-	/* 後ろ2個の入れ替え */
-	for (int i = 3; i <= 4; i++) {
-		tsp->order[i] = i;
-	}
+}
+
+/* n 個の並べ替え 
+ * 引数1：struct TSP *tsp : TSPデータ
+ * 引数2：n：並べ替え個数
+ */
+void replace(struct TSP *tsp, int n)
+{
+	
+
 }
 
 /*
@@ -162,5 +172,5 @@ void ShowCost(struct TSP *tsp)
 	for (i = 0; i < N; i ++) {
 		printf("C%-2d> ", tsp->order[i] + 1);
 	}
-	printf("C%-2d  cost=%7.1f\n", tsp->order[0] + 1, tsp->cost);
+	printf("C%-2d  cost =%7.1f\n", tsp->order[0] + 1, tsp->cost);
 }
