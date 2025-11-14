@@ -121,7 +121,8 @@ void SimpleOrder(struct TSP *tsp)
 
 /*
  * すべての巡回組み合わせを生成する
- * 引数：struct TSP *tsp : TSPデータ
+ * 引数1：struct TSP *tsp : TSPデータ
+ * 引数2：int index：tsp->order[index] を決める
  */
 void AllOrder(struct TSP *tsp, int index)
 {
