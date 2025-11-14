@@ -125,9 +125,7 @@ void SimpleOrder(struct TSP *tsp)
  */
 void AllOrder(struct TSP *tsp, int index)
 {
-	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
-	// tsp->order[0] = 0;			// 最初の都市は固定
-
+	/* order が完成したら計算する */
 	if (index == N) {
 		CalcCost(tsp);
 		ShowCost(tsp);
