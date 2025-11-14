@@ -46,7 +46,7 @@ int main()
 		distance += sqrt((tsp.city[i + 1].x - tsp.city[i].x) * (tsp.city[i + 1].x - tsp.city[i].x)
 					   + (tsp.city[i + 1].y - tsp.city[i].y) * (tsp.city[i + 1].y - tsp.city[i].y));
 	}
-	printf("%f\n", distance);
+	printf("\ndistance = %f\n", distance);
 	return 0;
 }
 
@@ -59,7 +59,6 @@ void ReadData(struct TSP *tsp)
 	/* 課題1で作成する */
 	/* ファイル名を作成 */
 	char filename[256];
-
 	if (4 <= N && N <=9) {
 		sprintf(filename, "cities2025_4-20/cities0%d.csv", N);
 	} else {
@@ -77,6 +76,7 @@ void ReadData(struct TSP *tsp)
         fgets(buf, 256 - 1, fp);
         sscanf(buf, "%d,%d\n", &tsp->city[i].x, &tsp->city[i].y);
     }
+	fclose(fp);
 }
 
 /*

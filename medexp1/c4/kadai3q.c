@@ -58,7 +58,6 @@ void ReadData(struct TSP *tsp)
 {
 	/* ファイル名を作成 */
 	char filename[256];
-
 	if (4 <= N && N <=9) {
 		sprintf(filename, "cities2025_4-20/cities0%d.csv", N);
 	} else {
@@ -76,6 +75,7 @@ void ReadData(struct TSP *tsp)
         fgets(buf, 256 - 1, fp);
         sscanf(buf, "%d,%d\n", &tsp->city[i].x, &tsp->city[i].y);
     }
+	fclose(fp);
 }
 
 /*
@@ -117,8 +117,9 @@ void CalcCost(struct TSP *tsp)
 	/* 計算した総移動距離は tsp->cost に代入する */
 	tsp->cost = 0;
 	for (int i = 0; i < N - 1; i++) {
-		tsp->cost += CalcDistance(tsp->city[i + 1], tsp->city[i]);
+		tsp->cost += CalcDistance(tsp->city[tsp->order[i + 1]], tsp->city[tsp->order[i]]);
 	}
+	tsp->cost += CalcDistance(tsp->city[tsp->order[N - 1]], tsp->city[tsp->order[0]]);
 }
 
 /*
