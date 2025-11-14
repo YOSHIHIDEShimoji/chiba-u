@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#ifndef N			/* "-DN=15" で "#define 15" とする */
-#define N 10		/* 都市の数 */
+#ifndef N			/* "gcc -DN=15 -lm *.c " で "#define 15" とする */
+#define N 3			/* 都市の数 */
 #endif
 
 /* 都市の座標構造体 */
@@ -26,13 +26,20 @@ struct TSP {
 	float cost;				/* 総移動距離 */
 };
 
+float cost_min;			/* 最短の移動距離 */
+int first = 1;			/* cost_min に最初の経路の cost を代入するためのフラグ */
+int order_min[N];		/* 最短経路を保持するための配列 */
+
 /* 関数の宣言 */
 void ReadData(struct TSP *tsp);
 void ShowData(struct TSP *tsp);
 float CalcDistance(struct City a, struct City b);
 void SimpleOrder(struct TSP *tsp);
+void AllOrder(struct TSP *tsp, int index);
 void CalcCost(struct TSP *tsp);
 void ShowCost(struct TSP *tsp);
+void CalcMin(struct TSP *tsp);
+void ShowResult();
 
 /*
  * メイン関数
@@ -43,10 +50,13 @@ int main()
 
 	ReadData(&tsp);
 	ShowData(&tsp);
-	SimpleOrder(&tsp);
-	CalcCost(&tsp);
-	ShowCost(&tsp);
-
+	// SimpleOrder(&tsp);
+	printf("\nAll order:\n"); 	/* 計算始めの表示 */
+	tsp.order[0] = 0;			// 最初の都市は固定
+	AllOrder(&tsp, 1);
+	// CalcCost(&tsp);
+	// ShowCost(&tsp);
+	ShowResult();
 	return 0;
 }
 
@@ -56,6 +66,7 @@ int main()
  */
 void ReadData(struct TSP *tsp)
 {
+	/* 課題１で作成 */
 	/* ファイル名を作成 */
 	char filename[256];
 	if (1 <= N && N <=9) {
@@ -89,7 +100,8 @@ void ShowData(struct TSP *tsp)
 	/* データ表示 */
 	printf("Cities location:\n");
 	for (i = 0; i < N; i ++) {
-		printf("C%-2d : %4d,%4d\n", i + 1, tsp->city[i].x, tsp->city[i].y);
+		printf("C%-2d : %4d,%4d\n", 
+			i + 1, tsp->city[i].x, tsp->city[i].y);
 	}
 }
 
@@ -104,6 +116,43 @@ void SimpleOrder(struct TSP *tsp)
 	/* 課題３で作成 */
 	for (int i = 0; i < N; i++) {
 		tsp->order[i] = i;
+	}
+}
+
+/*
+ * すべての巡回組み合わせを生成する
+ * 引数：struct TSP *tsp : TSPデータ
+ */
+void AllOrder(struct TSP *tsp, int index)
+{
+	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
+	// tsp->order[0] = 0;			// 最初の都市は固定
+
+	if (index == N) {
+		CalcCost(tsp);
+		ShowCost(tsp);
+		CalcMin(tsp);
+		return;
+	}
+
+	for (int i = 1; i < N; i++)	{
+
+		/* index より前の配列番号に i が使われているかの判定 */
+		int used = 0;
+		for (int j = 1; j < index; j++) {
+			if (tsp->order[j] == i) {
+				used = 1;
+				break;
+			}
+		}
+
+		/* 使われていなかったら代入 */
+		if (used)
+			continue;
+		else {
+			tsp->order[index] =  i;
+			AllOrder(tsp, index + 1);		
+		}
 	}
 }
 
@@ -147,4 +196,38 @@ void ShowCost(struct TSP *tsp)
 		printf("C%-2d> ", tsp->order[i] + 1);
 	}
 	printf("C%-2d  cost =%7.1f\n", tsp->order[0] + 1, tsp->cost);
+}
+
+/*
+ * 最初の経路の cost を cost_min に代入し、 order_min に tsp->order をコピーする
+ * 引数：struct TSP *tsp : TSPデータ
+ */
+void CalcMin(struct TSP *tsp)
+{
+	if (first) {
+		cost_min = tsp->cost;
+		for (int i = 0; i < N; i++) {
+			order_min[i] = tsp->order[i];
+		}
+		first = 0;
+	} else if (cost_min > tsp->cost) {
+		cost_min = tsp->cost;
+		for (int i = 0; i < N; i++) {
+			order_min[i] = tsp->order[i];
+		}
+	}
+}
+
+
+/*
+ * 最短経路とその距離を表示
+ * 引数なし
+ */
+void ShowResult()
+{
+	printf("\nShortest path and cost：\n");
+	for (int i = 0; i < N; i ++) {
+		printf("C%-2d> ", order_min[i] + 1);
+	}
+	printf("C%-2d  cost =%7.1f\n", order_min[0] + 1, cost_min);
 }
