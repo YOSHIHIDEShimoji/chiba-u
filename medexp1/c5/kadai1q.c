@@ -171,6 +171,13 @@ void InitialOrder(struct TSP *tsp)
 	}
 }
 
+/*
+ * 2-opt法による巡回路変形
+ * 引数１：const int currentOrder : InitialOrder からコピーした元の順番(変更しない)
+ * 引数２：int changedOrder : currentOrder を変形した巡回路を格納する配列 
+ * 引数３：int x1 : １つめのパラメータ
+ * 引数４：int x2 : ２つめのパラメータ
+ */
 void TwoOpt(const int currentOrder[N], int changedOrder[N], int x1, int x2)
 {
 	/* 0 番目から x1 - 1 番目までコピー */
