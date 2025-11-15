@@ -51,7 +51,7 @@ int main()
 	ReadData(&tsp);
 	ShowData(&tsp);
 	// SimpleOrder(&tsp);
-	printf("\nAll order:\n"); 	/* 計算始めの表示 */
+	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
 	tsp.order[0] = 0;			// 最初の都市は固定
 	AllOrder(&tsp, 1);
 	// CalcCost(&tsp);
@@ -98,11 +98,12 @@ void ShowData(struct TSP *tsp)
 	int i;
 
 	/* データ表示 */
-	printf("Cities location:\n");
-	for (i = 0; i < N; i ++) {
-		printf("C%-2d : %4d,%4d\n", 
-			i + 1, tsp->city[i].x, tsp->city[i].y);
-	}
+	// printf("Cities location:\n");
+	// for (i = 0; i < N; i ++) {
+	// 	printf("C%-2d : %4d,%4d\n", 
+	// 		i + 1, tsp->city[i].x, tsp->city[i].y);
+	// }
+	;
 }
 
 /*
@@ -111,7 +112,7 @@ void ShowData(struct TSP *tsp)
  */
 void SimpleOrder(struct TSP *tsp)
 {
-	printf("\nSimple order:\n"); /* 計算始めの表示 */
+	// printf("\nSimple order:\n"); /* 計算始めの表示 */
 
 	/* 課題３で作成 */
 	for (int i = 0; i < N; i++) {
@@ -191,10 +192,10 @@ void ShowCost(struct TSP *tsp)
 {
 	int i;
 
-	for (i = 0; i < N; i ++) {
-		printf("C%-2d> ", tsp->order[i] + 1);
-	}
-	printf("C%-2d  cost =%7.1f\n", tsp->order[0] + 1, tsp->cost);
+	// for (i = 0; i < N; i ++) {
+	// 	printf("C%-2d> ", tsp->order[i] + 1);
+	// }
+	// printf("C%-2d  cost =%7.1f\n", tsp->order[0] + 1, tsp->cost);
 }
 
 /*
@@ -224,7 +225,7 @@ void CalcMin(struct TSP *tsp)
  */
 void ShowResult()
 {
-	printf("\nShortest path and cost：\n");
+	printf("Shortest path and cost：\n");
 	for (int i = 0; i < N; i ++) {
 		printf("C%-2d> ", order_min[i] + 1);
 	}
