@@ -36,11 +36,14 @@ int order_min[N];		/* 最短経路を保持するための配列 */
 void ReadData(struct TSP *tsp);
 void ShowData(struct TSP *tsp);
 void InitialOrder(struct TSP *tsp);
-void TwoOpt(const int currentOrder[N], int changedOrder[N], int x1, int x2);
-void AllOrder(struct TSP *tsp, int index);
 void CalcCost(struct TSP *tsp);
 float CalcDistance(struct City a, struct City b);
+float CalcCostOrder(struct TSP *tsp, int order[]);
 void ShowCost(struct TSP *tsp);
+void ShowCostOrder(int order[], float cost);
+void TwoOpt(const int currentOrder[N], int changedOrder[N], int x1, int x2);
+int UpdateOrder(struct TSP *tsp, int x1, int x2);
+void AllOrder(struct TSP *tsp, int index);
 void CalcMin(struct TSP *tsp);
 void ShowResult();
 
@@ -56,12 +59,6 @@ int main()
 	ReadData(&tsp);
 	ShowData(&tsp);
 	InitialOrder(&tsp);
-
-	int currentOrder[N], changedOrder[N];
-	/* currentOrder に tsp.order をコピー*/
-	for (int i = 0; i < N; i++) {
-		currentOrder[i] = tsp.order[i];
-	}
 
 	/* x1, x2 をユーザーに入力させる*/
 	int x1, x2;
@@ -82,20 +79,9 @@ int main()
 		exit(1);
 	}
 
-	/* currentOrder を表示 */
-	printf("currentOrder: ");
-	CalcCost(&tsp);
-	ShowCost(&tsp);
-	
-	TwoOpt(currentOrder, changedOrder, x1, x2);
-	
-	/* changedOrder に tsp.order をコピー*/
-	for (int i = 0; i < N; i++) {
-		tsp.order[i] = changedOrder[i] ;
-	}
-	printf("changedOrder: ");
-	CalcCost(&tsp);
-	ShowCost(&tsp);
+	// TwoOpt(currentOrder, changedOrder, x1, x2);
+	int is_improve = UpdateOrder(&tsp, x1, x2);
+	printf("\nis_improve = %d\n", is_improve);
 	
 	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
 	// AllOrder(&tsp, 1);
@@ -197,6 +183,33 @@ void TwoOpt(const int currentOrder[N], int changedOrder[N], int x1, int x2)
 	}
 }
 
+int UpdateOrder(struct TSP *tsp, int x1, int x2)
+{
+	int changedOrder[N];
+	TwoOpt(tsp->order, changedOrder, x1, x2);
+	
+	/* currentOrder のコストを表示 */
+	CalcCost(tsp);
+	printf("\ncurrentOrder: ");
+	ShowCost(tsp);
+
+	/* currentOrder と changedOrder のコストを計算 */
+	float current_cost = tsp->cost;
+	float changed_cost = CalcCostOrder(tsp, changedOrder);
+
+	/* changedOrder のコストを表示 */
+	printf("changedOrder: ");
+	ShowCostOrder(changedOrder, changed_cost);
+
+	/* cost の比較 */
+	if (changed_cost < current_cost) {
+		for (int i = 0; i < N; i++) {
+			tsp->order[i] = changedOrder[i] ;
+		}
+		return 1;
+	} else
+		return 0;
+}
 
 /*
  * すべての巡回組み合わせを生成する
@@ -250,6 +263,23 @@ void CalcCost(struct TSP *tsp)
 }
 
 /*
+ * 配列から総移動距離を計算する
+ * 引数１：struct TSP *tsp : TSPデータ
+ * 引数２：計算したい配列
+ */
+float CalcCostOrder(struct TSP *tsp, int order[])
+{
+	float cost = 0;
+ 
+	for (int i = 0; i < N - 1; i++) {
+		cost += CalcDistance(tsp->city[order[i + 1]], tsp->city[order[i]]);
+	}
+	cost += CalcDistance(tsp->city[order[N - 1]], tsp->city[order[0]]);
+
+	return cost;
+}
+
+/*
  * ２都市間の距離を計算
  * 引数：struct City a : 都市1
  * 引数：struct City b : 都市2
@@ -274,6 +304,21 @@ void ShowCost(struct TSP *tsp)
 		printf("C%-2d> ", tsp->order[i] + 1);
 	}
 	printf("C%-2d  cost =%7.1f\n", tsp->order[0] + 1, tsp->cost);
+}
+
+/*
+ * 巡回順と総移動距離を表示
+ * 引数１：表示したい配列
+ * 引数２：表示したい配列のコスト
+ */
+void ShowCostOrder(int order[], float cost)
+{
+	int i;
+
+	for (i = 0; i < N; i ++) {
+		printf("C%-2d> ", order[i] + 1);
+	}
+	printf("C%-2d  cost =%7.1f\n", order[0] + 1, cost);
 }
 
 /*
