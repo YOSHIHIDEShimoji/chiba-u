@@ -64,8 +64,8 @@ int main()
 	int x1, x2;
 	printf("x1 = ");	
 	scanf("%d", &x1);
-	if (x1 < 0 || N - 1 < x1) {
-		printf("x1 must be between 0 and %d", N - 1);
+	if (x1 < 0 || N - 2 < x1) {
+		printf("x1 must be between 0 and %d", N - 2);
 		exit(1);
 	}
 		
