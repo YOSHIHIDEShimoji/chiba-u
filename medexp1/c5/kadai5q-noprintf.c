@@ -69,7 +69,7 @@ int main()
 	Repeat_SDM(&tsp);
 
 	/* 最適解を表示 */
-	// printf("Number of trials: %d", TRIALS);
+	printf("Number of trials: %d", TRIALS);
 	ShowResult(tsp.order, tsp.cost);
 		
 	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
