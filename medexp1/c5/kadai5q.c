@@ -40,7 +40,8 @@ int best_order[N];		/* 最短経路を保持するための配列 */
 void ReadData(struct TSP *tsp);
 void ShowData(struct TSP *tsp);
 void InitialOrder(struct TSP *tsp);
-void SteepestDescentMethod(struct TSP *tsp);
+void SDM(struct TSP *tsp);
+void Repeat_SDM(struct TSP *tsp);
 void CalcCost(struct TSP *tsp);
 float CalcDistance(struct City a, struct City b);
 float CalcCostOrder(struct TSP *tsp, int order[]);
@@ -61,27 +62,12 @@ int main()
 	
 	srand((unsigned)time(NULL));	// rand() を初期化
 
-	int is_first = 1;
-	
 	ReadData(&tsp);
 	ShowData(&tsp);
 
-	/* TRIALS 回繰り返す */
-	for (int i = 0; i < TRIALS; i++) {
-		InitialOrder(&tsp);
-		printf("Trials%d:\n", i + 1);
-		CalcCost(&tsp);
-		ShowCost(&tsp);
-		SteepestDescentMethod(&tsp);
-		
-		if (is_first || tsp.cost < cost_min) {
-			for (int i = 0; i < N; i++) {
-				best_order[i] = tsp.order[i];
-			}
-			cost_min = tsp.cost;
-			is_first = 0;
-		}
-	}
+	printf("\nSteepest descent method search:\n");
+	Repeat_SDM(&tsp);
+
 	/* 最適解を表示 */
 	ShowResult(tsp.order, tsp.cost);
 		
@@ -160,7 +146,7 @@ void InitialOrder(struct TSP *tsp)
 	}
 }
 
-void SteepestDescentMethod(struct TSP *tsp)
+void SDM(struct TSP *tsp)
 {
 	while (1) {
 		float diff, max_diff = 0;
@@ -199,6 +185,31 @@ void SteepestDescentMethod(struct TSP *tsp)
 	}
 }
 
+void Repeat_SDM(struct TSP *tsp)
+{
+	int is_first = 1;
+
+	for (int i = 0; i < TRIALS; i++) {
+		InitialOrder(tsp);
+		printf("Trial %d:\n", i + 1);
+		CalcCost(tsp);
+		ShowCost(tsp);
+		SDM(tsp);
+		
+		if (is_first || tsp->cost < cost_min) {
+			for (int i = 0; i < N; i++) {
+				best_order[i] = tsp->order[i];
+			}
+			cost_min = tsp->cost;
+			is_first = 0;
+		}
+	}
+
+	for (int i = 0; i < N; i++) {
+        tsp->order[i] = best_order[i];
+    }
+    tsp->cost = cost_min;
+}
 
 /*
  * 2-opt法による巡回路変形
