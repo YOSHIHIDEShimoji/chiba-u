@@ -39,8 +39,6 @@ int best_order[N];		/* 最短経路を保持するための配列 */
 /* 関数の宣言 */
 void ReadData(struct TSP *tsp);
 void ShowData(struct TSP *tsp);
-void Greedy(struct TSP *tsp, int start);
-void All_greedy(struct TSP *tsp);
 void InitialOrder(struct TSP *tsp);
 void SDM(struct TSP *tsp);
 void Repeat_SDM(struct TSP *tsp);
@@ -62,15 +60,23 @@ int main()
 {
 	struct TSP tsp;
 	
-	ReadData(&tsp);
-	ShowData(&tsp);
+	srand((unsigned)time(NULL));	// rand() を初期化
 
-	printf("\nGreedy search:\n");
-	All_greedy(&tsp);
+	ReadData(&tsp);
+	// ShowData(&tsp);
+
+	// printf("\nSteepest descent method search:\n");
+	Repeat_SDM(&tsp);
 
 	/* 最適解を表示 */
+	// printf("Number of trials: %d", TRIALS);
 	ShowResult(tsp.order, tsp.cost);
-
+		
+	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
+	// AllOrder(&tsp, 1);
+	// CalcCost(&tsp);
+	// ShowCost(&tsp);
+	// ShowResult();
 	return 0;
 }
 
@@ -115,66 +121,6 @@ void ShowData(struct TSP *tsp)
 	}
 }
 
-void Greedy(struct TSP *tsp, int start)
-{
-	int is_used[N] = {0};
-	tsp->order[0] = start;
-	is_used[start] = 1;
-	
-	for (int index = 1; index < N; index++) {
-		float best_cost;
-		int best_city;
-		int is_first = 1;
-		
-		for (int i = 0; i < N; i++) {
-			if (is_used[i])
-				continue;
-
-			float dis = CalcDistance(tsp->city[tsp->order[index - 1]], tsp->city[i]);
-
-			if (is_first || dis < best_cost) {
-				best_cost = dis;
-				best_city = i;
-				is_first = 0;
-			}
-		}
-
-		tsp->order[index] = best_city;
-		is_used[best_city] = 1;
-	}
-
-
-
-}
-
-void All_greedy(struct TSP *tsp)
-{
-	int is_first = 1;
-	float best_cost;
-
-	for (int start = 0; start < N; start++) {
-		Greedy(tsp, start)	;
-
-		CalcCost(tsp);
-		ShowCost(tsp);	
-
-		if (is_first || tsp->cost < best_cost) {
-			best_cost = tsp->cost;
-			for (int i = 0; i < N; i++) {
-				best_order[i] = tsp->order[i];
-			}
-			is_first = 0;
-		}
-	}
-
-	/* TSP に反映 */
-	for (int i = 0; i < N; i++)	{
-		tsp->order[i] = best_order[i];
-	}
-	tsp->cost = best_cost;
-}
-
-
 /*
  * 初期巡回路を乱数で決定する
  * 引数：struct TSP *tsp : TSPデータ
@@ -183,7 +129,7 @@ void InitialOrder(struct TSP *tsp)
 {
 	/* 課題１で作成 */
 	// printf("\nInitial order:\n");	 /* 計算始めの表示 */
-	printf("\n");
+	// printf("\n");
 
 	int used[N] = {0};
 	tsp->order[0] = 0;				// 最初の都市は固定
@@ -235,7 +181,7 @@ void SDM(struct TSP *tsp)
 		/* 改善する余地があるんだったら order を変える */
 		else {
 			UpdateOrder(tsp, best_x1, best_x2);
-			ShowCost(tsp);
+			// ShowCost(tsp);
 		}
 	}
 }
@@ -246,9 +192,9 @@ void Repeat_SDM(struct TSP *tsp)
 
 	for (int i = 0; i < TRIALS; i++) {
 		InitialOrder(tsp);
-		printf("Trial %d:\n", i + 1);
+		// printf("Trial %d:\n", i + 1);
 		CalcCost(tsp);
-		ShowCost(tsp);
+		// ShowCost(tsp);
 		SDM(tsp);
 		
 		if (is_first || tsp->cost < cost_min) {
@@ -265,7 +211,6 @@ void Repeat_SDM(struct TSP *tsp)
     }
     tsp->cost = cost_min;
 }
-
 
 /*
  * 2-opt法による巡回路変形

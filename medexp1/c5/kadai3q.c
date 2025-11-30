@@ -350,7 +350,7 @@ void CalcMin(struct TSP *tsp)
  */
 void ShowResult()
 {
-	printf("\nShortest path and cost：\n");
+	printf("\nShortest path and the cost：\n");
 	for (int i = 0; i < N; i ++) {
 		printf("C%-2d> ", order_min[i] + 1);
 	}
