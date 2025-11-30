@@ -66,7 +66,42 @@ int main()
 	ShowCost(&tsp);
 
 	SteepestDescentMethod(&tsp);
+	// while (1) {
+	// 	float diff, max_diff = 0;
+	// 	int x1, x2, best_x1, best_x2;
+	// 	int changedOrder[N];
+
+	// 	float oldcost = tsp.cost;
 		
+	// 	/* すべての x1, x2 をまわす */
+	// 	for (int i = 0; i <= N - 2; i++) {
+	// 		for (int j = i + 1; j <= N - 1; j++) {
+	// 			x1 = i;
+	// 			x2 = j;
+				
+	// 			TwoOpt(tsp.order, changedOrder, x1, x2);
+	// 			float changedCost = CalcCostOrder(&tsp, changedOrder);
+
+	// 			diff = oldcost - changedCost;
+
+	// 			if (diff > max_diff) {
+	// 				max_diff = diff;
+	// 				best_x1 = x1;
+	// 				best_x2 = x2;
+	// 			}
+	// 		}
+	// 	}
+
+	// 	/* これ以上改善しなかったら break */
+	// 	if (max_diff <= 0)
+	// 		break;
+	// 	/* 改善する余地があるんだったら order を変える */
+	// 	else {
+	// 		UpdateOrder(&tsp, best_x1, best_x2);
+	// 		ShowCost(&tsp);
+	// 	}
+	// }	
+	
 	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
 	// AllOrder(&tsp, 1);
 	// CalcCost(&tsp);
