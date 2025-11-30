@@ -48,8 +48,8 @@ void CalcMin(struct TSP *tsp);
 void ShowResult();
 
 /*
-* メイン関数
-*/
+　* メイン関数
+　*/
 int main()
 {
 	struct TSP tsp;
@@ -64,34 +64,42 @@ int main()
 	CalcCost(&tsp);
 	ShowCost(&tsp);
 
-	int count = 0;
+
 	while (1) {
-		/* x1, x2 を乱数で与える */
-		int x1 = rand() % (N - 1);
-		int x2;
-		while (1) {
-			x2 = rand() % N;
-			if (x1 < x2)
-				break;
+		float diff, max_diff = 0;
+		int x1, x2, best_x1, best_x2;
+		int changedOrder[N];
+
+		float oldcost = tsp.cost;
+		
+		/* すべての x1, x2 をまわす */
+		for (int i = 0; i <= N - 2; i++) {
+			for (int j = i + 1; j <= N - 1; j++) {
+				x1 = i;
+				x2 = j;
+				
+				TwoOpt(tsp.order, changedOrder, x1, x2);
+				float changedCost = CalcCostOrder(&tsp, changedOrder);
+
+				diff = oldcost - changedCost;
+
+				if (diff > max_diff) {
+					max_diff = diff;
+					best_x1 = x1;
+					best_x2 = x2;
+				}
+			}
 		}
-		
-		/* 繰り返し UpdateOrder() を呼ぶ */
-		int is_improve = UpdateOrder(&tsp, x1, x2);
 
-		if (is_improve)
-			count = 0;
-		else
-			count++;
-
-		CalcCost(&tsp);
-		ShowCost(&tsp);
-		
-		/* count = 3 * N になったら break */
-		if (count >= 3 * N)
-			break;		
-	}
-
-
+		/* これ以上改善しなかったら break */
+		if (max_diff <= 0)
+			break;
+		/* 改善する余地があるんだったら order を変える */
+		else {
+			UpdateOrder(&tsp, best_x1, best_x2);
+			ShowCost(&tsp);
+		}
+	}	
 	
 	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
 	// AllOrder(&tsp, 1);
@@ -149,7 +157,7 @@ void ShowData(struct TSP *tsp)
 void InitialOrder(struct TSP *tsp)
 {
 	/* 課題１で作成 */
-	printf("\nAll order:\n");	 /* 計算始めの表示 */
+	printf("\nInitial order:\n");	 /* 計算始めの表示 */
 
 	int used[N] = {0};
 	tsp->order[0] = 0;				// 最初の都市は固定
