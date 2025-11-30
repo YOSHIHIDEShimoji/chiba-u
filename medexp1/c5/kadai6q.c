@@ -39,6 +39,7 @@ int best_order[N];		/* 最短経路を保持するための配列 */
 /* 関数の宣言 */
 void ReadData(struct TSP *tsp);
 void ShowData(struct TSP *tsp);
+void Greedy(struct TSP *tsp, int start);
 void InitialOrder(struct TSP *tsp);
 void SteepestDescentMethod(struct TSP *tsp);
 void CalcCost(struct TSP *tsp);
@@ -59,37 +60,37 @@ int main()
 {
 	struct TSP tsp;
 	
-	srand((unsigned)time(NULL));	// rand() を初期化
-
-	int is_first = 1;
-	
 	ReadData(&tsp);
 	ShowData(&tsp);
 
-	/* TRIALS 回繰り返す */
-	for (int i = 0; i < TRIALS; i++) {
-		InitialOrder(&tsp);
-		printf("Trials%d:\n", i + 1);
+	int is_first = 1;
+	float best_cost;
+
+	printf("\n");
+	for (int start = 0; start < N; start++) {
+		Greedy(&tsp, start)	;
+
 		CalcCost(&tsp);
-		ShowCost(&tsp);
-		SteepestDescentMethod(&tsp);
-		
-		if (is_first || tsp.cost < cost_min) {
+		ShowCost(&tsp);	
+
+		if (is_first || tsp.cost < best_cost) {
+			best_cost = tsp.cost;
 			for (int i = 0; i < N; i++) {
 				best_order[i] = tsp.order[i];
 			}
-			cost_min = tsp.cost;
 			is_first = 0;
 		}
 	}
-	/* 最適解を表示 */
+
+	/* TSP に反映 */
+	for (int i = 0; i < N; i++)	{
+		tsp.order[i] = best_order[i];
+	}
+	tsp.cost = best_cost;
+
 	ShowResult(tsp.order, tsp.cost);
-		
-	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
-	// AllOrder(&tsp, 1);
-	// CalcCost(&tsp);
-	// ShowCost(&tsp);
-	// ShowResult();
+	
+	
 	return 0;
 }
 
@@ -132,6 +133,38 @@ void ShowData(struct TSP *tsp)
 		printf("C%-2d : %4d,%4d\n", 
 			i + 1, tsp->city[i].x, tsp->city[i].y);
 	}
+}
+
+void Greedy(struct TSP *tsp, int start)
+{
+	int is_used[N] = {0};
+	tsp->order[0] = start;
+	is_used[start] = 1;
+	
+	for (int index = 1; index < N; index++) {
+		float best_cost;
+		int best_city;
+		int is_first = 1;
+		
+		for (int i = 0; i < N; i++) {
+			if (is_used[i])
+				continue;
+
+			float dis = CalcDistance(tsp->city[tsp->order[index - 1]], tsp->city[i]);
+
+			if (is_first || dis < best_cost) {
+				best_cost = dis;
+				best_city = i;
+				is_first = 0;
+			}
+		}
+
+		tsp->order[index] = best_city;
+		is_used[best_city] = 1;
+	}
+
+
+
 }
 
 /*
