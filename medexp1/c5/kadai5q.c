@@ -13,7 +13,11 @@
 #include <math.h>
 
 #ifndef N			/* "gcc -DN=15 -lm *.c " で "#define N 15" とする */
-#define N 30		/* 都市の数 */
+#define N 30		/* デフォルト都市の数 */
+#endif
+
+#ifndef TRIALS
+#define TRIALS 50		/* デフォルト試行回数 */
 #endif
 
 /* 都市の座標構造体 */
@@ -30,7 +34,7 @@ struct TSP {
 
 float cost_min;			/* 最短の移動距離 */
 int first = 1;			/* cost_min に最初の経路の cost を代入するためのフラグ */
-int order_min[N];		/* 最短経路を保持するための配列 */
+int best_order[N];		/* 最短経路を保持するための配列 */
 
 /* 関数の宣言 */
 void ReadData(struct TSP *tsp);
@@ -57,51 +61,30 @@ int main()
 	
 	srand((unsigned)time(NULL));	// rand() を初期化
 
+	int is_first = 1;
+	
 	ReadData(&tsp);
 	ShowData(&tsp);
-	InitialOrder(&tsp);
 
-	/* currentOrder のコストを表示 */
-	CalcCost(&tsp);
-	ShowCost(&tsp);
-
-	SteepestDescentMethod(&tsp);
-	// while (1) {
-	// 	float diff, max_diff = 0;
-	// 	int x1, x2, best_x1, best_x2;
-	// 	int changedOrder[N];
-
-	// 	float oldcost = tsp.cost;
+	/* TRIALS 回繰り返す */
+	for (int i = 0; i < TRIALS; i++) {
+		InitialOrder(&tsp);
+		printf("Trials%d:\n", i + 1);
+		CalcCost(&tsp);
+		ShowCost(&tsp);
+		SteepestDescentMethod(&tsp);
 		
-	// 	/* すべての x1, x2 をまわす */
-	// 	for (int i = 0; i <= N - 2; i++) {
-	// 		for (int j = i + 1; j <= N - 1; j++) {
-	// 			x1 = i;
-	// 			x2 = j;
-				
-	// 			TwoOpt(tsp.order, changedOrder, x1, x2);
-	// 			float changedCost = CalcCostOrder(&tsp, changedOrder);
-
-	// 			diff = oldcost - changedCost;
-
-	// 			if (diff > max_diff) {
-	// 				max_diff = diff;
-	// 				best_x1 = x1;
-	// 				best_x2 = x2;
-	// 			}
-	// 		}
-	// 	}
-
-	// 	/* これ以上改善しなかったら break */
-	// 	if (max_diff <= 0)
-	// 		break;
-	// 	/* 改善する余地があるんだったら order を変える */
-	// 	else {
-	// 		UpdateOrder(&tsp, best_x1, best_x2);
-	// 		ShowCost(&tsp);
-	// 	}
-	// }	
-	
+		if (is_first || tsp.cost < cost_min) {
+			for (int i = 0; i < N; i++) {
+				best_order[i] = tsp.order[i];
+			}
+			cost_min = tsp.cost;
+			is_first = 0;
+		}
+	}
+	/* 最適解を表示 */
+	ShowResult();
+		
 	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
 	// AllOrder(&tsp, 1);
 	// CalcCost(&tsp);
@@ -374,7 +357,7 @@ void ShowCostOrder(int order[], float cost)
 }
 
 /*
- * 最初の経路の cost を cost_min に代入し、 order_min に tsp->order をコピーする
+ * 最初の経路の cost を cost_min に代入し、 best_order に tsp->order をコピーする
  * 引数：struct TSP *tsp : TSPデータ
  */
 void CalcMin(struct TSP *tsp)
@@ -382,13 +365,13 @@ void CalcMin(struct TSP *tsp)
 	if (first) {
 		cost_min = tsp->cost;
 		for (int i = 0; i < N; i++) {
-			order_min[i] = tsp->order[i];
+			best_order[i] = tsp->order[i];
 		}
 		first = 0;
 	} else if (cost_min > tsp->cost) {
 		cost_min = tsp->cost;
 		for (int i = 0; i < N; i++) {
-			order_min[i] = tsp->order[i];
+			best_order[i] = tsp->order[i];
 		}
 	}
 }
@@ -402,7 +385,7 @@ void ShowResult()
 {
 	printf("\nShortest path and cost：\n");
 	for (int i = 0; i < N; i ++) {
-		printf("C%-2d> ", order_min[i] + 1);
+		printf("C%-2d> ", best_order[i] + 1);
 	}
-	printf("C%-2d  cost =%7.1f\n", order_min[0] + 1, cost_min);
+	printf("C%-2d  cost =%7.1f\n", best_order[0] + 1, cost_min);
 }
