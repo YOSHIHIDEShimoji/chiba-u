@@ -20,8 +20,7 @@ int main()
 
     /* read data */
     int etime = 0, resp = 0;
-    int i;
-    for (i = 0; i < N; i ++) {
+    for (int i = 0; i < N; i ++) {
         fgets(buf, BUF_SIZE - 1, fp);
         sscanf(buf, "%d,%d\n", &etime, &resp);
 

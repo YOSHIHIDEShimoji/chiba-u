@@ -2,9 +2,10 @@
 #include <stdlib.h>
 
 #define BUF_SIZE 256
-#define M 5
 
-void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[]);
+#ifndef M           // gcc -DM=7 *.c で M = 7 に設定
+#define M 5         // M のデフォルト値 5
+#endif
 
 int main()
 {
@@ -21,58 +22,38 @@ int main()
     fgets(buf, BUF_SIZE - 1, fp);
     sscanf(buf, "%d\n", &N);
 
-    /* array を定義 */
-    int *etime_ary, *resp_ary;
-    etime_ary = (int *)malloc(sizeof(int) * N);
-    resp_ary = (int *)malloc(sizeof(int) * N);
+    /* define array */
+    int *etime = (int *)malloc(sizeof(int) * N);
+    int *resp = (int *)malloc(sizeof(int) * N);
+    float *resp_ma = (float *)malloc(sizeof(float) * N);
 
     /* read data */
-    int etime = 0, resp = 0;
     for (int i = 0; i < N; i ++) {
         fgets(buf, BUF_SIZE - 1, fp);
-        sscanf(buf, "%d,%d\n", &etime, &resp);
-        etime_ary[i] = etime;
-        resp_ary[i] = resp;
+        sscanf(buf, "%d,%d\n", &etime[i], &resp[i]);
     }
 
-    /* find i between 1000 and 1100 */
-    int count = 0;
-    for (int i = 0; i < N; i++) {
-        if (1000 <= etime_ary[i] && etime_ary[i] <= 1100) {
-            count++;
+    /* cal resp_ma */
+    for (int i = M - 1; i <= N - 1; i++) {
+        float tmp = 0;
+        for (int j = 0; j <= M - 1; j++) {
+            tmp +=resp[i - j];
         }
+        resp_ma[i] = tmp / M;
     }
-
-    /* array を定義 */
-    float *resp_ma;
-    resp_ma = (float *)malloc(sizeof(float) * N);
-
-    /* index を定義 */
-    printf("etime\tresp_ma\n");
-
-    for (int i = 0; i < N; i++) {
-        if (i >= M - 1 && 1000 <= etime_ary[i] && etime_ary[i] <= 1100) {
-            cal_resp_ma(i, resp_ary, resp_ma, etime_ary);
-        }
-    }
-
-    /* free */
-    free(etime_ary);
-    free(resp_ary);
-    free(resp_ma);
     
-    /* ending */
+    /* print the resp_ma[i] value for etime[i] between 1000[ms] and 1100[ms] */
+    printf("etime\tresp_ma\n");
+    for (int i = 0; i < N; i++) {
+        if (1000 <= etime[i] && etime[i] <= 1100) {
+            printf("%d\t%.3f\n", etime[i], resp_ma[i]);
+        }
+    }
+
+    /* free and ending */
+    free(etime);
+    free(resp);
+    free(resp_ma);
     fclose(fp);
     return 0;
-}
-
-void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[])
-{
-    long sum = 0;
-    for (int k = 0; k < M; k++) {
-        sum += resp_ary[i - k];
-    }
-    resp_ma[i] = (float)sum / (float)M;
-
-    printf("%d\t%f\n", etime_ary[i], resp_ma[i]);
 }

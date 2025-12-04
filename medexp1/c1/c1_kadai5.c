@@ -2,9 +2,10 @@
 #include <stdlib.h>
 
 #define BUF_SIZE 256
-#define M 5
 
-void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[]);
+#ifndef M           // gcc -DM=7 *.c で M = 7 に設定
+#define M 5         // M のデフォルト値 5
+#endif
 
 int main()
 {
@@ -22,60 +23,45 @@ int main()
     sscanf(buf, "%d\n", &N);
 
     /* define array */
-    int *etime_ary, *resp_ary;
-    etime_ary = (int *)malloc(sizeof(int) * N);
-    resp_ary = (int *)malloc(sizeof(int) * N);
+    int *etime = (int *)malloc(sizeof(int) * N);
+    int *resp = (int *)malloc(sizeof(int) * N);
+    float *resp_ma = (float *)malloc(sizeof(float) * N);
 
     /* read data */
-    int etime = 0, resp = 0;
     for (int i = 0; i < N; i ++) {
         fgets(buf, BUF_SIZE - 1, fp);
-        sscanf(buf, "%d,%d\n", &etime, &resp);
-        etime_ary[i] = etime;
-        resp_ary[i] = resp;
+        sscanf(buf, "%d,%d\n", &etime[i], &resp[i]);
     }
 
     /* cal mean */
-    double mean = 0, sum = 0;
+    float mean = 0, sum = 0;
     for (int i = 0; i < N; i++) {
-        sum += resp_ary[i];
+        sum += resp[i];
     }
     mean = sum / N;
 
-    /* define array */
-    float *resp_ma;
-    resp_ma = (float *)malloc(sizeof(float) * N);
-
     /* cal resp_ma */
     for (int i = M - 1; i <= N - 1; i++) {
-        cal_resp_ma(i, resp_ary, resp_ma, etime_ary);
+        float tmp = 0;
+        for (int j = 0; j <= M - 1; j++) {
+            tmp +=resp[i - j];
+        }
+        resp_ma[i] = tmp / M;
     }
 
     /* cal timing */
-    double timing;
+    printf("呼吸波形振幅の平均値を M = %d の移動平均波形が下向きに交差する時間\n", M);
     for (int i = M - 1; i < N - 1; i++) {
         if (resp_ma[i] > mean && mean >= resp_ma[i + 1]) {
-            // printf("debug: i = %d\n", i);
-            timing = etime_ary[i] + (mean - resp_ma[i]) / (resp_ma[i + 1] - resp_ma[i]) * (etime_ary[i + 1] - etime_ary[i]);
-            printf("%fms\n", timing);
+            float timing = etime[i] + (mean - resp_ma[i]) / (resp_ma[i + 1] - resp_ma[i]) * (etime[i + 1] - etime[i]);
+            printf("%.3fms\n", timing);
         }   
     }
 
-    /* free */
-    free(etime_ary);
-    free(resp_ary);
+    /* free and ending */
+    free(etime);
+    free(resp);
     free(resp_ma);
-    
-    /* ending */
     fclose(fp);
     return 0;
-}
-
-void cal_resp_ma(int i, int resp_ary[], float resp_ma[], int etime_ary[])
-{
-    float sum = 0;
-    for (int k = 0; k < M; k++) {
-        sum += resp_ary[i - k];
-    }
-    resp_ma[i] = sum / M;
 }
