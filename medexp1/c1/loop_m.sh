@@ -24,6 +24,7 @@ fi
 for M in $(seq "$start" "$end"); do
     echo "== M = $M =="
 
+    # コンパイラするファイルを適宜変更
     gcc -DM=$M c1_kadai4.c -o a.out
 
     ./a.out
