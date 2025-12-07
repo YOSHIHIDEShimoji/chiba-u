@@ -13,7 +13,7 @@
 #include <math.h>
 
 #ifndef N			/* "gcc -DN=15 -lm *.c " で "#define N 15" とする */
-#define N 30		/* デフォルト都市の数 */
+#define N 100		/* デフォルト都市の数 */
 #endif
 
 #ifndef TRIALS
@@ -45,6 +45,8 @@ void Repeat_SDM(struct TSP *tsp);
 void CalcCost(struct TSP *tsp);
 float CalcDistance(struct City a, struct City b);
 float CalcCostOrder(struct TSP *tsp, int order[]);
+void CalcActualCost(struct TSP *tsp);
+float CalcActualDistance(struct City a, struct City b);
 void ShowCost(struct TSP *tsp);
 void ShowCostOrder(int order[], float cost);
 void TwoOpt(const int currentOrder[N], int changedOrder[N], int x1, int x2);
@@ -67,6 +69,9 @@ int main()
 
 	// printf("\nSteepest descent method search:\n");
 	Repeat_SDM(&tsp);
+
+	/* 実際の cost を計算 */
+	CalcActualCost(&tsp);
 
 	/* 最適解を表示 */
 	printf("Number of trials: %d", TRIALS);
@@ -335,9 +340,26 @@ float CalcCostOrder(struct TSP *tsp, int order[])
 float CalcDistance(struct City a, struct City b)
 {
 	/* 課題3で作成 */
+	float dis = (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
+	return dis;
+}
+
+void CalcActualCost(struct TSP *tsp)
+{
+	tsp->cost = 0;
+	for (int i = 0; i < N - 1; i++) {
+		tsp->cost += CalcActualDistance(tsp->city[tsp->order[i + 1]], tsp->city[tsp->order[i]]);
+	}
+	tsp->cost += CalcActualDistance(tsp->city[tsp->order[N - 1]], tsp->city[tsp->order[0]]);
+}
+
+float CalcActualDistance(struct City a, struct City b)
+{
+	/* 課題3で作成 */
 	float dis = sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 	return dis;
 }
+
 
 /*
  * 巡回順と総移動距離を表示

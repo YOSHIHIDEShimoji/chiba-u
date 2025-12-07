@@ -13,11 +13,11 @@
 #include <math.h>
 
 #ifndef N			/* "gcc -DN=15 -lm *.c " で "#define N 15" とする */
-#define N 30		/* デフォルト都市の数 */
+#define N 100		/* デフォルト都市の数 */
 #endif
 
 #ifndef TRIALS
-#define TRIALS 50		/* デフォルト試行回数 */
+#define TRIALS 300		/* デフォルト試行回数 */
 #endif
 
 /* 都市の座標構造体 */
@@ -40,10 +40,8 @@ int best_order[N];		/* 最短経路を保持するための配列 */
 void ReadData(struct TSP *tsp);
 void ShowData(struct TSP *tsp);
 void Greedy(struct TSP *tsp, int start);
-void All_greedy(struct TSP *tsp);
 void InitialOrder(struct TSP *tsp);
 void SDM(struct TSP *tsp);
-void Repeat_SDM(struct TSP *tsp);
 void CalcCost(struct TSP *tsp);
 float CalcDistance(struct City a, struct City b);
 float CalcCostOrder(struct TSP *tsp, int order[]);
@@ -65,17 +63,34 @@ int main()
 	ReadData(&tsp);
 	ShowData(&tsp);
 
-	printf("\nGreedy search:\n");
-	All_greedy(&tsp);
-	/* 最適解を表示 */
-	printf("\nBest of Greedy search\n");
-	ShowResult(tsp.order, tsp.cost);
+	int is_first = 1;
+	float best_cost;
 
-	printf("\nSteepest descent method search:\n");
-	SDM(&tsp);
-	/* 最適解を表示 */
-	printf("\nBest of steepest descent method search\n");
+	printf("\nGreedy search:");
+	for (int start = 0; start < N; start++) {
+		Greedy(&tsp, start)	;
+
+		CalcCost(&tsp);
+		SDM(&tsp);
+		ShowCost(&tsp);	
+
+		if (is_first || tsp.cost < best_cost) {
+			best_cost = tsp.cost;
+			for (int i = 0; i < N; i++) {
+				best_order[i] = tsp.order[i];
+			}
+			is_first = 0;
+		}
+	}
+
+	/* TSP に反映 */
+	for (int i = 0; i < N; i++)	{
+		tsp.order[i] = best_order[i];
+	}
+	tsp.cost = best_cost;
+
 	ShowResult(tsp.order, tsp.cost);
+	
 	
 	return 0;
 }
@@ -153,34 +168,6 @@ void Greedy(struct TSP *tsp, int start)
 
 }
 
-void All_greedy(struct TSP *tsp)
-{
-	int is_first = 1;
-	float best_cost;
-
-	for (int start = 0; start < N; start++) {
-		Greedy(tsp, start)	;
-
-		CalcCost(tsp);
-		ShowCost(tsp);	
-
-		if (is_first || tsp->cost < best_cost) {
-			best_cost = tsp->cost;
-			for (int i = 0; i < N; i++) {
-				best_order[i] = tsp->order[i];
-			}
-			is_first = 0;
-		}
-	}
-
-	/* TSP に反映 */
-	for (int i = 0; i < N; i++)	{
-		tsp->order[i] = best_order[i];
-	}
-	tsp->cost = best_cost;
-}
-
-
 /*
  * 初期巡回路を乱数で決定する
  * 引数：struct TSP *tsp : TSPデータ
@@ -209,7 +196,6 @@ void InitialOrder(struct TSP *tsp)
 
 void SDM(struct TSP *tsp)
 {
-	ShowCost(tsp);
 	while (1) {
 		float diff, max_diff = 0;
 		int x1, x2, best_x1, best_x2;
@@ -245,32 +231,6 @@ void SDM(struct TSP *tsp)
 			ShowCost(tsp);
 		}
 	}
-}
-
-void Repeat_SDM(struct TSP *tsp)
-{
-	int is_first = 1;
-
-	for (int i = 0; i < TRIALS; i++) {
-		InitialOrder(tsp);
-		printf("Trial %d:\n", i + 1);
-		CalcCost(tsp);
-		ShowCost(tsp);
-		SDM(tsp);
-		
-		if (is_first || tsp->cost < cost_min) {
-			for (int i = 0; i < N; i++) {
-				best_order[i] = tsp->order[i];
-			}
-			cost_min = tsp->cost;
-			is_first = 0;
-		}
-	}
-
-	for (int i = 0; i < N; i++) {
-        tsp->order[i] = best_order[i];
-    }
-    tsp->cost = cost_min;
 }
 
 
@@ -462,4 +422,10 @@ void ShowResult(int order[], float cost)
 		printf("C%-2d> ", order[i] + 1);
 	}
 	printf("C%-2d  cost =%7.1f\n", order[0] + 1, cost);
+	
+	printf("\nCopy below\n");
+	for (int i = 0; i < N; i ++) {
+		printf("%d-", order[i]);
+	}
+	printf("%d\n", order[0]);
 }
