@@ -12,10 +12,23 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import pandas as pd
+import os
+
+def load_client_keys(path="./_ignore/client.csv"):
+    """CLIENT_ID と CLIENT_SECRET を CSV から読み込む"""
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"client.csv が見つかりません: {path}")
+
+    df = pd.read_csv(path, header=None)
+    # 0 列目がキー名、1 列目が値
+    key_map = dict(zip(df[0], df[1]))
+
+    return key_map.get("CLIENT_ID"), key_map.get("CLIENT_SECRET")
+
 
 # ====== 認証情報（提出用では xxx にする） ======
-CLIENT_ID = "883c38eec9e94dbbb22f0bb5659476d0"        # your Spotify Client ID
-CLIENT_SECRET = "db8bca2f8846447c9b4d3c9eeb1ecdf8"    # your Spotify Client Secret
+CLIENT_ID, CLIENT_SECRET = load_client_keys()
+
 REDIRECT_URI = "http://127.0.0.1:8000/callback"
 # audio-features, playlist 読み取りだけなら特別な scope は不要だが、
 # 念のため playlist 読み取り系 scope を付けておく。

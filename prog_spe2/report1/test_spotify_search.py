@@ -1,9 +1,22 @@
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from spotipy.exceptions import SpotifyException
+import pandas as pd
+import os
 
-CLIENT_ID = "xxx"
-CLIENT_SECRET = "xxx"
+def load_client_keys(path="./_ignore/client.csv"):
+    """CLIENT_ID と CLIENT_SECRET を CSV から読み込む"""
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"client.csv が見つかりません: {path}")
+
+    df = pd.read_csv(path, header=None)
+    # 0 列目がキー名、1 列目が値
+    key_map = dict(zip(df[0], df[1]))
+
+    return key_map.get("CLIENT_ID"), key_map.get("CLIENT_SECRET")
+
+
+CLIENT_ID, CLIENT_SECRET = load_client_keys()
 
 auth = SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 sp = spotipy.Spotify(auth_manager=auth)
