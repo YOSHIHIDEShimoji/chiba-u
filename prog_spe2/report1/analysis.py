@@ -21,7 +21,7 @@ df_japan = df[df["country"] == "Japan"].copy()
 df_global = df[df["country"] == "Global"].copy()
 df_both = pd.concat([df_japan, df_global], ignore_index=True)
 
-# Japan と Global の散布図を作成 
+# Japan と Global の散布図作成、相関係数算出
 def save_scatter_release_vs_duration_both(df_all, df_japan, df_global, save_dir):
     x_col = "release_year"
     y_col = "duration_ms"
@@ -33,35 +33,25 @@ def save_scatter_release_vs_duration_both(df_all, df_japan, df_global, save_dir)
         "Global": "deepskyblue",
     }
 
-    # 散布図（縦軸は秒に変換して描画）
+    # 相関係数
+    r_japan, _ = pearsonr(df_japan[x_col], df_japan[y_col])
+    r_global, _ = pearsonr(df_global[x_col], df_global[y_col])
+    r_both, _ = pearsonr(df_all[x_col], df_all[y_col])
+
+    # 散布図    
     for c in ["Global", "Japan"]:
-        sub_c = df_all[df_all["country"] == c].dropna(subset=[x_col, y_col])
-        if len(sub_c) < 2:
-            continue
-        x = sub_c[x_col].values
-        y_s = sub_c[y_col].values / 1000.0  # ms → s
-        plt.scatter(x, y_s, alpha=0.7, label=c, color=color_map[c])
+        sub = df_all[df_all["country"] == c]
+        x = sub[x_col].values
+        y = sub[y_col].values / 1000.0
+        plt.scatter(x, y, label=c, color=color_map[c])
 
-    # 相関係数はターミナル出力のみ
-    def safe_corr(df_sub):
-        sub = df_sub.dropna(subset=[x_col, y_col])
-        if len(sub) < 2:
-            return np.nan, np.nan
-        return pearsonr(sub[x_col], sub[y_col])
-
-    r_japan, _ = safe_corr(df_japan)
-    r_global, _ = safe_corr(df_global)
-    r_both, _ = safe_corr(df_all)
-
-    print("\n======================================")
-    print("[BOTH] duration_ms vs release_year")
-    print(f"  r(Japan)  = {r_japan:.4f}")
-    print(f"  r(Global) = {r_global:.4f}")
-    print(f"  r(Both)   = {r_both:.4f}")
-    print("======================================")
+    print("=== 曲の長さとリリース年の相関係数 ===")
+    print(f"  r(Japan)  =  {r_japan:.4f}")
+    print(f"  r(Global) =  {r_global:.4f}")
+    print(f"  r(Japan + Global)  =  {r_both:.4f}")
 
     plt.xlabel("release_year")
-    plt.ylabel("duration [s]")  # 単位を秒で表示
+    plt.ylabel("duration [s]")
     plt.title("duration [s] vs release_year (Japan & Global)")
     plt.grid(True)
     plt.legend(loc="upper left")
@@ -71,15 +61,10 @@ def save_scatter_release_vs_duration_both(df_all, df_japan, df_global, save_dir)
     plt.savefig(filepath)
     plt.close()
 
-    print(f"Saved scatter (Both): {filepath}")
+    # print(f"Saved scatter (Both): {filepath}")
 
 
-# =========================================================
-# 1-2. 散布図（Japan only）：release_year vs duration（秒）
-#      ＋ 赤色の線形近似直線
-#      相関係数はターミナルのみ
-#      式 y = ax + b を左下に表示
-# =========================================================
+# Japan の散布図(線形近似)
 def save_scatter_release_vs_duration_japan(df_japan, save_dir):
     x_col = "release_year"
     y_col = "duration_ms"
@@ -87,44 +72,31 @@ def save_scatter_release_vs_duration_japan(df_japan, save_dir):
     sub = df_japan.dropna(subset=[x_col, y_col])
     x = sub[x_col].values
     y_ms = sub[y_col].values
-    y_s = y_ms / 1000.0  # プロット用に秒に変換
+    y_s = y_ms / 1000.0
 
-    # 回帰直線は ms 単位で計算
     result_ms = linregress(x, y_ms)
-    slope_ms = result_ms.slope          # [ms / year]
-    intercept_ms = result_ms.intercept  # [ms]
+    slope_ms = result_ms.slope
+    intercept_ms = result_ms.intercept
 
-    # プロット用の直線は秒に変換して描く
     x_lin = np.linspace(x.min(), x.max(), 100)
-    y_lin_s = (slope_ms * x_lin + intercept_ms) / 1000.0  # ms → s
+    y_lin_s = (slope_ms * x_lin + intercept_ms) / 1000.0  # ms を s に変換
 
     plt.figure(figsize=(6, 4))
 
-    # 散布図（Japan, 縦軸は秒）
-    plt.scatter(x, y_s, alpha=0.7, label="Japan", color="tab:orange")
-
-    # 回帰直線（赤, 秒単位）
+    plt.scatter(x, y_s, label="Japan", color="tab:orange")
     plt.plot(x_lin, y_lin_s, color="red", linewidth=2, label="Linear fit")
 
-    # 式を左下に秒単位で表示
     slope_s = slope_ms / 1000.0
     intercept_s = intercept_ms / 1000.0
     eq_text = f"y = {slope_s:.2f} x + {intercept_s:.1f}"
     plt.text(
         0.05,
-        0.05,  # 左下
+        0.05,
         eq_text,
         transform=plt.gca().transAxes,
         fontsize=11,
-        bbox=dict(facecolor="white", alpha=0.7, edgecolor="gray"),
+        bbox=dict(facecolor="white", edgecolor="gray"),
     )
-
-    # 相関係数は ms で計算（s でも同じ値だが、元データに合わせる）
-    r, _ = pearsonr(x, y_ms)
-    print("\n[JAPAN] regression (computed in ms, shown in s)")
-    print(f"  slope [s/year] = {slope_s:.4f}")
-    print(f"  intercept [s]  = {intercept_s:.4f}")
-    print(f"  r(Japan)       = {r:.4f}")
 
     plt.xlabel("release_year")
     plt.ylabel("duration [s]")
@@ -137,37 +109,25 @@ def save_scatter_release_vs_duration_japan(df_japan, save_dir):
     plt.savefig(filepath)
     plt.close()
 
-    print(f"Saved scatter (Japan): {filepath}")
+    # print(f"Saved scatter (Japan): {filepath}")
 
 
-# =========================================================
-# 2-1. 単回帰分析（Both）：release_year → duration_ms
-#      （数値はこれまで通り ms 単位で計算・出力）
-# =========================================================
+# Japan + Global の線形回帰
 def regression_releaseyear_duration_both(df_all):
     sub = df_all.dropna(subset=["release_year", "duration_ms"])
     x = sub["release_year"].values
     y = sub["duration_ms"].values
 
     result = linregress(x, y)
-    n = len(x)
 
-    print("\n===== Linear regression: duration_ms = a * release_year + b (Both) =====")
-    print(f"a (s/year)   = {result.slope/1000:.3f}")
-    print(f"b (s)        = {result.intercept/1000:.3f}")
-    print(f"r            = {result.rvalue:.3f}")
-    print(f"p-value      = {result.pvalue:.3e}")
-    print(f"n            = {n}")
-    print("========================================================================")
-    print(
-        f"結論（Both）：リリース年が 1 年上がると、曲の長さは平均して約 {result.slope/1000:.1f} s 変化する。"
-    )
+    print('\n=== 線形回帰 (Japan + Global) ===')
+    print("duration_s = a * release_year + b としたとき、")
+    print(f"  a  =  {result.slope/1000:.3f} [s/year]")
+    print(f"  b  =  {result.intercept/1000:.3f} [s]")
+    print(f"  r  =  {result.rvalue:.3f}")
+    print(f"  p  =  {result.pvalue:.3e}")
 
-
-# =========================================================
-# 2-2. 単回帰分析（Japan only）：release_year → duration_ms
-#      （こちらも数値は ms 単位のものをログに出す）
-# =========================================================
+# Japan の線形回帰
 def regression_releaseyear_duration_japan(df_japan):
     sub = df_japan.dropna(subset=["release_year", "duration_ms"])
     x = sub["release_year"].values
@@ -176,21 +136,14 @@ def regression_releaseyear_duration_japan(df_japan):
     result = linregress(x, y)
     n = len(x)
 
-    print("\n===== Linear regression: duration_ms = a * release_year + b (Japan only) =====")
-    print(f"a (s/year)   = {result.slope/1000:.3f}")
-    print(f"b (s)        = {result.intercept/1000:.3f}")
-    print(f"r            = {result.rvalue:.3f}")
-    print(f"p-value      = {result.pvalue:.3e}")
-    print(f"n            = {n}")
-    print("==============================================================================")
-    print(
-        f"結論（Japan）：リリース年が 1 年上がると、日本における曲の長さは平均して約 {result.slope/1000:.1f} s 変化する。"
-    )
+    print('\n=== 線形回帰 (Japan) ===')
+    print("duration_s = a * release_year + b としたとき、")
+    print(f"  a  = {result.slope/1000:.3f} [s/year]")
+    print(f"  b  =  {result.intercept/1000:.3f} [s]")
+    print(f"  r  =  {result.rvalue:.3f}")
+    print(f"  p  =  {result.pvalue:.3e}")
 
-
-# =========================================================
-# 3. t検定：Japan vs Global（平均値の差の検定）
-# =========================================================
+# Japan と Global の t検定
 def run_ttests(df, df_japan, df_global):
     feature_cols = [
         "duration_ms",
@@ -200,32 +153,18 @@ def run_ttests(df, df_japan, df_global):
         "release_year",
     ]
 
-    print("\n================ T-tests Japan vs Global ================")
+    print("\n=== Japan と Global の平均値に差があるかのt検定 ===")
     for col in feature_cols:
-        if col not in df.columns:
-            print(f"{col:18s}: column not found, skip")
-            continue
-
         j = df_japan[col].dropna()
         g = df_global[col].dropna()
 
-        if len(j) > 1 and len(g) > 1:
-            t_stat, p_val = ttest_ind(j, g, equal_var=False)
-            print(
-                f"{col:18s}: "
-                f"t = {t_stat:8.3f}, p = {p_val:8.3e}, "
-                f"n_Japan = {len(j):3d}, n_Global = {len(g):3d}"
-            )
-        else:
-            print(f"{col:18s}: skip (not enough data)")
-    print("=========================================================\n")
+        t_stat, p_val = ttest_ind(j, g, equal_var=False)
+        print(f"  {col:18s}: t = {t_stat:8.3f},  p = {p_val:8.3e}")
 
 
-# =========================================================
-# 4. 箱ひげ図：Global / Japan の全数値特徴量を 1 枚に
-# =========================================================
+# 箱ひげ図
 def save_boxplot_all_features(df_both, save_dir):
-    sns.set(style="whitegrid")
+    sns.set_style(style="whitegrid")
 
     df_features = df_both.copy()
 
@@ -236,7 +175,7 @@ def save_boxplot_all_features(df_both, save_dir):
         if c not in exclude_cols and np.issubdtype(df_features[c].dtype, np.number)
     ]
 
-    print("Boxplot に使う列:", numeric_cols)
+    # print("Boxplot に使う列:", numeric_cols)
 
     df_long = df_features[["country"] + numeric_cols].melt(
         id_vars="country",
@@ -244,7 +183,7 @@ def save_boxplot_all_features(df_both, save_dir):
         value_name="value_raw",
     )
 
-    # 各特徴量ごとに標準化（平均0, 分散1）
+    # 標準化（平均0, 分散1）
     df_long["value"] = df_long.groupby("feature_name")["value_raw"].transform(
         lambda x: (x - x.mean()) / x.std(ddof=0)
     )
@@ -263,7 +202,7 @@ def save_boxplot_all_features(df_both, save_dir):
     plt.xlabel("country")
     plt.ylabel("value (standardized)")
 
-    # 凡例（タイトルは消す）
+    # 凡例
     handles, labels = ax.get_legend_handles_labels()
     plt.legend(
         handles,
@@ -279,18 +218,13 @@ def save_boxplot_all_features(df_both, save_dir):
     plt.savefig(box_path)
     plt.close()
 
-    print(f"Boxplot saved to: {box_path}")
+    # print(f"Boxplot saved to: {box_path}")
 
 
-# =========================================================
-# メイン処理
-# =========================================================
+# メイン関数
 if __name__ == "__main__":
     # 散布図（Both, duration を秒で表示）
     save_scatter_release_vs_duration_both(df_both, df_japan, df_global, SAVE_DIR)
-
-    # 散布図（Japan only, 秒＋回帰直線＋式）
-    save_scatter_release_vs_duration_japan(df_japan, SAVE_DIR)
 
     # 単回帰（Both, ms 単位でログ出力）
     regression_releaseyear_duration_both(df_both)
@@ -298,11 +232,14 @@ if __name__ == "__main__":
     # 単回帰（Japan only, ms 単位でログ出力）
     regression_releaseyear_duration_japan(df_japan)
 
+    # 散布図（Japan only, 秒＋回帰直線＋式）
+    save_scatter_release_vs_duration_japan(df_japan, SAVE_DIR)
+
     # t検定
     run_ttests(df, df_japan, df_global)
 
     # 箱ひげ図
     save_boxplot_all_features(df_both, SAVE_DIR)
 
-    print("Saved:", SAVE_DIR)
+    # print("Saved:", SAVE_DIR)
     
