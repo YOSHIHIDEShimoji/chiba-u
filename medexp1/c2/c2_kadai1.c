@@ -1,14 +1,13 @@
 /*
  * 医工学実験1 C言語プログラミング2
- * 課題番号：
- * 作成者：
- * 作成日：
+ * 課題番号：1
+ * 作成者：下地慶英
+ * 作成日：2025/12/09
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#define BUF_SIZE 256
 #define MAX_PEAK_NUM 6
 
 float *movingAverage(float *signal, int length, int K)
@@ -42,8 +41,6 @@ int main(int argc, char **argv)
 {
     /* 課題1: 心電図データの読み込み */
     int    dataLength = 0;
-    float* otime = NULL;
-    float* signal = NULL;
 
     /* open file */
     FILE *fp = fopen("ecg4000.txt", "r");
@@ -53,22 +50,17 @@ int main(int argc, char **argv)
     }
 
     /* define dataLength */
-    char buf[BUF_SIZE];
-    fgets(buf, BUF_SIZE - 1, fp);
+    char buf[256];
+    fgets(buf, 256 - 1, fp);
     sscanf(buf, "%d\n", &dataLength);
-    // printf("%d\n",dataLength);
 
     /* define array */
-    otime = (float *)malloc(sizeof(float) * dataLength);
-    signal = (float *)malloc(sizeof(float) * dataLength);
+    float* otime = (float *)malloc(sizeof(float) * dataLength);
+    float* signal = (float *)malloc(sizeof(float) * dataLength);
 
-    float otime_value = 0;
-    float signal_value = 0;
     for (int i = 0; i < dataLength; i++) {
-        fgets(buf, BUF_SIZE - 1, fp);
-        sscanf(buf, "%f,%f\n", &otime_value, &signal_value);
-        otime[i] = otime_value;
-        signal[i] = signal_value;
+        fgets(buf, 256 - 1, fp);
+        sscanf(buf, "%f,%f\n", &otime[i], &signal[i]);
         printf("otime[%d] = %f\tsignal[%d] = %f\n", i, otime[i], i, signal[i]);
     }
 
