@@ -32,5 +32,5 @@ for M in $(seq "$start" "$end"); do
 done
 
 # 実行方法
-# chmod +x *.sh
+# chmod +x loop_m.sh
 # ./loop_m.sh 3 10
