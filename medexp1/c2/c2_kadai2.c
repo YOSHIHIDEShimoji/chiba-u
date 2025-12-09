@@ -1,14 +1,13 @@
 /*
  * 医工学実験1 C言語プログラミング2
- * 課題番号：
- * 作成者：
- * 作成日：
+ * 課題番号：2
+ * 作成者：下地慶英
+ * 作成日：2025/12/09
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#define BUF_SIZE 256
 #define MAX_PEAK_NUM 6
 
 float *movingAverage(float *signal, int length, int K)
@@ -34,7 +33,6 @@ float *movingAverage(float *signal, int length, int K)
     return averagedSignal;
 }
 
-
 int main(int argc, char **argv)
 {
     /* 引数がなければエラー */
@@ -42,43 +40,34 @@ int main(int argc, char **argv)
     if (argc >= 2) {
         K = atoi(argv[1]);
     } else {
-        printf("移動平均のサイズ K を引数として指定してください\n");
+        printf("Usage: %s <moving_average_size>\n", argv[0]);
         return 1;
     }
     
     /* 課題1: 心電図データの読み込み */
-    int    dataLength = 0;
-    float* otime = NULL;
-    float* signal = NULL;
-
     /* open file */
     FILE *fp = fopen("ecg4000.txt", "r");
     if (fp == NULL) {
         printf("Can't open data file.\n");
         return 1;
     }
-
+    
     /* define dataLength */
-    char buf[BUF_SIZE];
-    fgets(buf, BUF_SIZE - 1, fp);
+    int dataLength = 0;
+    char buf[256];
+    fgets(buf, 256 - 1, fp);
     sscanf(buf, "%d\n", &dataLength);
 
     /* define array */
-    otime = (float *)malloc(sizeof(float) * dataLength);
-    signal = (float *)malloc(sizeof(float) * dataLength);
+    float* otime = (float *)malloc(sizeof(float) * dataLength);
+    float* signal = (float *)malloc(sizeof(float) * dataLength);
 
-    float otime_value;
-    float signal_value;
     for (int i = 0; i < dataLength; i++) {
-        fgets(buf, BUF_SIZE - 1, fp);
-        sscanf(buf, "%f,%f\n", &otime_value, &signal_value);
-        otime[i] = otime_value;
-        signal[i] = signal_value;
-        // printf("otime[%d] = %f\tsignal[%d] = %f\n", i, otime[i], i, signal[i]);
+        fgets(buf, 256 - 1, fp);
+        sscanf(buf, "%f,%f\n", &otime[i], &signal[i]);
     }
 
     /* 課題2: 移動平均処理の適用 */
-    // int K = 1;
     float *averagedSignal = movingAverage(signal, dataLength, K);
 
     /* 課題3: ピーク処理の検出 */

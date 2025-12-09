@@ -40,16 +40,15 @@ float *movingAverage(float *signal, int length, int K)
 int main(int argc, char **argv)
 {
     /* 課題1: 心電図データの読み込み */
-    int    dataLength = 0;
-
     /* open file */
     FILE *fp = fopen("ecg4000.txt", "r");
     if (fp == NULL) {
         printf("Can't open data file.\n");
         return 1;
     }
-
+    
     /* define dataLength */
+    int dataLength = 0;
     char buf[256];
     fgets(buf, 256 - 1, fp);
     sscanf(buf, "%d\n", &dataLength);
@@ -75,5 +74,6 @@ int main(int argc, char **argv)
     fclose(fp);
     free(otime);
     free(signal);
+    free(averagedSignal);
     return 0;
 }

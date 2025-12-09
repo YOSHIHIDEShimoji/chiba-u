@@ -1,16 +1,12 @@
 /*
  * 医工学実験1 C言語プログラミング2
- * 課題番号：
- * 作成者：
- * 作成日：
+ * 課題番号：4
+ * 作成者：下地慶英
+ * 作成日：2025/12/09
  */
 
 #include <stdio.h>
 #include <stdlib.h>
-
-#define BUF_SIZE 256
-#define MAX_PEAK_NUM 0.6
-#define MAX_PEAK_NUM_2 6
 
 float *movingAverage(float *signal, int length, int K)
 {
@@ -29,7 +25,6 @@ float *movingAverage(float *signal, int length, int K)
             }
         }
         averagedSignal[i] = sum / count;
-        // printf("%f\n", averagedSignal[i]);
     }
 
     return averagedSignal;
@@ -37,12 +32,17 @@ float *movingAverage(float *signal, int length, int K)
 
 int main(int argc, char **argv)
 {
+    /* 引数がなければエラー */
+    int K;
+    if (argc >= 2) {
+        K = atoi(argv[1]);
+    } else {
+        printf("Usage: %s <moving_average_size>\n", argv[0]);
+        return 1;
+    }
+    
     /* 課題1: 心電図データの読み込み */
-    int    dataLength = 0;
-    float* otime = NULL;
-    float* signal = NULL;
-
-    /* open file */
+    /* ecg4000.txt の読み込み */
     FILE *fp = fopen("ecg4000.txt", "r");
     if (fp == NULL) {
         printf("Can't open data file.\n");
@@ -50,57 +50,44 @@ int main(int argc, char **argv)
     }
     
     /* define dataLength */
-    char buf[BUF_SIZE];
-    fgets(buf, BUF_SIZE - 1, fp);
+    int dataLength = 0;
+    char buf[256];
+    fgets(buf, 256 - 1, fp);
     sscanf(buf, "%d\n", &dataLength);
 
     /* define array */
-    otime = (float *)malloc(sizeof(float) * dataLength);
-    signal = (float *)malloc(sizeof(float) * dataLength);
+    float* otime = (float *)malloc(sizeof(float) * dataLength);
+    float* signal = (float *)malloc(sizeof(float) * dataLength);
 
-    float otime_value;
-    float signal_value;
     for (int i = 0; i < dataLength; i++) {
-        fgets(buf, BUF_SIZE - 1, fp);
-        sscanf(buf, "%f,%f\n", &otime_value, &signal_value);
-        otime[i] = otime_value;
-        signal[i] = signal_value;
-        // printf("otime[%d] = %f\tsignal[%d] = %f\n", i, otime[i], i, signal[i]);
+        fgets(buf, 256 - 1, fp);
+        sscanf(buf, "%f,%f\n", &otime[i], &signal[i]);
     }
 
     /* ecg400.txt の読み込み */
-    int dataLength_short;
     FILE *fp_short = fopen("ecg400.txt", "r");
     if (fp_short == NULL) {
         printf("Can't open data file.\n");
         return 1;
     }
-    fgets(buf, BUF_SIZE - 1, fp_short);
+
+    /* define dataLength_short */
+    int dataLength_short = 0;
+    fgets(buf, 256 - 1, fp_short);
     sscanf(buf, "%d\n", &dataLength_short);
+
+    /* define array */
     float * otime_short = (float *)malloc(sizeof(float) * dataLength_short);
     float * signal_short = (float *)malloc(sizeof(float) * dataLength_short);
+
     for (int i = 0; i < dataLength_short; i++) {
-        fgets(buf, BUF_SIZE - 1, fp_short);
-        sscanf(buf, "%f,%f\n", &otime_value, &signal_value);
-        otime_short[i] = otime_value;
-        signal_short[i] = signal_value;
-        // printf("otime_short[%d] = %f\tsignal_short[%d] = %f\n", i, otime_short[i], i, signal_short[i]);
-    }
-    
-    /* 課題2: 移動平均処理の適用 */
-    int K = 1;
-    
-    if (argc >= 2) {
-        K = atoi(argv[1]);
-    } else {
-        printf("移動平均のサイズ K を引数として指定してください\n");
-        return 1;
+        fgets(buf, 256 - 1, fp_short);
+        sscanf(buf, "%f,%f\n", &otime_short[i], &signal_short[i]);
     }
 
-    /* averagedSignal 配列を定義*/
+    /* 課題2: 移動平均処理の適用 */
     float *averagedSignal = movingAverage(signal, dataLength, K);
-    float *averagedSignal_short = movingAverage(signal_short, dataLength_short, K);
-    // printf("%d\n", K);
+    float *averagedSignal_short = movingAverage(signal_short, dataLength, K);
     
     /* 課題3: ピーク処理の検出 */
     float* ds = (float *)malloc(sizeof(float) * dataLength);
@@ -121,10 +108,10 @@ int main(int argc, char **argv)
     }
 
     /* RR波のピーク時刻の配列 r_peak を定義 */
+    /* MAX_PEAK_NUM は使わず、max の 0.7 倍とする */
     int count = 0;
-    for (int i = 0; i < dataLength; i++) {
+    for (int i = 0; i < dataLength - 1; i++) {
         if (averagedSignal[i] > max * 0.7 && ds[i] >= 0 && ds[i + 1] <= 0) {
-            // printf("%d\t%f\t%f\n", i, otime[i], averagedSignal[i]);
             r_peak[count] = otime[i];
             count++;
         }
@@ -137,28 +124,28 @@ int main(int argc, char **argv)
     }
     float mean = tmp / (count - 1);
     float bpm = 60.0 / mean;
-    // printf("\nRR間隔の平均値 = %f[秒/回]\n\n平均心拍数 = %f[回/分]\n", mean, bpm);
-    
-    /* 課題4 */
 
+    // printf("\nRR間隔の平均値 = %f[秒/回]\n", mean);
+    // printf("\n平均心拍数 = %f[回/分]\n", bpm);
+
+    /* 課題4 */
     /* r_xyの定義 */
-    float * r_xy = (float *)malloc(sizeof(float) * (dataLength - dataLength_short + 1));
+    float* r_xy = (float *)malloc(sizeof(float) * (dataLength - dataLength_short + 1));
     for (int i = 0; i <= dataLength - dataLength_short; i++) {
-        double sigma = 0.0;
+        float sigma = 0.0;
         for (int j = 0; j < dataLength_short; j++) {
             sigma += averagedSignal_short[j] * averagedSignal[j + i];
         }
         r_xy[i] = sigma;
-        // printf("%f\n", r_xy[i]);
     }
 
     /* r_xyの極大の検出 */
-    float* dr = (float *)malloc(sizeof(float) * dataLength_short);
-    float* r_xy_peak = (float *)malloc(sizeof(float) * dataLength_short);
+    float* dr = (float *)malloc(sizeof(float) * (dataLength - dataLength_short + 1));
+    float* r_xy_peak = (float *)malloc(sizeof(float) * (dataLength - dataLength_short + 1));
 
     /* 導関数 dr を定義*/
     dr[0] = 0.0;
-    for (int i = 1; i < dataLength_short; i++) {
+    for (int i = 1; i < dataLength; i++) {
         dr[i] = (r_xy[i] - r_xy[i - 1]) / (otime[i] - otime[i - 1]);
     }
 
@@ -169,48 +156,47 @@ int main(int argc, char **argv)
             max_short = r_xy[i];
         }
     }
-    // printf("%f\n", max_short * 0.7);
-    printf("%f\n", max_short);
-
+    
     /* r_xy のピーク時刻の配列 r_xy_peak を定義 */
     printf("心電図に関係する i\n");
-    int count_2 = 0;
+    int count_short = 0;
     for (int i = 0; i < dataLength - dataLength_short; i++) {
-        if (r_xy[i] >  max_short * 0.9 && dr[i] >= 0 && dr[i + 1] <= 0) {
-            // printf("%d\t%f\t%f\n", i, otime[i], r_xy[i]);
-            r_xy_peak[count_2] = otime[i];
+        if (r_xy[i] > max_short * 0.7 && dr[i] >= 0 && dr[i + 1] <= 0) {
+            r_xy_peak[count_short] = otime[i];
 
             /* 心電図と関係する i */
             printf("i = %d\n", i);
-            count_2++;
+            count_short++;
         }
     }
 
     /* RR間隔の平均値[s/回]と平均心拍数[回/分] */
-    printf("\n%d個のRR間隔\n", count_2 - 1);
-    float tmp_2 = 0;
-    for (int i = 0; i < count_2 - 1; i++) {
+    printf("\n%d個のRR間隔\n", count_short - 1);
+    float tmp_short = 0;
+    for (int i = 0; i < count_short - 1; i++) {
         float interval = r_xy_peak[i + 1] - r_xy_peak[i];
         printf("%f[秒]\n", interval);
-        tmp_2 += interval;
+        tmp_short += interval;
     }
-    float mean_2 = tmp_2 / (count_2 - 1);
-    float bpm_2 = 60.0 / mean_2;
-    printf("\n%d個のRR間隔の平均値 = %f[秒/回]\n\n平均心拍数 = %f[回/分]\n", count_2 - 1, mean_2, bpm_2);
+    float mean_short = tmp_short / (count_short - 1);
+    float bpm_short = 60.0 / mean_short;
+    
+    printf("\n%d個のRR間隔の平均値 = %f[秒/回]\n", count_short - 1, mean_short);
+    printf("\n平均心拍数 = %f[回/分]\n", bpm_short);
 
     /* free and end */
     fclose(fp);
     fclose(fp_short);
     free(otime);
     free(signal);
+    free(otime_short);
+    free(signal_short);
     free(averagedSignal);
     free(averagedSignal_short);
     free(ds);
     free(r_peak);
     free(dr);
     free(r_xy_peak);
-    free(otime_short);
-    free(signal_short);
     free(r_xy);
     return 0;
 }
