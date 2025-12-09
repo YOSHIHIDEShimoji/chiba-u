@@ -158,7 +158,7 @@ int main(int argc, char **argv)
     }
     
     /* r_xy のピーク時刻の配列 r_xy_peak を定義 */
-    printf("心電図に関係する i\n");
+    printf("心電図信号に関係する i\n");
     int count_short = 0;
     for (int i = 0; i < dataLength - dataLength_short; i++) {
         if (r_xy[i] > max_short * 0.7 && dr[i] >= 0 && dr[i + 1] <= 0) {
@@ -175,14 +175,14 @@ int main(int argc, char **argv)
     float tmp_short = 0;
     for (int i = 0; i < count_short - 1; i++) {
         float interval = r_xy_peak[i + 1] - r_xy_peak[i];
-        printf("%f[秒]\n", interval);
+        printf("%.3f[秒]\n", interval);
         tmp_short += interval;
     }
     float mean_short = tmp_short / (count_short - 1);
     float bpm_short = 60.0 / mean_short;
     
-    printf("\n%d個のRR間隔の平均値 = %f[秒/回]\n", count_short - 1, mean_short);
-    printf("\n平均心拍数 = %f[回/分]\n", bpm_short);
+    printf("\n%d個のRR間隔の平均値 = %.3f[秒/回]\n", count_short - 1, mean_short);
+    printf("\n平均心拍数 = %.3f[回/分]\n", bpm_short);
 
     /* free and end */
     fclose(fp);
