@@ -60,6 +60,11 @@ int main(int argc, char **argv)
     for (int i = 0; i < dataLength; i++) {
         fgets(buf, 256 - 1, fp);
         sscanf(buf, "%f,%f\n", &otime[i], &signal[i]);
+    }
+    
+    /* printf */
+    printf("dataLength = %d\n", dataLength);
+    for (int i = 0; i < 5; i++) {
         printf("otime[%d] = %f\tsignal[%d] = %f\n", i, otime[i], i, signal[i]);
     }
 
