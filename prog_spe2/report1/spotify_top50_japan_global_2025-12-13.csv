@@ -1,0 +1,101 @@
+﻿country,weekly_rank,track_name,artist_name,popularity,duration_ms,release_year,artist_popularity,artist_followers
+Japan,1,IRIS OUT,Kenshi Yonezu,88,151573,2025,80,7649246
+Japan,2,Don’t Say You Love Me,Jin,87,180716,2025,80,9838250
+Japan,3,ライラック,Mrs. GREEN APPLE,73,289506,2025,80,6447266
+Japan,4,花束,back number,77,286053,2011,79,6014547
+Japan,5,JANE DOE,Kenshi Yonezu,84,235946,2025,80,7649246
+Japan,6,NON STOP,HANA,70,173633,2025,71,531937
+Japan,7,SOB,Imanbek,56,134000,2025,68,280865
+Japan,8,Blue Jeans,HANA,77,206706,2025,71,531937
+Japan,9,クリスマスソング,back number,74,340080,2015,79,6014547
+Japan,10,Soranji,Mrs. GREEN APPLE,74,343253,2023,80,6447266
+Japan,11,ROSE,HANA,75,164782,2025,71,531937
+Japan,12,Who,Jimin,87,170887,2024,80,10979408
+Japan,13,Ça va aller,LIMO,37,196500,2025,45,48837
+Japan,14,ハッピーエンド,back number,75,314280,2016,79,6014547
+Japan,15,高嶺の花子さん,back number,76,294813,2014,79,6014547
+Japan,16,点描の唄,Mrs. GREEN APPLE,76,307066,2018,80,6447266
+Japan,17,革命道中 - On The Way,AiNA THE END,82,197668,2025,66,282261
+Japan,18,Teri Marzi,Maurya Sevak,39,186304,2025,27,2129
+Japan,19,青と夏,Mrs. GREEN APPLE,74,270026,2019,80,6447266
+Japan,20,Golden,HUNTR/X,98,194607,2025,87,4265555
+Japan,21,HAPPY BIRTHDAY,back number,75,258333,2019,79,6014547
+Japan,22,夢中,BE:FIRST,73,190800,2025,71,521713
+Japan,23,Set Fire To The Rain x GAETANO,GAETANO,56,231093,2025,43,5721
+Japan,24,ヒロイン,back number,74,269786,2015,79,6014547
+Japan,25,僕のこと,Mrs. GREEN APPLE,73,321306,2019,80,6447266
+Japan,26,ケセラセラ,Mrs. GREEN APPLE,74,272226,2023,80,6447266
+Japan,27,水平線,back number,74,288013,2023,79,6014547
+Japan,28,You and Me and Miami,Michael Gilas,50,167866,2025,40,1274
+Japan,29,Kaiju no Hanauta,Vaundy,60,224804,2020,74,3626615
+Japan,30,ブルーアンバー,back number,75,207845,2025,79,6014547
+Japan,31,アゲハ蝶,PornoGraffitti,67,280506,2004,64,1086795
+Japan,32,LAVALAVA,Number_i,44,192603,2025,69,341550
+Japan,33,Sidestep,Band of Silver,47,176785,2025,38,5343
+Japan,34,Drop,HANA,71,149386,2025,71,531937
+Japan,35,My Body,HANA,75,203296,2025,71,531937
+Japan,36,シルエット,KANA-BOON,77,240133,2015,63,1072699
+Japan,37,カリスマックス - CHARISMAX,Snow Man,71,177433,2025,67,475937
+Japan,38,Chains,Kivrak,0,135727,2021,18,38125
+Japan,39,恋,back number,72,253306,2012,79,6014547
+Japan,40,クスシキ,Mrs. GREEN APPLE,68,189426,2025,80,6447266
+Japan,41,Zenzenzense,Vaundy,56,262733,2025,74,3626615
+Japan,42,GOD_i,Number_i,68,215032,2025,69,341550
+Japan,43,No Secrets,Pete Giza,37,178056,2025,23,48
+Japan,44,Kaiju,sakanaction,62,252722,2025,67,1706742
+Japan,45,Marigold,Aimyon,60,306626,2019,71,6055816
+Japan,46,Numbers Ur Zone,Number_i,68,154966,2025,69,341550
+Japan,47,奏(かなで),Sukima Switch,73,328626,2004,61,1306361
+Japan,48,プロポーズ,natori,75,178380,2025,67,1352768
+Japan,49,1991,Kenshi Yonezu,76,227391,2025,80,7649246
+Japan,50,Sanitizer,OFFICIAL HIGE DANDISM,55,304144,2025,72,7450488
+Global,1,All I Want for Christmas Is You,Mariah Carey,97,241562,1994,86,12155945
+Global,2,Last Christmas,Wham!,95,262960,1984,80,3193844
+Global,3,Rockin' Around The Christmas Tree,Brenda Lee,95,126266,1964,79,482556
+Global,4,The Fate of Ophelia,Taylor Swift,100,226073,2025,100,147876133
+Global,5,Jingle Bell Rock,Bobby Helms,93,130973,1957,77,82701
+Global,6,Golden,HUNTR/X,98,194607,2025,87,4265555
+Global,7,SOB,Imanbek,56,134000,2025,68,280865
+Global,8,Santa Tell Me,Ariana Grande,94,204093,2014,95,108329405
+Global,9,Let It Snow! Let It Snow! Let It Snow!,Dean Martin,93,117146,1959,81,1981356
+Global,10,Underneath the Tree,Kelly Clarkson,90,229638,2013,82,11002625
+Global,11,Snowman,Sia,93,165900,2018,87,30775325
+Global,12,One Taste,Hara,50,164300,2025,36,1791
+Global,13,It's Beginning to Look a Lot like Christmas,Michael Bublé,89,207199,2024,87,6967205
+Global,14,Man I Need,Olivia Dean,82,184000,2025,92,2205419
+Global,15,back to friends,sombr,92,199032,2025,86,3180700
+Global,16,It's the Most Wonderful Time of the Year,Andy Williams,80,151000,1963,78,601684
+Global,17,Chains,Kivrak,0,135727,2021,18,38125
+Global,18,Ordinary,Alex Warren,92,186964,2024,86,3189965
+Global,19,Sleigh Ride,The Ronettes,80,181266,2020,77,461282
+Global,20,End of Beginning,Djo,93,159245,2022,79,2736665
+Global,21,Feliz Navidad,José Feliciano,72,182066,2006,75,471722
+Global,22,Under Your Skin,Bruklin,50,180130,2025,41,4662
+Global,23,Mistletoe,Justin Bieber,90,182946,2011,93,85776836
+Global,24,Holly Jolly Christmas,Michael Bublé,87,121526,2024,87,6967205
+Global,25,The Christmas Song (Merry Christmas To You),Nat King Cole,81,190973,1961,81,2573703
+Global,26,So Easy (To Fall In Love),Olivia Dean,95,169000,2025,92,2205419
+Global,27,WHERE IS MY HUSBAND!,RAYE,95,196795,2025,84,3118454
+Global,28,Die With A Smile,Lady Gaga,88,251667,2025,90,43321943
+Global,29,Cuando No Era Cantante,El Bogueto,91,211084,2024,78,1499022
+Global,30,BIRDS OF A FEATHER,Billie Eilish,95,210373,2024,93,120534292
+Global,31,KUSURA BAKMA,BLOK3,87,157800,2025,80,5648903
+Global,32,Posso Até Não Te Dar Flores,DJ Japa NK,92,158769,2025,81,365974
+Global,33,Wonderful Christmastime - Edited Version / Remastered 2011,Paul McCartney,89,227653,1980,77,5282371
+Global,34,Happy Xmas (War Is Over) - Remastered 2010,John Lennon,89,214333,2010,76,6687754
+Global,35,Every Breath You Take,The Police,93,253920,1983,79,7719532
+Global,36,Gabriela,KATSEYE,94,197226,2025,84,6381743
+Global,37,CHANEL,Tyla,90,188059,2025,82,3865937
+Global,38,Opalite,Taylor Swift,95,235355,2025,100,147876133
+Global,39,Christmas (Baby Please Come Home),Darlene Love,86,166453,2020,75,70818
+Global,40,DtMF,Bad Bunny,92,237117,2025,98,104661443
+Global,41,WILDFLOWER,Billie Eilish,93,261466,2024,93,120534292
+Global,42,La Perla,ROSALÍA,93,195546,2025,89,9105504
+Global,43,Iris,The Goo Goo Dolls,93,289533,1998,78,3616086
+Global,44,"One Of The Girls (with JENNIE, Lily Rose Depp)",The Weeknd,92,244684,2023,96,115284824
+Global,45,Driving Home for Christmas - 2019 Remaster,Chris Rea,81,241626,1987,71,1155602
+Global,46,BAILE INoLVIDABLE,Bad Bunny,92,367725,2025,98,104661443
+Global,47,Merry Christmas Everyone,Shakin' Stevens,87,220160,1991,70,181768
+Global,48,Sweater Weather,The Neighbourhood,93,240400,2013,86,22047738
+Global,49,White Christmas - 1947 Version,Bing Crosby,88,183613,1945,83,611357
+Global,50,Don’t Say You Love Me,Jin,87,180716,2025,80,9838250

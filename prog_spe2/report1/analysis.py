@@ -6,7 +6,7 @@ import seaborn as sns
 from scipy.stats import pearsonr, ttest_ind, linregress
 
 # CSV ファイル名
-INPUT_CSV = 'spotify_meta.csv'
+INPUT_CSV = 'spotify_top50_japan_global_2025-12-13.csv'
 
 # 出力ディレクトリ作成
 os.makedirs('figure', exist_ok=True)
@@ -30,9 +30,9 @@ def print_corr(df_both, df_japan, df_global):
     r_both, _ = pearsonr(df_both[x_col], df_both[y_col])
 
     print('=== 曲の長さとリリース年の相関係数 ===')
-    print(f'  {"r(Japan)":18s} = {r_japan:8.4f}')
-    print(f'  {"r(Global)":18s} = {r_global:8.4f}')
-    print(f'  {"r(Japan + Global)":18s} = {r_both:8.4f}')
+    print(f'  {'r(Japan)':18s} = {r_japan:8.4f}')
+    print(f'  {'r(Global)':18s} = {r_global:8.4f}')
+    print(f'  {'r(Japan + Global)':18s} = {r_both:8.4f}')
     
 # Japan + Global の線形回帰
 def regression_both(df_both):
@@ -43,10 +43,10 @@ def regression_both(df_both):
 
     print('\n=== 線形回帰 (Japan + Global) ===')
     print('duration_s = a * release_year + b としたとき、')
-    print(f'  {"a":3s} = {result.slope/1000:11.3f} [s/year]')
-    print(f'  {"b":3s} = {result.intercept/1000:11.3f} [s]')
-    print(f'  {"r":3s} = {result.rvalue:11.3f}')
-    print(f'  {"p":3s} = {result.pvalue:11.3e}')
+    print(f'  {'a':3s} = {result.slope/1000:11.3f} [s/year]')
+    print(f'  {'b':3s} = {result.intercept/1000:11.3f} [s]')
+    print(f'  {'r':3s} = {result.rvalue:11.3f}')
+    print(f'  {'p':3s} = {result.pvalue:11.3e}')
 
 # Japan の線形回帰
 def regression_japan(df_japan):
@@ -57,10 +57,10 @@ def regression_japan(df_japan):
 
     print('\n=== 線形回帰 (Japan) ===')
     print('duration_s = a * release_year + b としたとき、')
-    print(f'  {"a":3s} = {result.slope/1000:11.3f} [s/year]')
-    print(f'  {"b":3s} = {result.intercept/1000:11.3f} [s]')
-    print(f'  {"r":3s} = {result.rvalue:11.3f}')
-    print(f'  {"p":3s} = {result.pvalue:11.3e}')
+    print(f'  {'a':3s} = {result.slope/1000:11.3f} [s/year]')
+    print(f'  {'b':3s} = {result.intercept/1000:11.3f} [s]')
+    print(f'  {'r':3s} = {result.rvalue:11.3f}')
+    print(f'  {'p':3s} = {result.pvalue:11.3e}')
 
 # Japan と Global の t検定
 def run_ttests(df_japan, df_global):
