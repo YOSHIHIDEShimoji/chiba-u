@@ -96,7 +96,7 @@ int main(int argc, char **argv)
             r_peak[count] = otime[i];
 
             /* RR波のピーク時刻[s] */
-            printf("peak %d\t%f[秒]\n",count + 1, r_peak[count]);
+            printf("peak %d\t%.3f[秒]\n",count + 1, r_peak[count]);
             count++;
         }
     }
@@ -109,8 +109,8 @@ int main(int argc, char **argv)
     float mean = tmp / (count - 1);
     float bpm = 60.0 / mean;
 
-    printf("\nRR間隔の平均値 = %f[秒/回]\n", mean);
-    printf("\n平均心拍数 = %f[回/分]\n", bpm);
+    printf("\nRR間隔の平均値 = %.3f[秒/回]\n", mean);
+    printf("\n平均心拍数 = %.3f[回/分]\n", bpm);
     
     /* free and end */
     fclose(fp);
