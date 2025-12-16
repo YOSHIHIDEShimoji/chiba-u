@@ -68,7 +68,8 @@ int main(int argc, char **argv)
 
     fourier_transform(dataLength, signal, G_r, G_i, G_abs);
 
-    /* dt: サンプリング間隔
+    /* 以下を定義
+     * dt: サンプリング間隔
      * f_s: サンプリング周波数
      * df: 周波数スペクトルのメモリ間隔
      * f_max: ナイキスト周波数
