@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+j#!/usr/bin/env zsh
 set -euo pipefail
 
 # 使い方:
