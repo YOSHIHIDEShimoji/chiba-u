@@ -109,6 +109,8 @@ def save_scatter_both(df_both, df_japan, df_global):
     plt.savefig('figure/scatter_release_year_duration_relationship_global_japan.png', dpi=300)
     plt.close()
 
+    print('\nsaved: figure/scatter_release_year_duration_relationship_global_japan.png')
+
 # Japan の散布図(線形近似)
 def save_scatter_japan(df_japan):
     x_col = 'release_year'
@@ -152,6 +154,8 @@ def save_scatter_japan(df_japan):
     plt.tight_layout()
     plt.savefig('figure/scatter_release_year_duration_relationship_japan.png', dpi=300)
     plt.close()
+
+    print('saved: figure/scatter_release_year_duration_relationship_japan.png')
 
 # 箱ひげ図
 def save_boxplot(df_both):
@@ -207,6 +211,8 @@ def save_boxplot(df_both):
     plt.savefig('figure/boxplot_global_japan.png', dpi=300)
     plt.close()
 
+    print('saved: figure/boxplot_global_japan.png')
+
 # メイン関数
 if __name__ == '__main__':
     # 相関係数
@@ -229,9 +235,3 @@ if __name__ == '__main__':
 
     # 箱ひげ図
     save_boxplot(df_both)
-
-    # print
-    print()
-    print('saved: figure/scatter_release_year_duration_relationship_global_japan.png')
-    print('saved: figure/scatter_release_year_duration_relationship_japan.png')
-    print('saved: figure/boxplot_global_japan.png')

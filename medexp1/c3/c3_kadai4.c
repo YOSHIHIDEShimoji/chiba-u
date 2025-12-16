@@ -40,7 +40,7 @@ void inverse_fourier_transform(int N, float G_r[], float G_i[], float g_r[], flo
         }
         g_r[n] = g_r_tmp / N;
         g_i[n] = g_i_tmp / N;
-        printf("g_r[%d] = %f\tg_i[%d] = %f\t\n", n, g_r[n], n, g_i[n]);
+        // printf("g_r[%d] = %f\tg_i[%d] = %f\t\n", n, g_r[n], n, g_i[n]);
     }
 }
 
@@ -92,17 +92,19 @@ int main(int argc, char **argv)
 
     inverse_fourier_transform(dataLength, G_r, G_i, g_r, g_i);
 
-    /* 以下を定義
-     * dt: サンプリング間隔
-     * f_s: サンプリング周波数
-     * df: 周波数スペクトルのメモリ間隔
-     * f_max: ナイキスト周波数
-     */
-    float dt = (otime[dataLength - 1] - otime[0]) / (dataLength - 1);
-    float f_s = 1.0 / dt;
-    float df = 1.0 / (dataLength * dt);
-    float f_max = f_s / 2.0;
-    
+    /* printf
+    for (int i = 0; i < dataLength; i++) {
+        printf("otime[%d] = %f\tg_r[%d] = %f\tg_i[%d] = %f\t\n", i, otime[i], i, g_r[i], i, g_i[i]);
+    }
+    */
+
+    /* 誤差を計算 */
+    float sse = 0;
+    for (int i = 0; i < dataLength; i++) {
+        sse += (signal[i] - g_r[i]) * (signal[i] - g_r[i]);
+    }
+    printf("signal と g_r の二乗誤差和 SSE = %.10f\n", sse);
+
     /* free and end */
     free(otime);
     free(signal);
