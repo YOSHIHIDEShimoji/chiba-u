@@ -33,29 +33,43 @@ def print_corr(df_both, df_japan, df_global):
     print(f'  {'r(Japan)':18s} = {r_japan:8.4f}')
     print(f'  {'r(Global)':18s} = {r_global:8.4f}')
     print(f'  {'r(Japan + Global)':18s} = {r_both:8.4f}')
-    
-# Japan + Global の線形回帰
-def regression_both(df_both):
-    x = df_both['release_year'].values
-    y = df_both['duration_ms'].values
 
-    result = linregress(x, y)
-
-    print('\n=== 線形回帰 (Japan + Global) ===')
-    print('duration_s = a * release_year + b としたとき、')
-    print(f'  {'a':3s} = {result.slope/1000:11.3f} [s/year]')
-    print(f'  {'b':3s} = {result.intercept/1000:11.3f} [s]')
-    print(f'  {'r':3s} = {result.rvalue:11.3f}')
-    print(f'  {'p':3s} = {result.pvalue:11.3e}')
-
-# Japan の線形回帰
+# Japan の線形回帰分析
 def regression_japan(df_japan):
     x = df_japan['release_year'].values
     y = df_japan['duration_ms'].values
 
     result = linregress(x, y)
 
-    print('\n=== 線形回帰 (Japan) ===')
+    print('\n=== 線形回帰分析分析 (Japan) ===')
+    print('duration_s = a * release_year + b としたとき、')
+    print(f'  {'a':3s} = {result.slope/1000:11.3f} [s/year]')
+    print(f'  {'b':3s} = {result.intercept/1000:11.3f} [s]')
+    print(f'  {'r':3s} = {result.rvalue:11.3f}')
+    print(f'  {'p':3s} = {result.pvalue:11.3e}')
+
+# Global の線形回帰分析
+def regression_global(df_global):
+    x = df_global['release_year'].values
+    y = df_global['duration_ms'].values
+
+    result = linregress(x, y)
+
+    print('\n=== 線形回帰分析 (Global) ===')
+    print('duration_s = a * release_year + b としたとき、')
+    print(f'  {'a':3s} = {result.slope/1000:11.3f} [s/year]')
+    print(f'  {'b':3s} = {result.intercept/1000:11.3f} [s]')
+    print(f'  {'r':3s} = {result.rvalue:11.3f}')
+    print(f'  {'p':3s} = {result.pvalue:11.3e}')
+    
+# Japan + Global の線形回帰分析
+def regression_both(df_both):
+    x = df_both['release_year'].values
+    y = df_both['duration_ms'].values
+
+    result = linregress(x, y)
+
+    print('\n=== 線形回帰分析 (Japan + Global) ===')
     print('duration_s = a * release_year + b としたとき、')
     print(f'  {'a':3s} = {result.slope/1000:11.3f} [s/year]')
     print(f'  {'b':3s} = {result.intercept/1000:11.3f} [s]')
@@ -100,7 +114,7 @@ def save_scatter_both(df_both, df_japan, df_global):
 
     plt.xlabel('release_year')
     plt.ylabel('duration [s]')
-    plt.title('Relationship between release year and duration [s] (Global and Japan)')
+    plt.title('Relationship between Release Year and Duration \nIn Japan Top 50 and Global Top 50')
     plt.ylim(100, 450)
     plt.grid(True)
     plt.legend(loc='upper left')
@@ -146,7 +160,7 @@ def save_scatter_japan(df_japan):
 
     plt.xlabel('release_year')
     plt.ylabel('duration [s]')
-    plt.title('Relationship between release year and duration [s] (Japan)')
+    plt.title('Relationship between Release Year and Duration \nIn Japan Top50 and the Linear Regression Line')
     plt.ylim(100, 450)
     plt.grid(True)
     plt.legend(loc='upper left')
@@ -191,7 +205,7 @@ def save_boxplot(df_both):
         showfliers=False,
     )
 
-    plt.title('Comparison of the Top 50 Weekly Spotify Charts in Japan and Global')
+    plt.title('Comparison of Feature Distributions for Japan Top50 and Global Top50', pad=40)
 
     plt.xlabel('')
     plt.ylabel('value (standardized)')
@@ -202,9 +216,10 @@ def save_boxplot(df_both):
         handles,
         labels,
         title='',
-        bbox_to_anchor=(1.02, 1),
-        loc='upper left',
-        borderaxespad=0.0,
+        loc='upper center',
+        bbox_to_anchor=(0.5, 1.18),
+        ncol=3,
+        frameon=False,
     )
 
     plt.tight_layout()
@@ -218,11 +233,14 @@ if __name__ == '__main__':
     # 相関係数
     print_corr(df_both, df_japan, df_global)
 
-    # 線形回帰 (global + Japan)
-    regression_both(df_both)
-
-    # 線形回帰（Japan)
+    # 線形回帰分析（Japan)
     regression_japan(df_japan)
+
+    # 線形回帰分析（Global)
+    regression_global(df_global)
+
+    # 線形回帰分析 (global + Japan)
+    regression_both(df_both)
 
     # t検定
     run_ttests(df_japan, df_global)
