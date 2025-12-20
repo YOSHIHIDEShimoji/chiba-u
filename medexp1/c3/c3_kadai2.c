@@ -89,6 +89,7 @@ int main(int argc, char **argv)
         }
     }
     float bpm = f_1 * 60.0;
+    printf("振幅スペクトルが最大となる周波数 f_1 = %.3f[Hz]\n", f_1);
     printf("心拍数 = %.3f[回/分]\n", bpm);
 
     /* free and end */
