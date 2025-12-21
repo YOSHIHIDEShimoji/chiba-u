@@ -53,7 +53,7 @@ def get_playlist_tracks(playlist_ids, market="JP"):
             # 1行分のデータを追加
             rows.append({
                 "country": country,
-                "weekly_rank": rank,
+                "rank": rank,
                 "track_name": track_name,
                 "artist_name": artist_name,
                 "popularity": popularity,
