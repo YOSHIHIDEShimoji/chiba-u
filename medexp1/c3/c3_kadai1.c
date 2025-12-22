@@ -10,7 +10,7 @@
 #include <string.h>
 #include <math.h>
 
-void fourier_transform(int N, float signal[], float G_r[], float G_i[], float G_abs[])
+void discrete_fourier_transform(int N, float signal[], float G_r[], float G_i[], float G_abs[])
 {
     for (int i = 0; i < N; i++) {
         int k = i - N / 2;
@@ -61,12 +61,12 @@ int main(int argc, char **argv)
 
     fclose(fp);
 
-    /* フーリエ変換関数を呼び出し */
+    /* 離散フーリエ変換関数を呼び出し */
     float* G_r = (float *)malloc(sizeof(float) * dataLength);
     float* G_i = (float *)malloc(sizeof(float) * dataLength);
     float* G_abs = (float *)malloc(sizeof(float) * dataLength);
 
-    fourier_transform(dataLength, signal, G_r, G_i, G_abs);
+    discrete_fourier_transform(dataLength, signal, G_r, G_i, G_abs);
 
     /* 以下を定義
      * dt: サンプリング間隔

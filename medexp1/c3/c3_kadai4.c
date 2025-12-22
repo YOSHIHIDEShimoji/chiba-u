@@ -10,7 +10,7 @@
 #include <string.h>
 #include <math.h>
 
-void fourier_transform(int N, float signal[], float G_r[], float G_i[], float G_abs[])
+void discrete_fourier_transform(int N, float signal[], float G_r[], float G_i[], float G_abs[])
 {
     for (int i = 0; i < N; i++) {
         int k = i - N / 2;
@@ -27,7 +27,7 @@ void fourier_transform(int N, float signal[], float G_r[], float G_i[], float G_
     }
 }
 
-void inverse_fourier_transform(int N, float G_r[], float G_i[], float g_r[], float g_i[])
+void inverse_discrete_fourier_transform(int N, float G_r[], float G_i[], float g_r[], float g_i[])
 {
     for (int n = 0; n < N; n++) {
         float g_r_tmp = 0;
@@ -79,20 +79,21 @@ int main(int argc, char **argv)
 
     fclose(fp);
 
-    /* フーリエ変換関数を呼び出し */
+    /* 離散フーリエ変換関数を呼び出し */
     float* G_r = (float *)malloc(sizeof(float) * dataLength);
     float* G_i = (float *)malloc(sizeof(float) * dataLength);
     float* G_abs = (float *)malloc(sizeof(float) * dataLength);
 
-    fourier_transform(dataLength, signal, G_r, G_i, G_abs);
+    discrete_fourier_transform(dataLength, signal, G_r, G_i, G_abs);
 
-    /* 逆フーリエ変換関数を呼び出し */
+    /* 離散逆フーリエ変換関数を呼び出し */
     float* g_r = (float *)malloc(sizeof(float) * dataLength);
     float* g_i = (float *)malloc(sizeof(float) * dataLength);  
 
-    inverse_fourier_transform(dataLength, G_r, G_i, g_r, g_i);
+    inverse_discrete_fourier_transform(dataLength, G_r, G_i, g_r, g_i);
 
-    /* printf
+    /* printf */
+    /*
     for (int i = 0; i < dataLength; i++) {
         printf("otime[%d] = %f\tg_r[%d] = %f\tg_i[%d] = %f\t\n", i, otime[i], i, g_r[i], i, g_i[i]);
     }
@@ -103,7 +104,7 @@ int main(int argc, char **argv)
     for (int i = 0; i < dataLength; i++) {
         sse += (signal[i] - g_r[i]) * (signal[i] - g_r[i]);
     }
-    printf("signal と g_r の二乗誤差和 SSE = %.10f\n", sse);
+    printf("元信号 %s と復元信号の二乗誤差和 SSE = %.10f\n",filename, sse);
 
     /* free and end */
     free(otime);

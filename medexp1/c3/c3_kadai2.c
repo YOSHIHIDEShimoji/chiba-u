@@ -10,7 +10,7 @@
 #include <string.h>
 #include <math.h>
 
-void fourier_transform(int N, float signal[], float G_r[], float G_i[], float G_abs[])
+void discrete_fourier_transform(int N, float signal[], float G_r[], float G_i[], float G_abs[])
 {
     for (int i = 0; i < N; i++) {
         int k = i - N / 2;
@@ -61,12 +61,12 @@ int main(int argc, char **argv)
 
     fclose(fp);
 
-    /* フーリエ変換関数を呼び出し */
+    /* 離散フーリエ変換関数を呼び出し */
     float* G_r = (float *)malloc(sizeof(float) * dataLength);
     float* G_i = (float *)malloc(sizeof(float) * dataLength);
     float* G_abs = (float *)malloc(sizeof(float) * dataLength);
 
-    fourier_transform(dataLength, signal, G_r, G_i, G_abs);
+    discrete_fourier_transform(dataLength, signal, G_r, G_i, G_abs);
 
     /* 以下を定義
      * dt: サンプリング間隔
@@ -80,8 +80,8 @@ int main(int argc, char **argv)
     float f_max = f_s / 2.0;
 
     /* |G| が最大となる周波数 f_1[Hz] を求める */
-    float max = G_abs[0];
     float f_1;
+    float max = G_abs[0];
     for (int i = 1; i < dataLength; i++) {
         if (max <= G_abs[i]) {
             max = G_abs[i];
