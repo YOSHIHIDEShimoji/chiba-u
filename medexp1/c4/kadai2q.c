@@ -1,17 +1,17 @@
 /*
  * 医工学実験１ C言語プログラミング４
  * 巡回セールスマン問題を総当たり法で解く
- * 課題番号：
- * 作成者：
- * 作成日：
+ * 課題番号：2
+ * 作成者：下地慶英
+ * 作成日：2026/01/20
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
-#ifndef N			/* "-DN=15" で "#define 15" とする */
-#define N 10		/* 都市の数 */
+#ifndef N			/* "cc -DN=15 -lm kadai2q.c" で "#define N 15" とする */
+#define N 10		/* デフォルト都市の数 10 */
 #endif
 
 /* 都市の座標構造体 */
@@ -41,12 +41,15 @@ int main()
 	ShowData(&tsp);
 
 	/* 課題2で作成する：　総移動距離 */
-	float distance = 0;
+	float dis = 0;
 	for (int i = 0; i < N - 1; i++) {
-		distance += sqrt((tsp.city[i + 1].x - tsp.city[i].x) * (tsp.city[i + 1].x - tsp.city[i].x)
+		dis += sqrt((tsp.city[i + 1].x - tsp.city[i].x) * (tsp.city[i + 1].x - tsp.city[i].x)
 					   + (tsp.city[i + 1].y - tsp.city[i].y) * (tsp.city[i + 1].y - tsp.city[i].y));
 	}
-	printf("\ndistance = %f\n", distance);
+	dis += sqrt((tsp.city[N - 1].x - tsp.city[0].x) * (tsp.city[N - 1].x - tsp.city[0].x)
+				   + (tsp.city[N - 1].y - tsp.city[0].y) * (tsp.city[N - 1].y - tsp.city[0].y));
+
+	printf("\ndistance = %7.1f\n", dis);
 	return 0;
 }
 
@@ -70,6 +73,7 @@ void ReadData(struct TSP *tsp)
         printf("Can't open data file.\n");
         exit(1);
     }
+
 	/* ファイル読み込み */
     char buf[256];
     for (int i = 0; i < N; i++) {
@@ -85,11 +89,9 @@ void ReadData(struct TSP *tsp)
  */
 void ShowData(struct TSP *tsp)
 {
-	int i;
-
 	/* データ表示 */
 	printf("Cities location:\n");
-	for (i = 0; i < N; i ++) {
+	for (int i = 0; i < N; i ++) {
 		printf("C%-2d : %4d,%4d\n", i + 1, tsp->city[i].x, tsp->city[i].y);
 	}
 }

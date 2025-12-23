@@ -1,17 +1,17 @@
 /*
  * 医工学実験１ C言語プログラミング４
  * 巡回セールスマン問題を総当たり法で解く
- * 課題番号：
- * 作成者：
- * 作成日：
+ * 課題番号：1
+ * 作成者：下地慶英
+ * 作成日：2026/01/20
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
-#ifndef N			/* "-DN=15" で "#define 15" とする */
-#define N 10		/* 都市の数 */
+#ifndef N			/* "cc -DN=15 -lm kadai1q.c" で "#define N 15" とする */
+#define N 10		/* デフォルトの都市の数 10 */
 #endif
 
 /* 都市の座標構造体 */
@@ -62,6 +62,7 @@ void ReadData(struct TSP *tsp)
         printf("Can't open data file.\n");
         exit(1);
     }
+
 	/* ファイル読み込み */
     char buf[256];
     for (int i = 0; i < N; i++) {
@@ -77,11 +78,9 @@ void ReadData(struct TSP *tsp)
  */
 void ShowData(struct TSP *tsp)
 {
-	int i;
-
 	/* データ表示 */
 	printf("Cities location:\n");
-	for (i = 0; i < N; i ++) {
+	for (int i = 0; i < N; i ++) {
 		printf("C%-2d : %4d,%4d\n", i + 1, tsp->city[i].x, tsp->city[i].y);
 	}
 }

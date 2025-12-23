@@ -1,17 +1,17 @@
 /*
  * 医工学実験１ C言語プログラミング４
  * 巡回セールスマン問題を総当たり法で解く
- * 課題番号：
- * 作成者：
- * 作成日：
+ * 課題番号：3
+ * 作成者：下地慶英
+ * 作成日：2026/01/20
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
-#ifndef N			/* "-DN=15" で "#define 15" とする */
-#define N 10		/* 都市の数 */
+#ifndef N			/* "cc -DN=15 -lm kadai3q.c" で "#define N 15" とする */
+#define N 10		/* デフォルトの都市の数 10 */
 #endif
 
 /* 都市の座標構造体 */
@@ -29,9 +29,9 @@ struct TSP {
 /* 関数の宣言 */
 void ReadData(struct TSP *tsp);
 void ShowData(struct TSP *tsp);
-float CalcDistance(struct City a, struct City b);
 void SimpleOrder(struct TSP *tsp);
 void CalcCost(struct TSP *tsp);
+float CalcDistance(struct City a, struct City b);
 void ShowCost(struct TSP *tsp);
 
 /*
@@ -69,6 +69,7 @@ void ReadData(struct TSP *tsp)
         printf("Can't open data file.\n");
         exit(1);
     }
+
 	/* ファイル読み込み */
     char buf[256];
     for (int i = 0; i < N; i++) {
@@ -84,11 +85,9 @@ void ReadData(struct TSP *tsp)
  */
 void ShowData(struct TSP *tsp)
 {
-	int i;
-
 	/* データ表示 */
 	printf("Cities location:\n");
-	for (i = 0; i < N; i ++) {
+	for (int i = 0; i < N; i ++) {
 		printf("C%-2d : %4d,%4d\n", i + 1, tsp->city[i].x, tsp->city[i].y);
 	}
 }
@@ -99,7 +98,8 @@ void ShowData(struct TSP *tsp)
  */
 void SimpleOrder(struct TSP *tsp)
 {
-	printf("\nSimple order:\n"); /* 計算始めの表示 */
+	/* 計算始めの表示 */
+	printf("\nSimple order:\n"); 
 
 	/* 課題３で作成 */
 	for (int i = 0; i < N; i++) {
@@ -141,9 +141,7 @@ float CalcDistance(struct City a, struct City b)
  */
 void ShowCost(struct TSP *tsp)
 {
-	int i;
-
-	for (i = 0; i < N; i ++) {
+	for (int i = 0; i < N; i ++) {
 		printf("C%-2d> ", tsp->order[i] + 1);
 	}
 	printf("C%-2d  cost =%7.1f\n", tsp->order[0] + 1, tsp->cost);

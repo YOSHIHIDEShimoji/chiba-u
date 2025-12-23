@@ -1,17 +1,17 @@
 /*
  * 医工学実験１ C言語プログラミング４
  * 巡回セールスマン問題を総当たり法で解く
- * 課題番号：
- * 作成者：
- * 作成日：
+ * 課題番号：4
+ * 作成者：下地慶英
+ * 作成日：2026/01/20
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
-#ifndef N			/* "gcc -DN=15 -lm *.c " で "#define 15" とする */
-#define N 5			/* 都市の数 */
+#ifndef N			/* "gcc -DN=15 -lm kadai4q.c" で "#define 15" とする */
+#define N 5			/* デフォルトの都市の数 5 */
 #endif
 
 /* 都市の座標構造体 */
@@ -27,16 +27,16 @@ struct TSP {
 };
 
 float cost_min;			/* 最短の移動距離 */
-int first = 1;			/* cost_min に最初の経路の cost を代入するためのフラグ */
+int is_first = 1;		/* cost_min に cost の最初の経路を代入するためのフラグ */
 int order_min[N];		/* 最短経路を保持するための配列 */
 
 /* 関数の宣言 */
 void ReadData(struct TSP *tsp);
 void ShowData(struct TSP *tsp);
-float CalcDistance(struct City a, struct City b);
 void SimpleOrder(struct TSP *tsp);
 void AllOrder(struct TSP *tsp);
 void CalcCost(struct TSP *tsp);
+float CalcDistance(struct City a, struct City b);
 void ShowCost(struct TSP *tsp);
 void CalcMin(struct TSP *tsp);
 void ShowResult();
@@ -50,10 +50,7 @@ int main()
 
 	ReadData(&tsp);
 	ShowData(&tsp);
-	// SimpleOrder(&tsp);
 	AllOrder(&tsp);
-	// CalcCost(&tsp);
-	// ShowCost(&tsp);
 	ShowResult();
 	return 0;
 }
@@ -78,6 +75,7 @@ void ReadData(struct TSP *tsp)
         printf("Can't open data file.\n");
         exit(1);
     }
+
 	/* ファイル読み込み */
     char buf[256];
     for (int i = 0; i < N; i++) {
@@ -93,11 +91,9 @@ void ReadData(struct TSP *tsp)
  */
 void ShowData(struct TSP *tsp)
 {
-	int i;
-
 	/* データ表示 */
 	printf("Cities location:\n");
-	for (i = 0; i < N; i ++) {
+	for (int i = 0; i < N; i ++) {
 		printf("C%-2d : %4d,%4d\n", 
 			i + 1, tsp->city[i].x, tsp->city[i].y);
 	}
@@ -109,7 +105,8 @@ void ShowData(struct TSP *tsp)
  */
 void SimpleOrder(struct TSP *tsp)
 {
-	printf("\nSimple order:\n"); /* 計算始めの表示 */
+	/* 計算始めの表示 */
+	printf("\nSimple order:\n");
 
 	/* 課題３で作成 */
 	for (int i = 0; i < N; i++) {
@@ -123,7 +120,8 @@ void SimpleOrder(struct TSP *tsp)
  */
 void AllOrder(struct TSP *tsp)
 {
-	printf("\nAll order:\n"); /* 計算始めの表示 */
+	/* 計算始めの表示 */
+	printf("\nAll order:\n");
 
 	tsp->order[0] = 0;		// 最初の都市は固定
 	for (int i = 1; i < 5; i++) {
@@ -199,17 +197,17 @@ void ShowCost(struct TSP *tsp)
 }
 
 /*
- * 最初の経路の cost を cost_min に代入し、 order_min に tsp->order をコピーする
+ * tsp->order の最小値を order_min に代入する
  * 引数：struct TSP *tsp : TSPデータ
  */
 void CalcMin(struct TSP *tsp)
 {
-	if (first) {
+	if (is_first) {
 		cost_min = tsp->cost;
 		for (int i = 0; i < N; i++) {
 			order_min[i] = tsp->order[i];
 		}
-		first = 0;
+		is_first = 0;
 	} else if(cost_min >= tsp->cost) {
 		cost_min = tsp->cost;
 		for (int i = 0; i < N; i++) {
@@ -224,7 +222,7 @@ void CalcMin(struct TSP *tsp)
  */
 void ShowResult()
 {
-	printf("\nShortest path and cost：\n");
+	printf("\nShortest path and the cost：\n");
 	for (int i = 0; i < N; i ++) {
 		printf("C%-2d> ", order_min[i] + 1);
 	}
