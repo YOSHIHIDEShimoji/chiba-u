@@ -63,16 +63,16 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    /* dataLength, otime[], sinal[] を定義 */
-    int dataLength;
+    /* N, otime[], sinal[] を定義 */
+    int N;
     char buf[256];
     fgets(buf, 256 - 1, fp);
-    sscanf(buf, "%d\n", &dataLength);
+    sscanf(buf, "%d\n", &N);
 
-    float* otime = (float *)malloc(sizeof(float) * dataLength);
-    float* signal = (float *)malloc(sizeof(float) * dataLength);
+    float* otime = (float *)malloc(sizeof(float) * N);
+    float* signal = (float *)malloc(sizeof(float) * N);
 
-    for (int i = 0; i < dataLength; i++) {
+    for (int i = 0; i < N; i++) {
         fgets(buf, 256 - 1, fp);
         sscanf(buf, "%f,%f\n", &otime[i], &signal[i]);
     }
@@ -80,28 +80,28 @@ int main(int argc, char **argv)
     fclose(fp);
 
     /* 離散フーリエ変換関数を呼び出し */
-    float* G_r = (float *)malloc(sizeof(float) * dataLength);
-    float* G_i = (float *)malloc(sizeof(float) * dataLength);
-    float* G_abs = (float *)malloc(sizeof(float) * dataLength);
+    float* G_r = (float *)malloc(sizeof(float) * N);
+    float* G_i = (float *)malloc(sizeof(float) * N);
+    float* G_abs = (float *)malloc(sizeof(float) * N);
 
-    discrete_fourier_transform(dataLength, signal, G_r, G_i, G_abs);
+    discrete_fourier_transform(N, signal, G_r, G_i, G_abs);
 
     /* 離散逆フーリエ変換関数を呼び出し */
-    float* g_r = (float *)malloc(sizeof(float) * dataLength);
-    float* g_i = (float *)malloc(sizeof(float) * dataLength);  
+    float* g_r = (float *)malloc(sizeof(float) * N);
+    float* g_i = (float *)malloc(sizeof(float) * N);  
 
-    inverse_discrete_fourier_transform(dataLength, G_r, G_i, g_r, g_i);
+    inverse_discrete_fourier_transform(N, G_r, G_i, g_r, g_i);
 
     /* printf */
     /*
-    for (int i = 0; i < dataLength; i++) {
+    for (int i = 0; i < N; i++) {
         printf("otime[%d] = %f\tg_r[%d] = %f\tg_i[%d] = %f\t\n", i, otime[i], i, g_r[i], i, g_i[i]);
     }
     */
 
     /* 誤差を計算 */
     float sse = 0;
-    for (int i = 0; i < dataLength; i++) {
+    for (int i = 0; i < N; i++) {
         sse += (signal[i] - g_r[i]) * (signal[i] - g_r[i]);
     }
     printf("元信号 %s と復元信号の二乗誤差和 SSE = %.10f\n",filename, sse);

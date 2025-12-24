@@ -45,16 +45,16 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    /* dataLength, otime[], sinal[] を定義 */
-    int dataLength;
+    /* N, otime[], sinal[] を定義 */
+    int N;
     char buf[256];
     fgets(buf, 256 - 1, fp);
-    sscanf(buf, "%d\n", &dataLength);
+    sscanf(buf, "%d\n", &N);
 
-    float* otime = (float *)malloc(sizeof(float) * dataLength);
-    float* signal = (float *)malloc(sizeof(float) * dataLength);
+    float* otime = (float *)malloc(sizeof(float) * N);
+    float* signal = (float *)malloc(sizeof(float) * N);
 
-    for (int i = 0; i < dataLength; i++) {
+    for (int i = 0; i < N; i++) {
         fgets(buf, 256 - 1, fp);
         sscanf(buf, "%f,%f\n", &otime[i], &signal[i]);
     }
@@ -62,11 +62,11 @@ int main(int argc, char **argv)
     fclose(fp);
 
     /* 離散フーリエ変換関数を呼び出し */
-    float* G_r = (float *)malloc(sizeof(float) * dataLength);
-    float* G_i = (float *)malloc(sizeof(float) * dataLength);
-    float* G_abs = (float *)malloc(sizeof(float) * dataLength);
+    float* G_r = (float *)malloc(sizeof(float) * N);
+    float* G_i = (float *)malloc(sizeof(float) * N);
+    float* G_abs = (float *)malloc(sizeof(float) * N);
 
-    discrete_fourier_transform(dataLength, signal, G_r, G_i, G_abs);
+    discrete_fourier_transform(N, signal, G_r, G_i, G_abs);
 
     /* 以下を定義
      * dt: サンプリング間隔
@@ -74,9 +74,9 @@ int main(int argc, char **argv)
      * df: 周波数スペクトルのメモリ間隔
      * f_max: ナイキスト周波数
      */
-    float dt = (otime[dataLength - 1] - otime[0]) / (dataLength - 1);
+    float dt = (otime[N - 1] - otime[0]) / (N - 1);
     float f_s = 1.0 / dt;
-    float df = 1.0 / (dataLength * dt);
+    float df = 1.0 / (N * dt);
     float f_max = f_s / 2.0;
 
     /* printf */
@@ -86,8 +86,8 @@ int main(int argc, char **argv)
     printf("ナイキスト周波数 f_max = %.3f[Hz]\n", f_max);
 
     printf("\nk\tf[k]\tG_r[k]\tG_i[k]\t|G[k]|\n");
-    for (int i = 0; i < dataLength; i++) {
-        int k = i - dataLength / 2;
+    for (int i = 0; i < N; i++) {
+        int k = i - N / 2;
         printf("%d\t%f\t%f\t%f\t%f\n", k, k * df, G_r[i], G_i[i], G_abs[i]);
     }
 

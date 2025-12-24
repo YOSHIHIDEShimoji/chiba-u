@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#ifndef N			/* "gcc -DN=15 -lm kadai5q.c " で "#define 15" とする */
+#ifndef N			/* "gcc -DN=15 -lm kadai5q.c" で "#define 15" とする */
 #define N 10		/* デフォルトの都市の数 10 */
 #endif
 
@@ -50,10 +50,12 @@ int main()
 
 	ReadData(&tsp);
 	ShowData(&tsp);
+
 	/* 計算始めの表示 */
 	printf("\nAll order:\n");
 	tsp.order[0] = 0;			// 最初の都市は固定
 	AllOrder(&tsp, 1);
+	
 	ShowResult();
 	return 0;
 }

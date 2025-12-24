@@ -45,16 +45,16 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    /* dataLength, otime[], sinal[] を定義 */
-    int dataLength;
+    /* N, otime[], sinal[] を定義 */
+    int N;
     char buf[256];
     fgets(buf, 256 - 1, fp);
-    sscanf(buf, "%d\n", &dataLength);
+    sscanf(buf, "%d\n", &N);
 
-    float* otime = (float *)malloc(sizeof(float) * dataLength);
-    float* signal = (float *)malloc(sizeof(float) * dataLength);
+    float* otime = (float *)malloc(sizeof(float) * N);
+    float* signal = (float *)malloc(sizeof(float) * N);
 
-    for (int i = 0; i < dataLength; i++) {
+    for (int i = 0; i < N; i++) {
         fgets(buf, 256 - 1, fp);
         sscanf(buf, "%f,%f\n", &otime[i], &signal[i]);
     }
@@ -62,11 +62,11 @@ int main(int argc, char **argv)
     fclose(fp);
 
     /* 離散フーリエ変換関数を呼び出し */
-    float* G_r = (float *)malloc(sizeof(float) * dataLength);
-    float* G_i = (float *)malloc(sizeof(float) * dataLength);
-    float* G_abs = (float *)malloc(sizeof(float) * dataLength);
+    float* G_r = (float *)malloc(sizeof(float) * N);
+    float* G_i = (float *)malloc(sizeof(float) * N);
+    float* G_abs = (float *)malloc(sizeof(float) * N);
 
-    discrete_fourier_transform(dataLength, signal, G_r, G_i, G_abs);
+    discrete_fourier_transform(N, signal, G_r, G_i, G_abs);
 
     /* 以下を定義
      * dt: サンプリング間隔
@@ -74,18 +74,18 @@ int main(int argc, char **argv)
      * df: 周波数スペクトルのメモリ間隔
      * f_max: ナイキスト周波数
      */
-    float dt = (otime[dataLength - 1] - otime[0]) / (dataLength - 1);
+    float dt = (otime[N - 1] - otime[0]) / (N - 1);
     float f_s = 1.0 / dt;
-    float df = 1.0 / (dataLength * dt);
+    float df = 1.0 / (N * dt);
     float f_max = f_s / 2.0;
 
     /* |G| が最大となる周波数 f_1[Hz] を求める */
     float f_1;
     float max = G_abs[0];
-    for (int i = 1; i < dataLength; i++) {
+    for (int i = 1; i < N; i++) {
         if (max <= G_abs[i]) {
             max = G_abs[i];
-            f_1 = (i - dataLength / 2) * df;
+            f_1 = (i - N / 2) * df;
         }
     }
     float bpm = f_1 * 60.0;
