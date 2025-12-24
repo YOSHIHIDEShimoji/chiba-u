@@ -188,9 +188,7 @@ float CalcDistance(struct City a, struct City b)
  */
 void ShowCost(struct TSP *tsp)
 {
-	int i;
-
-	for (i = 0; i < N; i ++) {
+	for (int i = 0; i < N; i ++) {
 		printf("C%-2d> ", tsp->order[i] + 1);
 	}
 	printf("C%-2d  cost =%7.1f\n", tsp->order[0] + 1, tsp->cost);
@@ -208,7 +206,7 @@ void CalcMin(struct TSP *tsp)
 			order_min[i] = tsp->order[i];
 		}
 		is_first = 0;
-	} else if(cost_min >= tsp->cost) {
+	} else if (cost_min > tsp->cost) {
 		cost_min = tsp->cost;
 		for (int i = 0; i < N; i++) {
 			order_min[i] = tsp->order[i];

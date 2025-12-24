@@ -27,7 +27,7 @@ struct TSP {
 };
 
 float cost_min;			/* 最短の移動距離 */
-int is_first = 1;		/* cost_min に最初の経路の cost を代入するためのフラグ */
+int is_first = 1;		/* cost_min に cost の最初の経路を代入するためのフラグ */
 int order_min[N];		/* 最短経路を保持するための配列 */
 
 /* 関数の宣言 */
@@ -55,7 +55,7 @@ int main()
 	printf("\nAll order:\n");
 	tsp.order[0] = 0;			// 最初の都市は固定
 	AllOrder(&tsp, 1);
-	
+
 	ShowResult();
 	return 0;
 }
@@ -197,7 +197,7 @@ void ShowCost(struct TSP *tsp)
 }
 
 /*
- * 最初の経路の cost を cost_min に代入し、 order_min に tsp->order をコピーする
+ * tsp->order の最小値を order_min に代入する
  * 引数：struct TSP *tsp : TSPデータ
  */
 void CalcMin(struct TSP *tsp)
@@ -215,7 +215,6 @@ void CalcMin(struct TSP *tsp)
 		}
 	}
 }
-
 
 /*
  * 最短経路とその距離を表示
