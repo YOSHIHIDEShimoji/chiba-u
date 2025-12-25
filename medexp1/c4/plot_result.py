@@ -3,14 +3,34 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import os
 import sys
+import argparse
 
 def generate_graphs():
-    input_csv = 'result.csv'
-    output_dir = 'graphs'
+    parser = argparse.ArgumentParser(description='Generate performance graphs from a CSV file.')
+    parser.add_argument('csv_file', help='Path to the input CSV file (e.g., result_2025..._Linux.csv)')
+    args = parser.parse_args()
+
+    input_csv = args.csv_file
 
     if not os.path.exists(input_csv):
-        print(f"Error: {input_csv} が見つかりません。")
+        print(f"Error: ファイル '{input_csv}' が見つかりません。パスを確認してください。")
         return
+
+    # --- フォルダ名の自動生成ロジック (変更) ---
+    # 1. ファイル名(拡張子なし)を取得 -> "result_20251225_103000_Linux"
+    base_name = os.path.basename(input_csv)
+    name_without_ext = os.path.splitext(base_name)[0]
+    
+    # 2. 先頭の "result_" を削除して、残りをサフィックスとする
+    # (例: "20251225_103000_Linux")
+    if name_without_ext.startswith("result_"):
+        suffix = name_without_ext.replace("result_", "", 1)
+    else:
+        suffix = name_without_ext
+
+    # 3. フォルダ名を決定 -> "graphs_20251225_103000_Linux"
+    output_dir = f'graphs_{suffix}'
+    # ----------------------------------------
 
     try:
         df = pd.read_csv(input_csv)
@@ -50,7 +70,7 @@ def generate_graphs():
                 has_data = True
         
         if not has_data:
-            print(f"Warning: {filename} 用のデータ列が見つかりませんでした。")
+            print(f"Warning: {filename} 用のデータ列が見つかりませんでした。スキップします。")
             plt.close()
             return
 
@@ -59,34 +79,27 @@ def generate_graphs():
         plt.ylabel(ylabel, fontsize=12)
         plt.grid(True, which='both', linestyle='--', alpha=0.7)
         plt.legend()
-        plt.xticks(df['N'])
+        
+        if not df['N'].empty:
+            plt.xticks(df['N'])
 
-        # y軸のフォーマット設定
         ax = plt.gca()
-        # useMathText=True で "1e7" を "x 10^7" に変換
         formatter = ticker.ScalarFormatter(useMathText=True)
-        # 0.01未満 または 1000以上 の場合に 10^n 表記を使う
         formatter.set_powerlimits((-2, 3)) 
         ax.yaxis.set_major_formatter(formatter)
 
         plt.tight_layout()
         save_path = os.path.join(output_dir, filename)
         
-        # 高解像度保存
         plt.savefig(save_path, dpi=300)
         
         plt.close()
         print(f"Saved: {save_path}")
 
-    # --- グラフ生成実行 (線形スケールのみ) ---
+    # --- グラフ生成実行 ---
 
-    # 1. 時間
     plot_metric('time[s]', 'Execution Time vs N', 'Time [s]', 'graph_time.png')
-
-    # 2. メモリ
     plot_metric('mem[kb]', 'Memory Usage vs N', 'Memory [KB]', 'graph_memory.png')
-
-    # 3. 命令数
     plot_metric('instr', 'CPU Instructions vs N', 'Instructions Retired', 'graph_instructions.png')
 
     print("\nすべてのグラフ作成が完了しました！")

@@ -51,7 +51,7 @@ def run_experiment():
     # ★ ファイル名の生成処理を追加 ★
     # 例: result_20231027_153000_Linux.csv
     now_str = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-    output_csv = f'result_{now_str}_{current_os}.csv'
+    output_csv = f'result-nok5_{now_str}_{current_os}.csv'
 
     configs = [
         ('kadai5q-noprintf.c', [],                 'nop'),
