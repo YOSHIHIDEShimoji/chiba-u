@@ -54,7 +54,6 @@ def run_experiment():
     output_csv = f'result_{now_str}_{current_os}.csv'
 
     configs = [
-        ('kadai5q.c',          [],                 'k5'),
         ('kadai5q-noprintf.c', [],                 'nop'),
         ('kadai5q-noprintf.c', ['-O2'],            'O2'),
         ('kadai5q-noprintf.c', ['-O3'],            'O3'),
