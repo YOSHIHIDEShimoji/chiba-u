@@ -5,7 +5,7 @@ import argparse
 import os
 import platform
 import re
-import datetime  # 日時取得用に追加
+import datetime
 
 def get_time_command():
     system = platform.system()
@@ -48,10 +48,14 @@ def run_experiment():
     end_n = args.max_n
     current_os = platform.system()
 
-    # ★ ファイル名の生成処理を追加 ★
-    # 例: result_20231027_153000_Linux.csv
+    # 結果保存用CSVファイル名
     now_str = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
-    output_csv = f'result-nok5_{now_str}_{current_os}.csv'
+    output_csv = f'result_{now_str}_{current_os}.csv'
+
+    # ★修正ポイント: プロセスIDを使ってユニークな実行ファイル名を作る
+    # これで他のターミナルで実行中のスクリプトとファイル名が被らなくなる
+    pid = os.getpid()
+    exe_file = f'./a_{pid}.out'
 
     configs = [
         ('kadai5q-noprintf.c', [],                 'nop'),
@@ -65,7 +69,8 @@ def run_experiment():
         return
 
     print(f"環境: {current_os}")
-    print(f"結果保存先: {output_csv}\n")  # 保存先ファイル名を表示
+    print(f"PID: {pid} (実行ファイル: {exe_file})") # 確認用表示
+    print(f"結果保存先: {output_csv}\n")
 
     try:
         with open(output_csv, 'w', newline='') as f:
@@ -87,7 +92,8 @@ def run_experiment():
                 print(f"N={n}: ", end='', flush=True)
 
                 for src_file, extra_flags, prefix in configs:
-                    compile_cmd = ['gcc', f'-DN={n}', src_file, '-lm'] + extra_flags
+                    # ★修正ポイント: -o オプションでユニークなファイル名を指定
+                    compile_cmd = ['gcc', f'-DN={n}', src_file, '-lm', '-o', exe_file] + extra_flags
                     try:
                         subprocess.run(compile_cmd, check=True)
                     except subprocess.CalledProcessError:
@@ -95,10 +101,10 @@ def run_experiment():
                         times.extend(["Error", "Error", "Error"])
                         continue
 
-                    time_cmd = get_time_command() + ['./a.out']
+                    # ★修正ポイント: ユニークなファイルを実行
+                    time_cmd = get_time_command() + [exe_file]
                     
                     try:
-                        # stdout=subprocess.DEVNULL で出力を捨てる
                         result = subprocess.run(
                             time_cmd, 
                             stdout=subprocess.DEVNULL, 
@@ -132,8 +138,9 @@ def run_experiment():
         print(f"ファイルエラー: {e}")
     
     finally:
-        if os.path.exists('./a.out'):
-            os.remove('./a.out')
+        # ★修正ポイント: 自分のPIDがついたファイルだけを削除する
+        if os.path.exists(exe_file):
+            os.remove(exe_file)
 
 if __name__ == "__main__":
     run_experiment()
