@@ -1,0 +1,137 @@
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+from skimage import io
+from skimage.feature import match_descriptors, ORB
+from skimage.transform import AffineTransform, warp
+from skimage.measure import ransac
+
+
+OrgImg = cv2.imread('SampleImg2.png')
+
+# 特徴点検出
+detector = cv2.AKAZE_create()
+keypoints = detector.detect(OrgImg)
+OutImg = cv2.drawKeypoints(OrgImg, keypoints, None)
+
+# 特徴点対の検出
+OrgImg1 = cv2.imread('SampleImg2.png')
+OrgImg2 = cv2.imread('MovedImg2.png')
+detector = cv2.AKAZE_create()
+kp1, des1 = detector.detectAndCompute(OrgImg1, None)
+kp2, des2 = detector.detectAndCompute(OrgImg2, None)
+
+bf = cv2.BFMatcher()
+matches = bf.knnMatch(des1, des2, k=2)
+good = []
+MATCH_RATIO = 0.6
+for m, n in matches:
+    if m.distance < MATCH_RATIO * n.distance:
+        good.append([m])
+OutImg = cv2.drawMatchesKnn(OrgImg1, kp1, OrgImg2, kp2, good, None, flags=2)
+
+# 結果表示
+OutImg_rgb = cv2.cvtColor(OutImg, cv2.COLOR_BGR2RGB)
+plt.figure(figsize=(10, 5))
+plt.imshow(OutImg_rgb)
+plt.axis('off')
+plt.savefig("result.png", dpi=200, bbox_inches="tight")
+plt.close()
+
+# 特徴点対を用いたマッチング - 1
+OrgImg1 = cv2.imread('SampleImg2.png')
+OrgImg2 = cv2.imread('MovedImg2.png')
+detector = cv2.AKAZE_create()
+kp1, des1 = detector.detectAndCompute(OrgImg1, None)
+kp2, des2 = detector.detectAndCompute(OrgImg2, None)
+
+MATCH_RATIO = 0.2
+Matcher = cv2.DescriptorMatcher_create(cv2.DescriptorMatcher_BRUTEFORCE_HAMMING)
+matches = Matcher.match(des1, des2)
+matches = sorted(matches, key=lambda x: x.distance)
+numGoodMatches = int(len(matches) * MATCH_RATIO)
+matches = matches[:numGoodMatches]
+
+# 特徴点対を用いたマッチング - 2
+imMatches = cv2.drawMatches(OrgImg1, kp1, OrgImg2, kp2, matches, None)
+
+# 結果表示
+imMatches_rgb = cv2.cvtColor(imMatches, cv2.COLOR_BGR2RGB)
+plt.figure(figsize=(10, 5))
+plt.imshow(imMatches_rgb)
+plt.axis('off')
+plt.savefig("result.png", dpi=200, bbox_inches="tight")
+plt.close()
+
+pt1 = np.zeros((len(matches), 2), dtype=np.float32)
+pt2 = np.zeros((len(matches), 2), dtype=np.float32)
+
+for i, match in enumerate(matches):
+    pt1[i, :] = kp1[match.queryIdx].pt
+    pt2[i, :] = kp2[match.trainIdx].pt
+
+h, mask = cv2.findHomography(pt2, pt1, cv2.LMEDS)
+
+S = OrgImg1.shape
+RegImg = cv2.warpPerspective(OrgImg2, h, (S[1], S[0]))
+
+# 結果表示
+RegImg_rgb = cv2.cvtColor(RegImg, cv2.COLOR_BGR2RGB)
+OrgImg1_rgb = cv2.cvtColor(OrgImg1, cv2.COLOR_BGR2RGB)
+plt.figure(figsize=(10, 4))
+plt.subplot(1, 2, 1)
+plt.imshow(OrgImg1_rgb)
+plt.axis('off')
+plt.subplot(1, 2, 2)
+plt.imshow(RegImg_rgb)
+plt.axis('off')
+plt.savefig("result.png", dpi=200, bbox_inches="tight")
+plt.close()
+
+# skimage 特徴点検出
+OrgImg1 = io.imread('SampleImg2.png')
+OrgImg2 = io.imread('MovedImg2.png')
+descriptor_extractor = ORB(n_keypoints=200)
+
+descriptor_extractor.detect_and_extract(OrgImg1)
+keypoints1 = descriptor_extractor.keypoints
+descriptors1 = descriptor_extractor.descriptors
+
+descriptor_extractor.detect_and_extract(OrgImg2)
+keypoints2 = descriptor_extractor.keypoints
+descriptors2 = descriptor_extractor.descriptors
+
+matches12 = match_descriptors(descriptors1, descriptors2, cross_check=True)
+
+# skimage
+src = []
+dst = []
+for idx in matches12:
+    src.append(keypoints1[idx[0]])
+    dst.append(keypoints2[idx[1]])
+src = np.array(src)
+dst = np.array(dst)
+
+model = AffineTransform()
+model.estimate(src, dst)
+model_robust, inliers = ransac(
+    (src, dst),
+    AffineTransform,
+    min_samples=3,
+    residual_threshold=2,
+    max_trials=100
+)
+
+CorrectImg = warp(OrgImg2, model.inverse)
+CorrectImgR = warp(OrgImg2, model_robust.inverse)
+
+# 結果表示
+plt.figure(figsize=(10, 4))
+plt.subplot(1, 2, 1)
+plt.imshow(OrgImg1, cmap='gray')
+plt.axis('off')
+plt.subplot(1, 2, 2)
+plt.imshow(CorrectImgR, cmap='gray')
+plt.axis('off')
+plt.savefig("result.png", dpi=200, bbox_inches="tight")
+plt.close()
