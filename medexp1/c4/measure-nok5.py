@@ -41,9 +41,10 @@ def parse_output(output, system_type):
 
 def run_experiment():
     parser = argparse.ArgumentParser(description='Measure execution time, memory, and instructions.')
-    parser.add_argument('max_n', nargs='?', type=int, default=20, help='Maximum N value (default: 20)')
+    parser.add_argument('max_n', nargs='?', type=int, default=14, help='Maximum N value (default: 14)')
     args = parser.parse_args()
 
+    # Nの開始と終了
     start_n = 4
     end_n = args.max_n
     current_os = platform.system()
@@ -52,16 +53,16 @@ def run_experiment():
     now_str = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
     output_csv = f'result_{now_str}_{current_os}.csv'
 
-    # ★修正ポイント: プロセスIDを使ってユニークな実行ファイル名を作る
-    # これで他のターミナルで実行中のスクリプトとファイル名が被らなくなる
+    # ユニークな実行ファイル名
     pid = os.getpid()
     exe_file = f'./a_{pid}.out'
 
     configs = [
-        ('kadai5q-noprintf.c', [],                 'nop'),
-        ('kadai5q-noprintf.c', ['-O2'],            'O2'),
-        ('kadai5q-noprintf.c', ['-O3'],            'O3'),
-        ('kadai5q-noprintf.c', ['-O3', '-ffast-math'], 'fast_math')
+        ('kadai5q-noprintf.c', [],                          'O0'),     # 最適化なし(基準)
+        ('kadai5q-noprintf.c', ['-Os'],                     'Os'),     # 最適化なし(基準)
+        ('kadai5q-noprintf.c', ['-O2'],                     'O2'),     # 標準最適化
+        ('kadai5q-noprintf.c', ['-O3'],                     'O3'),     # 強力な最適化
+        # ('kadai5q-noprintf.c', ['-O3', '-ffast-math'],    'Ofast')  # ハードウェア特化
     ]
     
     if not os.path.exists('/usr/bin/time'):
@@ -69,13 +70,15 @@ def run_experiment():
         return
 
     print(f"環境: {current_os}")
-    print(f"PID: {pid} (実行ファイル: {exe_file})") # 確認用表示
+    print(f"PID: {pid} (実行ファイル: {exe_file})")
     print(f"結果保存先: {output_csv}\n")
+    print("計測を開始します (printfなし版のみ実行)...")
 
     try:
         with open(output_csv, 'w', newline='') as f:
             writer = csv.writer(f)
             
+            # ヘッダー作成
             header = ['N']
             header += [f"{c[2]}_time[s]" for c in configs]
             header += [f"{c[2]}_mem[kb]" for c in configs]
@@ -92,7 +95,7 @@ def run_experiment():
                 print(f"N={n}: ", end='', flush=True)
 
                 for src_file, extra_flags, prefix in configs:
-                    # ★修正ポイント: -o オプションでユニークなファイル名を指定
+                    # コンパイル
                     compile_cmd = ['gcc', f'-DN={n}', src_file, '-lm', '-o', exe_file] + extra_flags
                     try:
                         subprocess.run(compile_cmd, check=True)
@@ -101,13 +104,13 @@ def run_experiment():
                         times.extend(["Error", "Error", "Error"])
                         continue
 
-                    # ★修正ポイント: ユニークなファイルを実行
+                    # 実行時間を計測
                     time_cmd = get_time_command() + [exe_file]
                     
                     try:
                         result = subprocess.run(
                             time_cmd, 
-                            stdout=subprocess.DEVNULL, 
+                            stdout=subprocess.DEVNULL, # 標準出力は捨てる(念のため)
                             stderr=subprocess.PIPE, 
                             text=True
                         )
@@ -138,7 +141,6 @@ def run_experiment():
         print(f"ファイルエラー: {e}")
     
     finally:
-        # ★修正ポイント: 自分のPIDがついたファイルだけを削除する
         if os.path.exists(exe_file):
             os.remove(exe_file)
 

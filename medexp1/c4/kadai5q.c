@@ -110,7 +110,6 @@ void ShowData(struct TSP *tsp)
  */
 void SimpleOrder(struct TSP *tsp)
 {
-	
 	/* 計算始めの表示 */
 	printf("\nSimple order:\n");
 
