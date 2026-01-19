@@ -1,6 +1,10 @@
 # _ignore ディレクトリを再帰的に無視
 **/_ignore/
 
+# すべてのPDFを無視。必要ならば以下のように書く
+# ![.gitignoreからの相対パス(.pdf)]
+*.pdf
+
 # コンパイル結果
 *.o
 *.out
@@ -43,6 +47,8 @@ ENV/
 *.sqlite3
 *.db
 .DS_Store
+._*
+.AppleDouble/
 
 # Spotipy OAuth cache
 .cache*
@@ -50,10 +56,20 @@ ENV/
 # VSCode
 .vscode/
 
-# === 一時ファイル ===
+# 一時ファイル
 *.swp
 *~
 
-# すべてのPDFを無視。必要ならば以下のように書く
-# ![.gitignoreからの相対パス(.pdf)]
-*.pdf
+# Office
+~$*.docx
+~$*.xlsx
+~$*.pptx
+
+# LaTeX
+.aux
+.log
+.toc
+.out
+.synctex.gz
+.fdb_latexmk
+.fls
