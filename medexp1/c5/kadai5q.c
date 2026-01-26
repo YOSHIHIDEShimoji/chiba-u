@@ -2,9 +2,9 @@
 /*
  * 医工学実験１ C言語プログラミング４
  * 巡回セールスマン問題を2-opt法で解く
- * 課題番号：
- * 作成者：
- * 作成日：
+ * 課題番号：24TB4039
+ * 作成者：下地慶英
+ * 作成日：2026/01/27
  */
 
 #include <stdio.h>
@@ -33,7 +33,6 @@ struct TSP {
 };
 
 float cost_min;			/* 最短の移動距離 */
-int first = 1;			/* cost_min に最初の経路の cost を代入するためのフラグ */
 int best_order[N];		/* 最短経路を保持するための配列 */
 
 /* 関数の宣言 */
@@ -49,8 +48,6 @@ void ShowCost(struct TSP *tsp);
 void ShowCostOrder(int order[], float cost);
 void TwoOpt(const int currentOrder[N], int changedOrder[N], int x1, int x2);
 int UpdateOrder(struct TSP *tsp, int x1, int x2);
-void AllOrder(struct TSP *tsp, int index);
-void CalcMin(struct TSP *tsp);
 void ShowResult(int order[], float cost);
 
 /*
@@ -72,11 +69,6 @@ int main()
 	printf("Number of trials: %d", TRIALS);
 	ShowResult(tsp.order, tsp.cost);
 		
-	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
-	// AllOrder(&tsp, 1);
-	// CalcCost(&tsp);
-	// ShowCost(&tsp);
-	// ShowResult();
 	return 0;
 }
 
@@ -86,7 +78,6 @@ int main()
  */
 void ReadData(struct TSP *tsp)
 {
-	/* 課題１で作成 */
 	/* ファイル名を作成 */
 	char filename[256];
 	sprintf(filename, "cities2024_30-100/cities%d.csv", N);	
@@ -96,6 +87,7 @@ void ReadData(struct TSP *tsp)
         printf("Can't open data file.\n");
         exit(1);
     }
+
 	/* ファイル読み込み */
     char buf[256];
     for (int i = 0; i < N; i++) {
@@ -127,7 +119,6 @@ void ShowData(struct TSP *tsp)
  */
 void InitialOrder(struct TSP *tsp)
 {
-	/* 課題１で作成 */
 	// printf("\nInitial order:\n");	 /* 計算始めの表示 */
 	printf("\n");
 
@@ -147,6 +138,10 @@ void InitialOrder(struct TSP *tsp)
 	}
 }
 
+/*
+ * 2-opt法による局所解探索（最急降下法）
+ * 引数：struct TSP *tsp : TSPデータ
+ */
 void SDM(struct TSP *tsp)
 {
 	while (1) {
@@ -238,6 +233,12 @@ void TwoOpt(const int currentOrder[N], int changedOrder[N], int x1, int x2)
 	}
 }
 
+/*
+ * 巡回路改善の判定
+ * 引数 1：struct TSP *tsp : TSPデータ
+ * 引数 2：int x1 : １つめのパラメータ
+ * 引数 3：int x2 : ２つめのパラメータ
+*/
 int UpdateOrder(struct TSP *tsp, int x1, int x2)
 {
 	int changedOrder[N];
@@ -259,48 +260,11 @@ int UpdateOrder(struct TSP *tsp, int x1, int x2)
 }
 
 /*
- * すべての巡回組み合わせを生成する
- * 引数1：struct TSP *tsp : TSPデータ
- * 引数2：int index：tsp->order[index] を決める
- */
-void AllOrder(struct TSP *tsp, int index)
-{
-	/* order が完成したら計算する */
-	if (index == N) {
-		CalcCost(tsp);
-		ShowCost(tsp);
-		CalcMin(tsp);
-		return;
-	}
-
-	for (int i = 1; i < N; i++)	{
-
-		/* index より前の配列番号に i が使われているかの判定 */
-		int used = 0;
-		for (int j = 1; j < index; j++) {
-			if (tsp->order[j] == i) {
-				used = 1;
-				break;
-			}
-		}
-
-		/* 使われていなかったら代入 */
-		if (used)
-			continue;
-		else {
-			tsp->order[index] =  i;
-			AllOrder(tsp, index + 1);		
-		}
-	}
-}
-
-/*
  * 総移動距離を計算する
  * 引数：struct TSP *tsp : TSPデータ
  */
 void CalcCost(struct TSP *tsp)
 {
-	/* 課題3で作成 */
 	/* 計算した総移動距離は tsp->cost に代入する */
 	tsp->cost = 0;
 	for (int i = 0; i < N - 1; i++) {
@@ -334,7 +298,6 @@ float CalcCostOrder(struct TSP *tsp, int order[])
  */
 float CalcDistance(struct City a, struct City b)
 {
-	/* 課題3で作成 */
 	float dis = sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 	return dis;
 }
@@ -345,12 +308,7 @@ float CalcDistance(struct City a, struct City b)
  */
 void ShowCost(struct TSP *tsp)
 {
-	int i;
-
-	for (i = 0; i < N; i ++) {
-		printf("C%-2d> ", tsp->order[i] + 1);
-	}
-	printf("C%-2d  cost =%7.1f\n", tsp->order[0] + 1, tsp->cost);
+	ShowCostOrder(tsp->order, tsp->cost);
 }
 
 /*
@@ -360,34 +318,11 @@ void ShowCost(struct TSP *tsp)
  */
 void ShowCostOrder(int order[], float cost)
 {
-	int i;
-
-	for (i = 0; i < N; i ++) {
+	for (int i = 0; i < N; i ++) {
 		printf("C%-2d> ", order[i] + 1);
 	}
 	printf("C%-2d  cost =%7.1f\n", order[0] + 1, cost);
 }
-
-/*
- * 最初の経路の cost を cost_min に代入し、 best_order に tsp->order をコピーする
- * 引数：struct TSP *tsp : TSPデータ
- */
-void CalcMin(struct TSP *tsp)
-{
-	if (first) {
-		cost_min = tsp->cost;
-		for (int i = 0; i < N; i++) {
-			best_order[i] = tsp->order[i];
-		}
-		first = 0;
-	} else if (cost_min > tsp->cost) {
-		cost_min = tsp->cost;
-		for (int i = 0; i < N; i++) {
-			best_order[i] = tsp->order[i];
-		}
-	}
-}
-
 
 /*
  * 最短経路とその距離を表示
