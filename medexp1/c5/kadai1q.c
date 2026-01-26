@@ -2,9 +2,9 @@
 /*
  * 医工学実験１ C言語プログラミング４
  * 巡回セールスマン問題を2-opt法で解く
- * 課題番号：
- * 作成者：
- * 作成日：
+ * 課題番号：1
+ * 作成者：下地慶英
+ * 作成日：2026/01/27
  */
 
 #include <stdio.h>
@@ -29,7 +29,6 @@ struct TSP {
 };
 
 float cost_min;			/* 最短の移動距離 */
-int first = 1;			/* cost_min に最初の経路の cost を代入するためのフラグ */
 int order_min[N];		/* 最短経路を保持するための配列 */
 
 /* 関数の宣言 */
@@ -37,11 +36,9 @@ void ReadData(struct TSP *tsp);
 void ShowData(struct TSP *tsp);
 void InitialOrder(struct TSP *tsp);
 void TwoOpt(const int currentOrder[N], int changedOrder[N], int x1, int x2);
-void AllOrder(struct TSP *tsp, int index);
 void CalcCost(struct TSP *tsp);
 float CalcDistance(struct City a, struct City b);
 void ShowCost(struct TSP *tsp);
-void CalcMin(struct TSP *tsp);
 void ShowResult();
 
 /*
@@ -57,28 +54,29 @@ int main()
 	ShowData(&tsp);
 	InitialOrder(&tsp);
 
+	/* currentOrder に tsp.order をコピー */
 	int currentOrder[N], changedOrder[N];
-	/* currentOrder に tsp.order をコピー*/
 	for (int i = 0; i < N; i++) {
 		currentOrder[i] = tsp.order[i];
 	}
 
-	/* x1, x2 をユーザーに入力させる*/
+	/* x1 をユーザーに入力させる */
 	int x1, x2;
 	printf("x1 = ");	
 	scanf("%d", &x1);
 	if (x1 < 0 || N - 2 < x1) {
-		printf("x1 must be between 0 and %d", N - 2);
+		printf("error: x1 must be between 0 and %d", N - 2);
 		exit(1);
 	}
-		
+
+	/* x2 をユーザーに入力させる */
 	printf("x2 = ");	
 	scanf("%d", &x2);
 	if (x2 < 0 || N - 1 < x2) {
-		printf("x2 must be between 0 and %d", N - 1);
+		printf("error: x2 must be between 0 and %d", N - 1);
 		exit(1);
 	} else if (x1 >= x2) {
-		printf("x2 must be bigger than x1");
+		printf("error: x2 must be bigger than x1");
 		exit(1);
 	}
 
@@ -89,7 +87,7 @@ int main()
 	
 	TwoOpt(currentOrder, changedOrder, x1, x2);
 	
-	/* changedOrder に tsp.order をコピー*/
+	/* changedOrder に tsp.order をコピー */
 	for (int i = 0; i < N; i++) {
 		tsp.order[i] = changedOrder[i] ;
 	}
@@ -97,11 +95,6 @@ int main()
 	CalcCost(&tsp);
 	ShowCost(&tsp);
 	
-	// printf("\nAll order:\n"); 	/* 計算始めの表示 */
-	// AllOrder(&tsp, 1);
-	// CalcCost(&tsp);
-	// ShowCost(&tsp);
-	// ShowResult();
 	return 0;
 }
 
@@ -111,7 +104,6 @@ int main()
  */
 void ReadData(struct TSP *tsp)
 {
-	/* 課題１で作成 */
 	/* ファイル名を作成 */
 	char filename[256];
 	sprintf(filename, "cities2024_30-100/cities%d.csv", N);	
@@ -121,6 +113,7 @@ void ReadData(struct TSP *tsp)
         printf("Can't open data file.\n");
         exit(1);
     }
+	
 	/* ファイル読み込み */
     char buf[256];
     for (int i = 0; i < N; i++) {
@@ -136,11 +129,9 @@ void ReadData(struct TSP *tsp)
  */
 void ShowData(struct TSP *tsp)
 {
-	int i;
-
 	/* データ表示 */
 	printf("Cities location:\n");
-	for (i = 0; i < N; i ++) {
+	for (int i = 0; i < N; i ++) {
 		printf("C%-2d : %4d,%4d\n", 
 			i + 1, tsp->city[i].x, tsp->city[i].y);
 	}
@@ -152,7 +143,6 @@ void ShowData(struct TSP *tsp)
  */
 void InitialOrder(struct TSP *tsp)
 {
-	/* 課題１で作成 */
 	printf("\nInitial order:\n");	 /* 計算始めの表示 */
 
 	int used[N] = {0};
@@ -197,50 +187,12 @@ void TwoOpt(const int currentOrder[N], int changedOrder[N], int x1, int x2)
 	}
 }
 
-
-/*
- * すべての巡回組み合わせを生成する
- * 引数1：struct TSP *tsp : TSPデータ
- * 引数2：int index：tsp->order[index] を決める
- */
-void AllOrder(struct TSP *tsp, int index)
-{
-	/* order が完成したら計算する */
-	if (index == N) {
-		CalcCost(tsp);
-		ShowCost(tsp);
-		CalcMin(tsp);
-		return;
-	}
-
-	for (int i = 1; i < N; i++)	{
-
-		/* index より前の配列番号に i が使われているかの判定 */
-		int used = 0;
-		for (int j = 1; j < index; j++) {
-			if (tsp->order[j] == i) {
-				used = 1;
-				break;
-			}
-		}
-
-		/* 使われていなかったら代入 */
-		if (used)
-			continue;
-		else {
-			tsp->order[index] =  i;
-			AllOrder(tsp, index + 1);		
-		}
-	}
-}
-
 /*
  * 総移動距離を計算する
  * 引数：struct TSP *tsp : TSPデータ
  */
 void CalcCost(struct TSP *tsp)
 {
-	/* 課題3で作成 */
 	/* 計算した総移動距離は tsp->cost に代入する */
 	tsp->cost = 0;
 	for (int i = 0; i < N - 1; i++) {
@@ -257,7 +209,6 @@ void CalcCost(struct TSP *tsp)
  */
 float CalcDistance(struct City a, struct City b)
 {
-	/* 課題3で作成 */
 	float dis = sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 	return dis;
 }
@@ -275,27 +226,6 @@ void ShowCost(struct TSP *tsp)
 	}
 	printf("C%-2d  cost =%7.1f\n", tsp->order[0] + 1, tsp->cost);
 }
-
-/*
- * 最初の経路の cost を cost_min に代入し、 order_min に tsp->order をコピーする
- * 引数：struct TSP *tsp : TSPデータ
- */
-void CalcMin(struct TSP *tsp)
-{
-	if (first) {
-		cost_min = tsp->cost;
-		for (int i = 0; i < N; i++) {
-			order_min[i] = tsp->order[i];
-		}
-		first = 0;
-	} else if (cost_min > tsp->cost) {
-		cost_min = tsp->cost;
-		for (int i = 0; i < N; i++) {
-			order_min[i] = tsp->order[i];
-		}
-	}
-}
-
 
 /*
  * 最短経路とその距離を表示
