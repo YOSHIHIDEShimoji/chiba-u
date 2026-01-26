@@ -104,7 +104,7 @@ void ReadData(struct TSP *tsp)
 	/* 課題１で作成 */
 	/* ファイル名を作成 */
 	char filename[256];
-	sprintf(filename, "cities2024_30-100/cities%d.csv", N);	
+	sprintf(filename, "cities2025_30-100/cities%d.csv", N);	
 
 	FILE *fp = fopen(filename, "r");
     if (fp == NULL) {
