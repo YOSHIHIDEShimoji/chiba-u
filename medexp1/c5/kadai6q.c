@@ -1,7 +1,7 @@
 /*
- * 医工学実験１ C言語プログラミング４
- * 巡回セールスマン問題を2-opt法で解く
- * 課題番号：24TB4039
+ * 医工学実験１ C言語プログラミング5
+ * 巡回セールスマン問題を2-opt法で解く。今回は欲張り法。
+ * 課題番号：自由課題
  * 作成者：下地慶英
  * 作成日：2026/01/27
  */
@@ -67,7 +67,13 @@ void ReadData(struct TSP *tsp)
 {
 	/* ファイル名を作成 */
 	char filename[256];
-	sprintf(filename, "cities2025_30-100/cities%d.csv", N);	
+	if (1 <= N && N <=9) {
+		sprintf(filename, "cities2025_4-20/cities0%d.csv", N);
+	} else if (10 <= N && N <= 20) {
+		sprintf(filename, "cities2025_4-20/cities%d.csv", N);
+	} else {
+		sprintf(filename, "cities2025_30-100/cities%d.csv", N);	
+	}
 
 	FILE *fp = fopen(filename, "r");
     if (fp == NULL) {

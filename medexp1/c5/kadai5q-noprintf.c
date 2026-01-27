@@ -1,5 +1,5 @@
 /*
- * 医工学実験１ C言語プログラミング４
+ * 医工学実験１ C言語プログラミング5
  * 巡回セールスマン問題を2-opt法で解く
  * 課題番号：24TB4039
  * 作成者：下地慶英
@@ -118,8 +118,7 @@ void ShowData(struct TSP *tsp)
  */
 void InitialOrder(struct TSP *tsp)
 {
-	// printf("\nInitial order:\n");	 /* 計算始めの表示 */
-	// printf("\n");
+	// 	// printf("\n");
 
 	int used[N] = {0};
 	tsp->order[0] = 0;				// 最初の都市は固定

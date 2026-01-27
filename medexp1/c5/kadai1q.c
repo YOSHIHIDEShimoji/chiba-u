@@ -1,5 +1,5 @@
 /*
- * 医工学実験１ C言語プログラミング４
+ * 医工学実験１ C言語プログラミング5
  * 巡回セールスマン問題を2-opt法で解く
  * 課題番号：1
  * 作成者：下地慶英
@@ -61,25 +61,26 @@ int main()
 
 	/* x1 をユーザーに入力させる */
 	int x1, x2;
-	printf("x1 = ");	
+	printf("Enter x1 = ");	
 	scanf("%d", &x1);
 	if (x1 < 0 || N - 2 < x1) {
-		printf("error: x1 must be between 0 and %d", N - 2);
+		printf("\nerror: x1 must be between 0 and %d", N - 2);
 		exit(1);
 	}
 
 	/* x2 をユーザーに入力させる */
-	printf("x2 = ");	
+	printf("Enter x2 = ");	
 	scanf("%d", &x2);
 	if (x2 < 0 || N - 1 < x2) {
-		printf("error: x2 must be between 0 and %d", N - 1);
+		printf("\nerror: x2 must be between 0 and %d", N - 1);
 		exit(1);
 	} else if (x1 >= x2) {
-		printf("error: x2 must be bigger than x1");
+		printf("\nerror: x2 must be bigger than x1");
 		exit(1);
 	}
 
 	/* currentOrder を表示 */
+	printf("\n");
 	printf("currentOrder: ");
 	CalcCost(&tsp);
 	ShowCost(&tsp);
@@ -105,7 +106,13 @@ void ReadData(struct TSP *tsp)
 {
 	/* ファイル名を作成 */
 	char filename[256];
-	sprintf(filename, "cities2025_30-100/cities%d.csv", N);	
+	if (1 <= N && N <=9) {
+		sprintf(filename, "cities2025_4-20/cities0%d.csv", N);
+	} else if (10 <= N && N <= 20) {
+		sprintf(filename, "cities2025_4-20/cities%d.csv", N);
+	} else {
+		sprintf(filename, "cities2025_30-100/cities%d.csv", N);	
+	}
 
 	FILE *fp = fopen(filename, "r");
     if (fp == NULL) {
@@ -134,6 +141,7 @@ void ShowData(struct TSP *tsp)
 		printf("C%-2d : %4d,%4d\n", 
 			i + 1, tsp->city[i].x, tsp->city[i].y);
 	}
+	printf("\n");
 }
 
 /*
@@ -142,8 +150,6 @@ void ShowData(struct TSP *tsp)
  */
 void InitialOrder(struct TSP *tsp)
 {
-	printf("\nInitial order:\n");	 /* 計算始めの表示 */
-
 	int used[N] = {0};
 	tsp->order[0] = 0;				// 最初の都市は固定
 	used[0] = 1;
