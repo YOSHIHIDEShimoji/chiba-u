@@ -12,7 +12,7 @@
 #include <time.h>
 #include <math.h>
 
-#ifndef N			/* "gcc -DN=15 -lm *.c " で "#define N 15" とする */
+#ifndef N			/* "gcc -DN=100 -lm *.c " で "#define N 100" とする */
 #define N 100		/* デフォルト都市の数 */
 #endif
 
