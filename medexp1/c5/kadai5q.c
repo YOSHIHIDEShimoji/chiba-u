@@ -1,7 +1,7 @@
 /*
- * 医工学実験１ C言語プログラミング４
+ * 医工学実験１ C言語プログラミング5
  * 巡回セールスマン問題を2-opt法で解く
- * 課題番号：24TB4039
+ * 課題番号：5
  * 作成者：下地慶英
  * 作成日：2026/01/27
  */
@@ -65,7 +65,7 @@ int main()
 	Repeat_SDM(&tsp);
 
 	/* 最適解を表示 */
-	printf("Number of trials: %d", TRIALS);
+	printf("\nNumber of trials: %d", TRIALS);
 	ShowResult(tsp.order, tsp.cost);
 		
 	return 0;
@@ -79,7 +79,13 @@ void ReadData(struct TSP *tsp)
 {
 	/* ファイル名を作成 */
 	char filename[256];
-	sprintf(filename, "cities2025_30-100/cities%d.csv", N);	
+	if (1 <= N && N <=9) {
+		sprintf(filename, "cities2025_4-20/cities0%d.csv", N);
+	} else if (10 <= N && N <= 20) {
+		sprintf(filename, "cities2025_4-20/cities%d.csv", N);
+	} else {
+		sprintf(filename, "cities2025_30-100/cities%d.csv", N);	
+	}
 
 	FILE *fp = fopen(filename, "r");
     if (fp == NULL) {
@@ -118,8 +124,7 @@ void ShowData(struct TSP *tsp)
  */
 void InitialOrder(struct TSP *tsp)
 {
-	// printf("\nInitial order:\n");	 /* 計算始めの表示 */
-	printf("\n");
+	// 	printf("\n");
 
 	int used[N] = {0};
 	tsp->order[0] = 0;				// 最初の都市は固定
@@ -186,7 +191,7 @@ void Repeat_SDM(struct TSP *tsp)
 
 	for (int i = 0; i < TRIALS; i++) {
 		InitialOrder(tsp);
-		printf("Trial %d:\n", i + 1);
+		printf("\nTrial %d:\n", i + 1);
 		CalcCost(tsp);
 		ShowCost(tsp);
 		SDM(tsp);
