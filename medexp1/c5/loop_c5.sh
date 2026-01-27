@@ -1,17 +1,26 @@
 #!/bin/bash
 
+# デフォルト値: TRIALS=1000, ID=default
+TRIALS=${1:-1000}
+ID=${2:-"default"}
+
 # 設定
 SRC="kadai5q-noprintf.c"
-TRIALS=1000
-BEST_FILE="result_loop.txt"      # 固定のファイル名に変更
-EXE="./build/tsp_solver"
+BEST_FILE="result/loop_result_${TRIALS}${ID}.txt"
+EXE="./build/tsp_solver_${ID}"
+
+echo "Source File : $SRC"
+echo "Trials      : $TRIALS"
+echo "ID          : $ID"
+echo "Best File   : $BEST_FILE"
 
 # コンパイル
 mkdir -p ./build
+mkdir -p ./result
 gcc -O3 -DN=100 -DTRIALS=$TRIALS "$SRC" -o "$EXE" -lm
 
 if [ $? -ne 0 ]; then
-    echo "コンパイルエラー"
+    echo "エラー: コンパイルに失敗しました。"
     exit 1
 fi
 
@@ -19,7 +28,6 @@ fi
 current_best=99999999.9
 total_loops=0
 
-echo "Commencing search... (Press Ctrl+C to stop)"
 if [ -f "$BEST_FILE" ]; then
     # ファイルからコストを読み取り
     val=$(grep "cost =" "$BEST_FILE" | awk -F'=' '{print $2}' | awk '{print $1}')
@@ -32,6 +40,8 @@ if [ -f "$BEST_FILE" ]; then
         total_loops=$last_loop
     fi
 fi
+
+echo "Commencing search... (Press Ctrl+C to stop)"
 
 # 無限ループ実行
 while true
@@ -71,7 +81,7 @@ do
                 echo "Last Updated: $(date '+%Y-%m-%d %H:%M:%S')"
             } > "$BEST_FILE"
 
-            echo "[UPDATE] Loop $total_loops: Cost = $new_cost (Saved to $BEST_FILE)"
+            echo "[$ID] [UPDATE] Loop $total_loops: Cost = $new_cost"
         fi
     fi
 done
