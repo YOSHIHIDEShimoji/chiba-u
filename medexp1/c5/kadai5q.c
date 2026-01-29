@@ -61,7 +61,6 @@ int main()
 	ReadData(&tsp);
 	ShowData(&tsp);
 
-	printf("\nSteepest descent method search:\n");
 	Repeat_SDM(&tsp);
 
 	/* 最適解を表示 */
