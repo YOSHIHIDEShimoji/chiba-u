@@ -38,7 +38,6 @@ env/
 .venv/
 ENV/
 .pip-cache/
-.python-version
 
 # Jupyter Notebook チェックポイント
 .ipynb_checkpoints/
