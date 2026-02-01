@@ -1,5 +1,6 @@
 from __future__ import print_function
 import time
+import os
 from tensorflow import keras
 from keras.datasets import mnist
 from keras.models import Sequential
@@ -88,8 +89,14 @@ score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
-# ファイル名作成
-file_name = f'MNIST_{model_type}_e{epochs}.weights.h5'
-model.save_weights(file_name)
+# 保存
+save_dir = '../models'
+if not os.path.exists(save_dir):
+    os.makedirs(save_dir)
+    
+file_name = f'MNIST_{model_type}.weights.h5'
+save_path = os.path.join('models', file_name)
+
+model.save_weights(save_path)
 
 print(f"学習時間（{epochs}epochs）: {end_time - start_time:.2f} 秒")
