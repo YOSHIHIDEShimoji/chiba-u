@@ -36,7 +36,7 @@ model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
 # 重みを読み込む
-model.load_weights('MNIST_Complex_e100.weights.h5')
+model.load_weights('../models/MNIST_Complex.weights.h5')
 
 # ディレクトリ指定
 img_dir = "data"

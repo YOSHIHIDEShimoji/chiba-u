@@ -38,7 +38,7 @@ model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
 # 学習済み重みの読み込み
-model.load_weights('MNIST_MoreComplex_e100.weights.h5')
+model.load_weights('../models/MNIST_MoreComplex.weights.h5')
 
 # ディレクトリ指定
 img_dir = "data"
@@ -47,8 +47,6 @@ files = sorted(os.listdir(img_dir))
 # 数字ごとの集計用リスト
 correct_per_class = [0] * 10
 total_per_class = [0] * 10
-
-print(f"判定開始: MNIST_MoreComplex_e100 モデルを使用\n")
 
 for filename in files:
     if not filename.endswith(".png"):
