@@ -25,7 +25,7 @@ Sat Jan 31 13:06:06 2026
 +-----------------------------------------------------------------------------------------+
 -----------------------------------------------------------------------------------------------------------------------------------
 [COMMAND]
-python MNIST_complex.py
+python src/MNIST_complex.py
 -----------------------------------------------------------------------------------------------------------------------------------
 [OUTPUT]
 x_train shape: (60000, 28, 28, 1)
@@ -243,11 +243,9 @@ GPU 実行時の計測結果。
 
 -----------------------------------------------------------------------------------------------------------------------------------
 [COMMAND]
-python MNIST_complex_TEST.py
+python src/MNIST_complex_TEST.py
 -----------------------------------------------------------------------------------------------------------------------------------
 [OUTPUT]
-/Users/yoshihide/.pyenv/versions/prog-spe2-3.11.9/lib/python3.11/site-packages/keras/src/layers/convolutional/base_conv.py:113: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
-  super().__init__(activity_regularizer=activity_regularizer, **kwargs)
 [NG] File: 0_p01_r00_c00.png -> Pred: 7 (True: 0)
 [NG] File: 0_p01_r00_c01.png -> Pred: 1 (True: 0)
 [OK] File: 0_p01_r00_c02.png -> Pred: 0 (True: 0)
