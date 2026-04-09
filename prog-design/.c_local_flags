@@ -1,0 +1,10 @@
+# Wandbox (gcc 13.2.0) に合わせたコンパイルオプション
+# 参考: https://wandbox.org/
+
+# 警告
+-Wall
+-Wextra
+
+# C11規格
+-std=c11
+-pedantic
