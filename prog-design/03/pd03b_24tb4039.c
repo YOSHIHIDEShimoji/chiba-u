@@ -2,7 +2,10 @@
  * 氏名：下地慶英   学生証番号：24TB4039    日付：2026/05/12
 
  * 説明：
-
+ *   ・インデント幅を定数化（#define INDENT 4）し、後から自由に設定・変更できるようにした
+ *   ・1文字ずつの解析処理において、配列の添え字を使わずポインタ（*p や p++）を
+ *     活用することで、効率的な文字へのアクセスにした
+ * 
  * 開発環境：Wandbox(online) https://wandbox.org/
  * コンパイラー：gcc 13.2.0
  * コマンド：gcc -Wall -Wextra -std=c11 -pedantic
@@ -17,9 +20,6 @@ void print_indent(int depth);
 #define MAX_LINE 1000
 #define INDENT 4
 
-/*
- *@param String "fileName.c"
- */
 int main(int argc, char **argv)
 {
     // 引数がなければエラー
