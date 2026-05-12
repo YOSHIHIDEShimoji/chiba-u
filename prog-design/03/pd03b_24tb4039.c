@@ -6,6 +6,22 @@
  *   ・1文字ずつの解析処理において、配列の添え字を使わずポインタ（*p や p++）を
  *     活用することで、効率的な文字へのアクセスにした
  * 
+ * 個人的に *.c ファイルで *.c ファイルを使って整形するのは気持ち悪いと思ったので調べてみると、
+ * clang-format というコマンドが存在することを知った。
+ * 以下の設定ファイル（.clang-format）を作業ディレクトリに配置し、コマンドを実行するだけで整形できる
+ * 
+ * [実行コマンド]
+ * clang-format pd03b-code.c       # 標準出力
+ * clang-format -i pd03b-code.c    # 元ファイルを上書き
+ * 
+ * [.clang-format の内容]
+ * BasedOnStyle: LLVM
+ * IndentWidth: 4
+ * SpaceBeforeParens: ControlStatements
+ * BreakBeforeBraces: Custom
+ * BraceWrapping:
+ * AfterFunction: true
+ * 
  * 開発環境：Wandbox(online) https://wandbox.org/
  * コンパイラー：gcc 13.2.0
  * コマンド：gcc -Wall -Wextra -std=c11 -pedantic

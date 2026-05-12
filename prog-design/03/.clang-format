@@ -1,0 +1,12 @@
+BasedOnStyle: LLVM
+
+# インデント
+IndentWidth: 4
+
+# ()の前後にスペースを入れる
+SpaceBeforeParens: ControlStatements
+
+# 関数はじめの{は改行。それ以外は改行しない
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true

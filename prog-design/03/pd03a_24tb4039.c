@@ -5,7 +5,7 @@
     ・既存の2人のじゃんけん場合のコードを参考にして、3人に拡張した。
     ・標準出力時にきれいに出力されるように改行の位置を工夫した。
 
- * 開発環境：Wandbox(online) https://wandbox.org/
+ * 開発環境：Wandbox(online) https://wjandbox.org/
  * コンパイラー：gcc 13.2.0
  * コマンド：gcc -Wall -Wextra -std=c11 -pedantic
  */
@@ -20,7 +20,8 @@
 
 /* メイン関数
  */
-int main(void) {
+int main(void)
+{
     int winPoint = 3;       /* 勝利に必要なポイント */
     int round  = 0;         /* 現在の対戦数 */
     int random = 0;         /* 乱数を記録 */
