@@ -18,8 +18,7 @@
 #define STONE 2
 #define CHOKI 3
 
-/* メイン関数
- */
+/* メイン関数 */
 int main(void)
 {
     int winPoint = 3;       /* 勝利に必要なポイント */
