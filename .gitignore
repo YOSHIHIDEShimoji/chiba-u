@@ -79,3 +79,5 @@ ENV/
 .synctex.gz
 .fdb_latexmk
 .fls
+.Rproj.user
+.positai
