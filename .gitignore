@@ -3,6 +3,7 @@
 .RData
 .Ruserdata
 .Rproj.user/
+.Rapp.history
 
 # _ignore ディレクトリを再帰的に無視
 **/_ignore/
