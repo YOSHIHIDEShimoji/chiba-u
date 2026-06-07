@@ -68,6 +68,7 @@ ENV/
 *~
 
 # Office
+*.docx
 ~$*.docx
 ~$*.xlsx
 ~$*.pptx
