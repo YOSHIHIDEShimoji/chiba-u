@@ -65,7 +65,8 @@ class FromToday {
         todayTm.tm_sec  = 0;
         time_t todayT = mktime(&todayTm);
 
-        return (int)(difftime(target, todayT) / 86400.0 + 0.5);
+        double diff = difftime(target, todayT) / 86400.0;
+        return (int)(diff >= 0 ? diff + 0.5 : diff - 0.5);
     }
 
 public:
