@@ -6,7 +6,6 @@
 // 説明：
 //   - NumericDataを純粋仮想関数Show()を持つ抽象クラスとして実装
 //   - Point2DとComplexがNumericDataを継承し、ポリモーフィズムで表示
-// 調べた関数：printf("%.*f", n, x) - 小数桁数を実行時に指定できる書式
 
 #include <cstdio>
 
@@ -14,17 +13,21 @@
 class NumericData {
 public:
     virtual void Show(int decimalPart = 3) = 0;
-    virtual ~NumericData() {}
 };
 
 // Point2D クラス: x,y座標を実数型で持つ
 class Point2D : public NumericData {
     double _x;
     double _y;
+
 public:
-    Point2D(double x, double y) : _x(x), _y(y) {}
+    Point2D(double x, double y) {
+        _x = x;
+        _y = y;
+    }
     void Show(int decimalPart = 3) {
-        printf("(x,y)=(%.*f, %.*f)\n", decimalPart, _x, decimalPart, _y);
+        if (decimalPart == 2) printf("(x,y)=(%.2f, %.2f)\n", _x, _y);
+        else                  printf("(x,y)=(%.3f, %.3f)\n", _x, _y);
     }
 };
 
@@ -32,24 +35,36 @@ public:
 class Complex : public NumericData {
     double _r;
     double _v;
+
 public:
-    Complex(double r, double v) : _r(r), _v(v) {}
+    Complex(double r, double v) {
+        _r = r;
+        _v = v;
+    }
     void Show(int decimalPart = 3) {
         if (_v == 0.0) {
             // 虚部なし
-            printf("%.*f\n", decimalPart, _r);
+            if (decimalPart == 2) printf("%.2f\n", _r);
+            else                  printf("%.3f\n", _r);
         } else if (_r == 0.0) {
             // 実部なし
             if (_v == 1.0)       printf("i\n");
             else if (_v == -1.0) printf("-i\n");
-            else                 printf("%.*fi\n", decimalPart, _v);
+            else if (decimalPart == 2) printf("%.2fi\n", _v);
+            else                       printf("%.3fi\n", _v);
         } else {
             // 実部と虚部あり
-            printf("%.*f", decimalPart, _r);
+            if (decimalPart == 2) printf("%.2f", _r);
+            else                  printf("%.3f", _r);
             if (_v == 1.0)       printf("+i\n");
             else if (_v == -1.0) printf("-i\n");
-            else if (_v > 0.0)   printf("+%.*fi\n", decimalPart, _v);
-            else                 printf("%.*fi\n", decimalPart, _v);
+            else if (_v > 0.0) {
+                if (decimalPart == 2) printf("+%.2fi\n", _v);
+                else                  printf("+%.3fi\n", _v);
+            } else {
+                if (decimalPart == 2) printf("%.2fi\n", _v);
+                else                  printf("%.3fi\n", _v);
+            }
         }
     }
 };

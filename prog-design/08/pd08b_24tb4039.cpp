@@ -5,7 +5,7 @@
 // コマンド：g++ prog.cc -Wall -Wextra -std=c++17 -pedantic
 // 説明：
 //   - pd07bのMatrixクラスのメンバ変数をprotectedに変更してImageクラスを継承
-//   - DrawLineはBresenhamのアルゴリズムで線分を描画
+//   - DrawLineは線形補間で線分を描画
 //   - Rotateは90度ずつ右回転を繰り返して実現
 
 #include <iostream>
