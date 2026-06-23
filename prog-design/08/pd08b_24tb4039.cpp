@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <cstdlib>
 
+// Matrix クラス: pd07bのコピー（アクス権限を protected に修正）
 class Matrix {
 protected:
     int _rows;
@@ -107,30 +108,29 @@ class Image : public Matrix {
 public:
     Image(int R, int C) : Matrix(R, C) {}
 
-    // (x1,y1)から(x2,y2)へ値vの線分を描画する（Bresenhamアルゴリズム）
+    // (x1,y1)から(x2,y2)へ値vの線分を描画する
     // x=列, y=行 に対応
     void DrawLine(int x1, int y1, int x2, int y2, int v) {
-        int dx = abs(x2 - x1);
-        int dy = abs(y2 - y1);
-        int sx = (x1 < x2) ? 1 : -1;
-        int sy = (y1 < y2) ? 1 : -1;
-        int err = dx - dy;
-        while (true) {
-            Set(y1, x1, (double)v);
-            if (x1 == x2 && y1 == y2) break;
-            int e2 = 2 * err;
-            if (e2 > -dy) { err -= dy; x1 += sx; }
-            if (e2 < dx)  { err += dx; y1 += sy; }
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+        int steps = (abs(dx) > abs(dy)) ? abs(dx) : abs(dy);
+        double xStep = (double)dx / steps;
+        double yStep = (double)dy / steps;
+        double x = x1;
+        double y = y1;
+        for (int i = 0; i <= steps; i++) {
+            Set((int)(y + 0.5), (int)(x + 0.5), (double)v);
+            x += xStep;
+            y += yStep;
         }
     }
 
     // 画像を右回りに90度単位で回転する
-    // angle=0:回転なし, 1:90度, 2:180度, 3:270度
+    // @param angle=0:回転なし, 1:90度, 2:180度, 3:270度
     void Rotate(int angle) {
         int times = angle % 4;
         for (int t = 0; t < times; t++) {
-            // 90度右回転: R×C → C×R
-            // new[r][c] = old[R-1-c][r]
+            // 90度右回転
             double *tmp = new double[_cols * _rows];
             int newRows = _cols;
             int newCols = _rows;
@@ -147,7 +147,6 @@ public:
     }
 
     // 画像を表示する
-    // |なし、整数部1桁のみ、区切りスペースなし、末尾に空行
     void ShowImage() {
         for (int r = 0; r < _rows; r++) {
             for (int c = 0; c < _cols; c++) {
@@ -170,7 +169,7 @@ int main() {
     img.Rotate(1);
     img.ShowImage();
 
-    // 追加検証: 180度・270度回転
+    // 180度・270度回転
     Image img2(4, 4);
     img2.DrawLine(0, 0, 3, 0, 1);  // 水平線
     img2.DrawLine(0, 0, 0, 3, 2);  // 垂直線
@@ -180,7 +179,7 @@ int main() {
     std::cout << "img2 Rotate(2):\n";
     img2.ShowImage();
 
-    // 追加検証: DrawLineの斜め線
+    // DrawLineの斜め線
     Image img3(5, 5);
     img3.DrawLine(0, 0, 4, 4, 9);
     std::cout << "img3 diagonal:\n";
