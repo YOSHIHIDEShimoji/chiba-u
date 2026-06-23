@@ -9,4 +9,5 @@ cd ~/med-data-analysis && \
 python3 -m venv venv && \
 source venv/bin/activate && \
 python -m pip install --upgrade pip && \
+pip install cycler matplotlib numpy opencv-python pandas pydicom Pillow scikit-learn scikit-image seaborn && \
 echo "SUCCESS"
