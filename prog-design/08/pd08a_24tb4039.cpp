@@ -44,26 +44,26 @@ public:
     void Show(int decimalPart = 3) {
         if (_v == 0.0) {
             // 虚部なし
-            if (decimalPart == 2) printf("%.2f\n", _r);
-            else                  printf("%.3f\n", _r);
+            if (decimalPart == 2)       printf("%.2f\n", _r);
+            else                        printf("%.3f\n", _r);
         } else if (_r == 0.0) {
             // 実部なし
-            if (_v == 1.0)       printf("i\n");
-            else if (_v == -1.0) printf("-i\n");
-            else if (decimalPart == 2) printf("%.2fi\n", _v);
-            else                       printf("%.3fi\n", _v);
+            if (_v == 1.0)              printf("i\n");
+            else if (_v == -1.0)        printf("-i\n");
+            else if (decimalPart == 2)  printf("%.2fi\n", _v);
+            else                        printf("%.3fi\n", _v);
         } else {
             // 実部と虚部あり
-            if (decimalPart == 2) printf("%.2f", _r);
-            else                  printf("%.3f", _r);
-            if (_v == 1.0)       printf("+i\n");
-            else if (_v == -1.0) printf("-i\n");
+            if (decimalPart == 2)       printf("%.2f", _r);
+            else                        printf("%.3f", _r);
+            if (_v == 1.0)              printf("+i\n");
+            else if (_v == -1.0)        printf("-i\n");
             else if (_v > 0.0) {
-                if (decimalPart == 2) printf("+%.2fi\n", _v);
-                else                  printf("+%.3fi\n", _v);
+                if (decimalPart == 2)   printf("+%.2fi\n", _v);
+                else                    printf("+%.3fi\n", _v);
             } else {
-                if (decimalPart == 2) printf("%.2fi\n", _v);
-                else                  printf("%.3fi\n", _v);
+                if (decimalPart == 2)   printf("%.2fi\n", _v);
+                else                    printf("%.3fi\n", _v);
             }
         }
     }
