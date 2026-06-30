@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from sklearn.model_selection import train_test_split, ParameterGrid
+from sklearn.model_selection import train_test_split, ParameterSampler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_curve, auc, confusion_matrix, accuracy_score, recall_score
 
@@ -15,7 +15,8 @@ def evaluate_validation(data, label, model):
     auc_value = auc(fpr, tpr)
 
     # Youden's indexによるカットオフ値
-    cutoff = thresholds[-1]
+    cutoff_idx = np.argmax(tpr - fpr)
+    cutoff = thresholds[cutoff_idx]
 
     return {
         "auc": auc_value,
@@ -31,10 +32,11 @@ def evaluate_test(data, label, model, cutoff=0.5):
     auc_value = auc(fpr, tpr)
 
     # 混同行列から性能指標を算出
-    pred = None
-    accuracy = 0
-    sensitivity = 0
-    specificity = 0
+    pred = (probability >= cutoff).astype(int)
+    tn, fp, fn, tp = confusion_matrix(label, pred).ravel()
+    accuracy = accuracy_score(label, pred)
+    sensitivity = recall_score(label, pred)
+    specificity = tn / (tn + fp)
            
     # ROC曲線の描画 (matplotlibを使用)
     plt.plot(fpr, tpr, 'b', linewidth=2.0, clip_on=False)
@@ -67,13 +69,13 @@ def training_with_parameter_search(train_data, train_label,
     best_params = None
     best_cutoff = None
 
-    # 試行するパラメータのリストを作成
-    param_sets = []
+    # 試行するパラメータのリストを作成 (ランダムサーチ)
+    param_sets = list(ParameterSampler(hyper_params, n_iter=20, random_state=45678))
 
     for params in param_sets:
 
         # 学習
-        model = None
+        model = RandomForestClassifier(random_state=23456, **params)
         model.fit(train_data, train_label)
     
         # 検証データによる評価
@@ -99,11 +101,16 @@ def main():
     diabetes_label = diabetes_data_selected['Outcome']
 
     # 学習、検証、テストデータに分割 (6:2:2)
-    train_data = train_label = val_data = val_label = None
-    test_data = test_label = None
+    trainval_data, test_data, trainval_label, test_label = train_test_split(
+        diabetes_data, diabetes_label, test_size=0.2, random_state=12345)
+    train_data, val_data, train_label, val_label = train_test_split(
+        trainval_data, trainval_label, test_size=0.25, random_state=12345)
 
     # ハイパーパラメータの設定
-    hyper_params = {}
+    hyper_params = {"n_estimators": range(1, 21),
+                    "max_depth": range(1, 6),
+                    "criterion": ["gini", "entropy"],
+                    "min_samples_leaf": [1, 2, 4]}
 
     best_model, best_params, best_cutoff = training_with_parameter_search(train_data,
                                                                           train_label,
