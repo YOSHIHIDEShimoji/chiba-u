@@ -12,7 +12,7 @@
 //   - 加減積の演算子でサイズ不一致をチェックしメッセージを出した
 //   - 複合代入 +=,-=,*= を二項演算子の再利用で追加した
 // 調べた関数：
-//   - fabs：絶対値（ピボット選択に使用）
+//   - fabs：絶対値
 
 #include <iostream>
 #include <cstdio>
@@ -148,7 +148,7 @@ public:
         return ret;
     }
 
-    // 複合代入演算子（上で定義した二項演算子を再利用）
+    // 複合代入演算子
     Matrix& operator+=(const Matrix &m) { *this = *this + m; return *this; }
     Matrix& operator-=(const Matrix &m) { *this = *this - m; return *this; }
     Matrix& operator*=(const Matrix &m) { *this = *this * m; return *this; }
@@ -223,7 +223,6 @@ public:
 
 // メイン関数：追加した演算子の動作検証と連立方程式の求解
 int main() {
-    // --- 新しい演算子の動作検証 ---
     double av[4] = {1, 2, 3, 4};
     double bv[4] = {5, 6, 7, 8};
     Matrix A(2, 2, av);
@@ -247,12 +246,12 @@ int main() {
     C = !A;        std::cout << "!A (逆行列)=\n";     C.Show();
     C = A * (!A);  std::cout << "A*(!A) (単位行列)=\n"; C.Show();
 
-    // 発展：複合代入演算子
+    // 複合代入演算子
     Matrix acc = A;
     acc += B;  std::cout << "A+=B=\n"; acc.Show();
     acc -= B;  std::cout << "(A+=B)-=B=\n"; acc.Show();   // Aに戻る
 
-    // 発展：サイズ不一致の検出
+    // jサイズ不一致の検出
     std::cout << "サイズ不一致の加算テスト:\n";
     Matrix D(3, 3);
     Matrix err = A + D;   // 2x2 + 3x3 はエラーメッセージが出る
