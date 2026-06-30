@@ -6,21 +6,17 @@
 // 説明：
 //   - pd07bのMatrixクラスに演算子をオーバーロードした
 //   - 行列同士の +,-,* と スカラ値との +,-,*,/ を新しい行列で返す
-//   - ~で転置、!で逆行列（ガウス・ジョルダン法）を返す
+//   - ~で転置、!で逆行列を返す
 //   - コピーコンストラクタと代入演算子で動的配列を要素ごとに複製した
-//   - 連立方程式を X = (!A) * B の形で解いた
 // 発展：
 //   - 加減積の演算子でサイズ不一致をチェックしメッセージを出した
 //   - 複合代入 +=,-=,*= を二項演算子の再利用で追加した
-//   - 求めた解を A*X で検算し右辺Bに戻ることを確認した
 // 調べた関数：
-//   - std::swap：ピボット選択で行を入れ替える
 //   - fabs：絶対値（ピボット選択に使用）
 
 #include <iostream>
 #include <cstdio>
 #include <cmath>
-#include <algorithm>
 
 class Matrix {
     int _rows;
@@ -183,9 +179,15 @@ public:
                     pivot = k;
                 }
             }
-            for (int j = 0; j < n; j++) {
-                std::swap(a._data[i * n + j], a._data[pivot * n + j]);
-                std::swap(inv._data[i * n + j], inv._data[pivot * n + j]);
+            if (pivot != i) {
+                for (int j = 0; j < n; j++) {
+                    double t = a._data[i * n + j];
+                    a._data[i * n + j] = a._data[pivot * n + j];
+                    a._data[pivot * n + j] = t;
+                    t = inv._data[i * n + j];
+                    inv._data[i * n + j] = inv._data[pivot * n + j];
+                    inv._data[pivot * n + j] = t;
+                }
             }
             // ピボットを1に正規化
             double p = a._data[i * n + i];

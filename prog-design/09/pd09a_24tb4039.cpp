@@ -10,8 +10,6 @@
 // 発展：
 //   - 単項マイナス -、複合代入 +=,-=,*=,/=、比較 ==,!= を追加した
 //   - 複合代入は二項演算子を再利用して実装した
-// 調べた関数：
-//   - sqrt：平方根（絶対値の計算に使用）
 
 #include <cstdio>
 #include <cmath>
@@ -49,7 +47,7 @@ public:
         _v = v;
     }
 
-    // 複素数同士の四則演算（結果を新しいComplexで返す）
+    // 複素数同士の四則演算
     Complex operator+(const Complex &c) {
         return Complex(_r + c._r, _v + c._v);
     }
@@ -93,7 +91,7 @@ public:
         return Complex(-_r, -_v);
     }
 
-    // 複合代入演算子（上で定義した二項演算子を再利用）
+    // 複合代入演算子
     Complex& operator+=(const Complex &c) { *this = *this + c; return *this; }
     Complex& operator-=(const Complex &c) { *this = *this - c; return *this; }
     Complex& operator*=(const Complex &c) { *this = *this * c; return *this; }
@@ -135,7 +133,6 @@ public:
     }
 };
 
-// ------------------------------------------------------------
 // メイン関数：オーバーロードした演算子の動作検証
 int main() {
     Complex a(3.0, 4.0);
@@ -167,7 +164,7 @@ int main() {
     printf("~a="); conj.Show(2);
     printf("!a=%.2f\n", !a);  // 5.00
 
-    // 発展：単項マイナス・複合代入・比較
+    // 単項マイナス・複合代入・比較
     Complex neg = -a;         // -3-4i
     printf("-a="); neg.Show(2);
 
