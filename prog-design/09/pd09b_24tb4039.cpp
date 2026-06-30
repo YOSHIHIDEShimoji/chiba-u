@@ -1,0 +1,247 @@
+// 課題： pd09b 行列クラスの演算子
+// 氏名：下地慶英　学生証番号：24TB4039　日付：2026/06/30
+// 開発環境：Wandbox(online) https://wandbox.org/
+// コンパイラー：gcc 13.2.0
+// コマンド：g++ prog.cc -Wall -Wextra -std=c++17 -pedantic
+// 説明：
+//   - pd07bのMatrixクラスに演算子をオーバーロードした
+//   - 行列同士の +,-,* と スカラ値との +,-,*,/ を新しい行列で返す
+//   - ~で転置、!で逆行列（ガウス・ジョルダン法）を返す
+//   - コピーコンストラクタと代入演算子で動的配列を要素ごとに複製した
+//   - 連立方程式を X = (!A) * B の形で解いた
+// 調べた関数：
+//   - std::swap：ピボット選択で行を入れ替える
+//   - fabs：絶対値（ピボット選択に使用）
+
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
+
+class Matrix {
+    int _rows;
+    int _cols;
+    double *_data;
+
+public:
+    // コンストラクタ：サイズを指定して零行列を生成
+    Matrix(int R, int C) {
+        _rows = R;
+        _cols = C;
+        _data = new double[_rows * _cols];
+        for (int i = 0; i < _rows * _cols; i++) {
+            _data[i] = 0.0;
+        }
+    }
+
+    // コンストラクタ：サイズと要素を指定して生成
+    Matrix(int R, int C, double *vals) {
+        _rows = R;
+        _cols = C;
+        _data = new double[_rows * _cols];
+        for (int i = 0; i < _rows * _cols; i++) {
+            _data[i] = vals[i];
+        }
+    }
+
+    // コピーコンストラクタ：動的配列の要素をコピーして複製
+    Matrix(const Matrix &m) {
+        _rows = m._rows;
+        _cols = m._cols;
+        _data = new double[_rows * _cols];
+        for (int i = 0; i < _rows * _cols; i++) {
+            _data[i] = m._data[i];
+        }
+    }
+
+    // デストラクタ：動的確保したメモリを解放
+    ~Matrix() {
+        delete[] _data;
+    }
+
+    // 代入演算子：既存の配列を解放してから複製する
+    Matrix& operator=(const Matrix &m) {
+        delete[] _data;
+        _rows = m._rows;
+        _cols = m._cols;
+        _data = new double[_rows * _cols];
+        for (int i = 0; i < _rows * _cols; i++) {
+            _data[i] = m._data[i];
+        }
+        return *this;
+    }
+
+    // 指定要素に値を代入
+    void Set(int r, int c, double v) {
+        _data[r * _cols + c] = v;
+    }
+
+    // 指定要素の値を取得
+    double Get(int r, int c) {
+        return _data[r * _cols + c];
+    }
+
+    // 行列同士の加算（結果を新しい行列で返す）
+    Matrix operator+(const Matrix &m) {
+        Matrix ret(_rows, _cols);
+        for (int i = 0; i < _rows * _cols; i++) {
+            ret._data[i] = _data[i] + m._data[i];
+        }
+        return ret;
+    }
+
+    // 行列同士の減算
+    Matrix operator-(const Matrix &m) {
+        Matrix ret(_rows, _cols);
+        for (int i = 0; i < _rows * _cols; i++) {
+            ret._data[i] = _data[i] - m._data[i];
+        }
+        return ret;
+    }
+
+    // 行列同士の積（this:_rows×_cols, m:_cols×m._cols）
+    Matrix operator*(const Matrix &m) {
+        Matrix ret(_rows, m._cols);
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < m._cols; j++) {
+                double s = 0.0;
+                for (int k = 0; k < _cols; k++) {
+                    s += _data[i * _cols + k] * m._data[k * m._cols + j];
+                }
+                ret._data[i * m._cols + j] = s;
+            }
+        }
+        return ret;
+    }
+
+    // スカラ値との四則演算
+    Matrix operator+(double v) {
+        Matrix ret(_rows, _cols);
+        for (int i = 0; i < _rows * _cols; i++) ret._data[i] = _data[i] + v;
+        return ret;
+    }
+    Matrix operator-(double v) {
+        Matrix ret(_rows, _cols);
+        for (int i = 0; i < _rows * _cols; i++) ret._data[i] = _data[i] - v;
+        return ret;
+    }
+    Matrix operator*(double v) {
+        Matrix ret(_rows, _cols);
+        for (int i = 0; i < _rows * _cols; i++) ret._data[i] = _data[i] * v;
+        return ret;
+    }
+    Matrix operator/(double v) {
+        Matrix ret(_rows, _cols);
+        for (int i = 0; i < _rows * _cols; i++) ret._data[i] = _data[i] / v;
+        return ret;
+    }
+
+    // ~演算子：転置行列を返す
+    Matrix operator~() {
+        Matrix t(_cols, _rows);
+        for (int r = 0; r < _rows; r++) {
+            for (int c = 0; c < _cols; c++) {
+                t._data[c * _rows + r] = _data[r * _cols + c];
+            }
+        }
+        return t;
+    }
+
+    // !演算子：逆行列を返す（ガウス・ジョルダン法、正方行列が前提）
+    Matrix operator!() {
+        int n = _rows;
+        Matrix a(*this);    // 計算用に自分を複製
+        Matrix inv(n, n);   // 単位行列から開始
+        for (int i = 0; i < n; i++) inv._data[i * n + i] = 1.0;
+
+        for (int i = 0; i < n; i++) {
+            // ピボット選択：i列で絶対値最大の行を選び入れ替える
+            int pivot = i;
+            for (int k = i + 1; k < n; k++) {
+                if (fabs(a._data[k * n + i]) > fabs(a._data[pivot * n + i])) {
+                    pivot = k;
+                }
+            }
+            for (int j = 0; j < n; j++) {
+                std::swap(a._data[i * n + j], a._data[pivot * n + j]);
+                std::swap(inv._data[i * n + j], inv._data[pivot * n + j]);
+            }
+            // ピボットを1に正規化
+            double p = a._data[i * n + i];
+            for (int j = 0; j < n; j++) {
+                a._data[i * n + j] /= p;
+                inv._data[i * n + j] /= p;
+            }
+            // 他の行のi列を0にする
+            for (int k = 0; k < n; k++) {
+                if (k == i) continue;
+                double f = a._data[k * n + i];
+                for (int j = 0; j < n; j++) {
+                    a._data[k * n + j] -= f * a._data[i * n + j];
+                    inv._data[k * n + j] -= f * inv._data[i * n + j];
+                }
+            }
+        }
+        return inv;
+    }
+
+    // 行列を表示する（整数部3桁・小数部2桁、両端を|で囲む）
+    void Show() {
+        for (int r = 0; r < _rows; r++) {
+            std::cout << "|";
+            for (int c = 0; c < _cols; c++) {
+                printf("%6.2f", _data[r * _cols + c]);
+            }
+            std::cout << "|\n";
+        }
+        std::cout << "\n";
+    }
+};
+
+// メイン関数：追加した演算子の動作検証と連立方程式の求解
+int main() {
+    // --- 新しい演算子の動作検証 ---
+    double av[4] = {1, 2, 3, 4};
+    double bv[4] = {5, 6, 7, 8};
+    Matrix A(2, 2, av);
+    Matrix B(2, 2, bv);
+    std::cout << "A=\n"; A.Show();
+    std::cout << "B=\n"; B.Show();
+
+    Matrix C = A + B;                       // コピーコンストラクタ
+    std::cout << "A+B=\n"; C.Show();
+    C = A - B;                              // 代入演算子
+    std::cout << "A-B=\n"; C.Show();
+    C = A * B;
+    std::cout << "A*B=\n"; C.Show();
+
+    C = A + 10.0;  std::cout << "A+10=\n"; C.Show();
+    C = A - 1.0;   std::cout << "A-1=\n";  C.Show();
+    C = A * 2.0;   std::cout << "A*2=\n";  C.Show();
+    C = A / 2.0;   std::cout << "A/2=\n";  C.Show();
+
+    C = ~A;        std::cout << "~A (転置)=\n";       C.Show();
+    C = !A;        std::cout << "!A (逆行列)=\n";     C.Show();
+    C = A * (!A);  std::cout << "A*(!A) (単位行列)=\n"; C.Show();
+
+    // --- 連立方程式を解く ---
+    //  -3w + 8x + 3y - 3z = -43
+    //   4w -  x + 5y + 3z = -12
+    //    w - 2x +  y - 2z = -12
+    //  -3w + 5x + 8y -  z = -52
+    double coef[16] = {
+        -3,  8,  3, -3,
+         4, -1,  5,  3,
+         1, -2,  1, -2,
+        -3,  5,  8, -1
+    };
+    double rhs[4] = {-43, -12, -12, -52};
+    Matrix Amat(4, 4, coef);
+    Matrix Bvec(4, 1, rhs);
+
+    Matrix X = (!Amat) * Bvec;   // X = A^-1 * B
+    std::cout << "連立方程式の解 (w, x, y, z)=\n";
+    X.Show();
+
+    return 0;
+}
