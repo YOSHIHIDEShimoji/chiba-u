@@ -9,6 +9,10 @@
 //   - ~で転置、!で逆行列（ガウス・ジョルダン法）を返す
 //   - コピーコンストラクタと代入演算子で動的配列を要素ごとに複製した
 //   - 連立方程式を X = (!A) * B の形で解いた
+// 発展：
+//   - 加減積の演算子でサイズ不一致をチェックしメッセージを出した
+//   - 複合代入 +=,-=,*= を二項演算子の再利用で追加した
+//   - 求めた解を A*X で検算し右辺Bに戻ることを確認した
 // 調べた関数：
 //   - std::swap：ピボット選択で行を入れ替える
 //   - fabs：絶対値（ピボット選択に使用）
@@ -81,8 +85,12 @@ public:
         return _data[r * _cols + c];
     }
 
-    // 行列同士の加算（結果を新しい行列で返す）
+    // 行列同士の加算（結果を新しい行列で返す。不一致時は零行列を返す）
     Matrix operator+(const Matrix &m) {
+        if (_rows != m._rows || _cols != m._cols) {
+            std::cout << "operator+ error: サイズが異なります\n";
+            return Matrix(_rows, _cols);
+        }
         Matrix ret(_rows, _cols);
         for (int i = 0; i < _rows * _cols; i++) {
             ret._data[i] = _data[i] + m._data[i];
@@ -92,6 +100,10 @@ public:
 
     // 行列同士の減算
     Matrix operator-(const Matrix &m) {
+        if (_rows != m._rows || _cols != m._cols) {
+            std::cout << "operator- error: サイズが異なります\n";
+            return Matrix(_rows, _cols);
+        }
         Matrix ret(_rows, _cols);
         for (int i = 0; i < _rows * _cols; i++) {
             ret._data[i] = _data[i] - m._data[i];
@@ -101,6 +113,10 @@ public:
 
     // 行列同士の積（this:_rows×_cols, m:_cols×m._cols）
     Matrix operator*(const Matrix &m) {
+        if (_cols != m._rows) {
+            std::cout << "operator* error: サイズが不適合です\n";
+            return Matrix(_rows, m._cols);
+        }
         Matrix ret(_rows, m._cols);
         for (int i = 0; i < _rows; i++) {
             for (int j = 0; j < m._cols; j++) {
@@ -135,6 +151,11 @@ public:
         for (int i = 0; i < _rows * _cols; i++) ret._data[i] = _data[i] / v;
         return ret;
     }
+
+    // 複合代入演算子（上で定義した二項演算子を再利用）
+    Matrix& operator+=(const Matrix &m) { *this = *this + m; return *this; }
+    Matrix& operator-=(const Matrix &m) { *this = *this - m; return *this; }
+    Matrix& operator*=(const Matrix &m) { *this = *this * m; return *this; }
 
     // ~演算子：転置行列を返す
     Matrix operator~() {
@@ -224,6 +245,17 @@ int main() {
     C = !A;        std::cout << "!A (逆行列)=\n";     C.Show();
     C = A * (!A);  std::cout << "A*(!A) (単位行列)=\n"; C.Show();
 
+    // 発展：複合代入演算子
+    Matrix acc = A;
+    acc += B;  std::cout << "A+=B=\n"; acc.Show();
+    acc -= B;  std::cout << "(A+=B)-=B=\n"; acc.Show();   // Aに戻る
+
+    // 発展：サイズ不一致の検出
+    std::cout << "サイズ不一致の加算テスト:\n";
+    Matrix D(3, 3);
+    Matrix err = A + D;   // 2x2 + 3x3 はエラーメッセージが出る
+    err.Show();           // 返ってきた零行列
+
     // --- 連立方程式を解く ---
     //  -3w + 8x + 3y - 3z = -43
     //   4w -  x + 5y + 3z = -12
@@ -242,6 +274,11 @@ int main() {
     Matrix X = (!Amat) * Bvec;   // X = A^-1 * B
     std::cout << "連立方程式の解 (w, x, y, z)=\n";
     X.Show();
+
+    // 検算：求めた解を元の行列に掛けて右辺Bに戻るか確認
+    Matrix check = Amat * X;
+    std::cout << "検算 A*X (右辺 -43,-12,-12,-52 に一致)=\n";
+    check.Show();
 
     return 0;
 }

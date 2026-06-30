@@ -7,6 +7,9 @@
 //   - pd08aのComplexクラスに四則演算の演算子をオーバーロードした
 //   - 複素数同士、複素数と実数の +,-,*,/ を定義し結果を新しいComplexで返す
 //   - ~で共役複素数、!で絶対値(double)を返す演算子を定義した
+// 発展：
+//   - 単項マイナス -、複合代入 +=,-=,*=,/=、比較 ==,!= を追加した
+//   - 複合代入は二項演算子を再利用して実装した
 // 調べた関数：
 //   - sqrt：平方根（絶対値の計算に使用）
 
@@ -85,6 +88,25 @@ public:
         return sqrt(_r * _r + _v * _v);
     }
 
+    // 単項マイナス：符号を反転した複素数を返す
+    Complex operator-() {
+        return Complex(-_r, -_v);
+    }
+
+    // 複合代入演算子（上で定義した二項演算子を再利用）
+    Complex& operator+=(const Complex &c) { *this = *this + c; return *this; }
+    Complex& operator-=(const Complex &c) { *this = *this - c; return *this; }
+    Complex& operator*=(const Complex &c) { *this = *this * c; return *this; }
+    Complex& operator/=(const Complex &c) { *this = *this / c; return *this; }
+
+    // 比較演算子：実部と虚部が両方一致するか
+    bool operator==(const Complex &c) {
+        return _r == c._r && _v == c._v;
+    }
+    bool operator!=(const Complex &c) {
+        return !(*this == c);
+    }
+
     void Show(int decimalPart = 3) {
         if (_v == 0.0) {
             // 虚部なし
@@ -144,6 +166,21 @@ int main() {
     Complex conj = ~a;        // 3-4i
     printf("~a="); conj.Show(2);
     printf("!a=%.2f\n", !a);  // 5.00
+
+    // 発展：単項マイナス・複合代入・比較
+    Complex neg = -a;         // -3-4i
+    printf("-a="); neg.Show(2);
+
+    Complex acc = a;          // 3+4i から開始
+    acc += b;                 // 4+6i
+    printf("a+=b -> "); acc.Show(2);
+    acc -= b;                 // 3+4i に戻る
+    printf("a-=b -> "); acc.Show(2);
+
+    Complex a2(3.0, 4.0);
+    printf("a==b ? %s\n",  (a == b)  ? "true" : "false");
+    printf("a!=b ? %s\n",  (a != b)  ? "true" : "false");
+    printf("a==a2? %s\n",  (a == a2) ? "true" : "false");
 
     return 0;
 }
