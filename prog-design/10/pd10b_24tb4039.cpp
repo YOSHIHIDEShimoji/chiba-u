@@ -9,8 +9,6 @@
 //   - 動作確認としてdouble型に加えint型でも同じMatrixクラスを使ってみた
 // 発展：
 //   - 要素の型サイズ(sizeof)を表示するShowSize()を追加した
-// 調べた関数：
-//   - fabs：絶対値
 
 #include <iostream>
 #include <cstdio>

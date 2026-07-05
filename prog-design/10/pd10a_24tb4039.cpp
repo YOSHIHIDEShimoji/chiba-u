@@ -32,7 +32,7 @@ T min(T* array, int n) {
     return m;
 }
 
-// 汎用関数：配列の中央値を返す（元の配列は変更しない）
+// 汎用関数：配列の中央値を返す
 template <class T>
 T median(T* array, int n) {
     T* temp = new T[n];
@@ -54,7 +54,7 @@ T median(T* array, int n) {
     return result;
 }
 
-// 発展：配列の平均値を返す（戻り値はdoubleに固定）
+// 発展：配列の平均値を返す
 template <class T>
 double mean(T* array, int n) {
     double sum = 0;
@@ -74,7 +74,7 @@ void reverse(T* array, int n) {
     }
 }
 
-// 汎用関数：検索値のインデックスを返す（見つからなければ-1）
+// 汎用関数：検索値のインデックスを返す（見つからなければ -1）
 template <class T>
 int find(T* array, int n, T query) {
     for (int i = 0; i < n; i ++) {
