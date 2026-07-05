@@ -41,13 +41,13 @@ T median(T* array, int n) {
     }
     // 選択ソート（昇順）
     for (int i = 0; i < n - 1; i ++) {
-        int minIndex = i;
+        int mi = i;
         for (int j = i + 1; j < n; j ++) {
-            if (temp[j] < temp[minIndex]) minIndex = j;
+            if (temp[j] < temp[mi]) mi = j;
         }
         T t = temp[i];
-        temp[i] = temp[minIndex];
-        temp[minIndex] = t;
+        temp[i] = temp[mi];
+        temp[mi] = t;
     }
     T result = temp[n / 2];
     delete[] temp;

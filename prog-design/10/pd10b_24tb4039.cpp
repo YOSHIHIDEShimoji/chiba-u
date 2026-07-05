@@ -6,9 +6,9 @@
 // 説明：
 //   - pd09bのMatrixクラスをテンプレート化し、任意のデータ型(MatrixType)で使えるようにした
 //   - Show()は要素をdoubleにキャストしてから出力することで、どの型でも整形して表示できるようにした
+//   - 動作確認としてdouble型に加えint型でも同じMatrixクラスを使ってみた
 // 発展：
-//   - double型に加えint型でも同じMatrixクラスが動作することを確認した
-//   - 要素の型サイズ(sizeof)を表示するShowInfo()を追加した
+//   - 要素の型サイズ(sizeof)を表示するShowSize()を追加した
 // 調べた関数：
 //   - fabs：絶対値
 
@@ -220,14 +220,13 @@ public:
     }
 
     // 発展：要素の型サイズを表示する
-    void ShowInfo() {
+    void ShowSize() {
         std::cout << "要素の型サイズ: " << sizeof(MatrixType) << " bytes\n";
     }
 };
 
 // メイン関数：テンプレート化したMatrixクラスの動作検証
 int main() {
-    // ---- double型でのテスト（pd09bと同じ計算を確認） ----
     double av[4] = {1, 2, 3, 4};
     double bv[4] = {5, 6, 7, 8};
     Matrix<double> A(2, 2, av);
@@ -286,7 +285,7 @@ int main() {
     std::cout << "検算 A*X (右辺 -43,-12,-12,-52 に一致)=\n";
     check.Show();
 
-    // ---- 発展：int型でも同じMatrixクラスが使えることを確認 ----
+    // --- int型での動作確認 ---
     int iv1[4] = {1, 2, 3, 4};
     int iv2[4] = {5, 6, 7, 8};
     Matrix<int> IA(2, 2, iv1);
@@ -301,8 +300,8 @@ int main() {
     IC = ~IA;
     std::cout << "~IA (転置)=\n"; IC.Show();
 
-    A.ShowInfo();
-    IA.ShowInfo();
+    A.ShowSize();
+    IA.ShowSize();
 
     return 0;
 }
