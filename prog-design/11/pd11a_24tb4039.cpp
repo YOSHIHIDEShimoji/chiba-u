@@ -4,7 +4,6 @@
 // コンパイラー：gcc 13.2.0
 // コマンド：g++ prog.cc -Wall -Wextra -std=c++17 -pedantic
 // 説明：
-//   - 実験1 C言語プログラミング5で作成した2-opt法の巡回セールスマン問題をC++で再実装した
 //   - 都市データはcities100.csvを読み込みvector<City>に格納する
 //   - 初期巡回路はstd::shuffleでランダムに決定し、2-opt法（最急降下法）で局所改善する
 //   - 改善する2辺の組をすべて調べ、最も距離が縮む組をstd::reverseで反転して採用する
@@ -22,7 +21,8 @@
 #include <algorithm>
 #include <random>
 
-const int TRIALS = 200;  // 試行回数（WandBoxでタイムアウトしない範囲で調整）
+// 試行回数
+const int TRIALS = 200;
 
 // 都市の座標
 struct City {

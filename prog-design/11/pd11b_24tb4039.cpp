@@ -8,8 +8,6 @@
 //   - 英字だけで単語を構成し、それ以外の記号は区切りとして無視する。大文字・小文字は区別しない
 //   - 冠詞(a, an, the)とbe動詞(am, is, are, was, were, be, been, being)はカウントしない
 //   - 単語の出現回数はmapクラス(連想配列)で数え、vectorに移してからstd::sortで頻度順に並べる
-// 調べた関数：
-//   - std::map（http://vivi.dyndns.org/tech/cpp/map.html を参考にした）
 
 #include <cstdio>
 #include <cstdlib>
